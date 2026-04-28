@@ -1,13 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
-import { useAuthStore } from '@/features/auth/stores/authStore';
-import { useCompleteOnboarding } from '@/features/onboarding/api/completeOnboarding';
 import { StepShell } from '@/features/onboarding/components/StepShell';
+import { useFinishOnboarding } from '@/features/onboarding/hooks/useFinishOnboarding';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboardingStore';
-import type { CompleteOnboardingPayload } from '@/features/onboarding/types';
 import { ApiError } from '@/lib/api/types';
-import { getTokens, setTokens } from '@/lib/auth/tokenStorage';
 import {
   checkLocationPermission,
   getCurrentLocation,
@@ -16,25 +13,21 @@ import {
   type PermissionStatus,
 } from '@/lib/permissions/location';
 import { toast } from '@/lib/toast';
+import { Location as LocationIcon, Setting2 } from 'iconsax-react-nativejs';
 import * as React from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import { Location as LocationIcon, Setting2 } from 'iconsax-react-nativejs';
 
 const TOTAL_STEPS = 6;
 
 export default function LocationStep() {
-  const draft = useOnboardingStore((s) => s.draft);
+  const draftLocation = useOnboardingStore((s) => s.draft.location);
   const setField = useOnboardingStore((s) => s.setField);
-  const resetDraft = useOnboardingStore((s) => s.reset);
-  const setUser = useAuthStore((s) => s.setUser);
+  const { finishOnboarding, isPending } = useFinishOnboarding();
 
   const [permission, setPermission] =
     React.useState<PermissionStatus | null>(null);
   const [isFetching, setIsFetching] = React.useState(false);
 
-  const completeOnboarding = useCompleteOnboarding();
-
-  // Read the existing permission state on mount.
   React.useEffect(() => {
     void checkLocationPermission().then(setPermission);
   }, []);
@@ -59,43 +52,10 @@ export default function LocationStep() {
   };
 
   const onFinish = async () => {
-    if (
-      !draft.dateOfBirth ||
-      !draft.gender ||
-      !draft.avatarKey ||
-      !draft.location
-    ) {
-      toast.error('something is missing — please go back through the steps.');
-      return;
-    }
-
-    const payload: CompleteOnboardingPayload = {
-      username: draft.username,
-      displayName: draft.displayName,
-      dateOfBirth: draft.dateOfBirth.toISOString(),
-      gender: draft.gender,
-      avatarKey: draft.avatarKey,
-      location: draft.location,
-    };
-
     try {
-      const result = await completeOnboarding.mutateAsync(payload);
-
-      // Replace the access token (new one carries `onboarded: true`); refresh
-      // token is unchanged.
-      const existing = await getTokens();
-      if (existing?.refreshToken) {
-        await setTokens({
-          accessToken: result.accessToken,
-          refreshToken: existing.refreshToken,
-        });
-      }
-
-      // setUser recomputes onboardingRequired → false, which causes the
-      // /onboarding _layout guard to redirect to /home on next render.
-      setUser(result.user);
-      resetDraft();
+      await finishOnboarding();
       toast.success('welcome to forsure');
+      // /onboarding/_layout will now redirect to /home automatically.
     } catch (err) {
       const message =
         err instanceof ApiError
@@ -105,7 +65,7 @@ export default function LocationStep() {
     }
   };
 
-  const hasLocation = !!draft.location;
+  const hasLocation = !!draftLocation;
 
   return (
     <StepShell
@@ -115,18 +75,22 @@ export default function LocationStep() {
       subtitle="forsure shows activities near you. we use your precise location for matching only."
       onContinue={hasLocation ? onFinish : undefined}
       continueDisabled={!hasLocation}
-      continueLoading={completeOnboarding.isPending}
+      continueLoading={isPending}
       continueLabel="finish"
     >
       <View className="items-center gap-6">
         <View className="bg-primary/10 size-32 items-center justify-center rounded-full">
-          <Icon as={LocationIcon} variant="Bold" className="text-primary size-16" />
+          <Icon
+            as={LocationIcon}
+            variant="Bold"
+            className="text-primary size-16"
+          />
         </View>
 
         {hasLocation ? (
           <View className="items-center gap-1">
             <Text className="text-foreground text-xl font-semibold">
-              {draft.location?.placeName}
+              {draftLocation?.placeName}
             </Text>
             <Text className="text-muted-foreground text-sm">
               tap finish to wrap up.
@@ -153,7 +117,10 @@ export default function LocationStep() {
           <Button
             onPress={enableLocation}
             leftIcon={
-              <Icon as={LocationIcon} className="text-primary-foreground size-5" />
+              <Icon
+                as={LocationIcon}
+                className="text-primary-foreground size-5"
+              />
             }
           >
             <Text>enable location</Text>

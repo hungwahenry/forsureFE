@@ -1,13 +1,12 @@
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
 import { useRequestCode } from '@/features/auth/api/requestCode';
-import { useVerifyCode } from '@/features/auth/api/verifyCode';
 import {
   OtpInput,
   type OtpInputRef,
 } from '@/features/auth/components/OtpInput';
 import { useResendCooldown } from '@/features/auth/hooks/useResendCooldown';
-import { useAuthStore } from '@/features/auth/stores/authStore';
+import { useSignInFromCode } from '@/features/auth/hooks/useSignInFromCode';
 import { ApiError } from '@/lib/api/types';
 import { toast } from '@/lib/toast';
 import { cn } from '@/lib/utils';
@@ -27,34 +26,22 @@ export default function CodeScreen() {
   const otpRef = React.useRef<OtpInputRef>(null);
   const [hasError, setHasError] = React.useState(false);
 
-  const verifyCode = useVerifyCode();
+  const { signInFromCode, isPending: isVerifying } = useSignInFromCode();
   const requestCode = useRequestCode();
   const cooldown = useResendCooldown(60);
-  const signIn = useAuthStore((s) => s.signIn);
 
   // Start the cooldown on mount — the previous screen just sent a code.
   React.useEffect(() => {
     cooldown.start();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onVerify = async (codeValue: string) => {
     if (!email) return;
     setHasError(false);
     try {
-      const result = await verifyCode.mutateAsync({
-        email,
-        code: codeValue,
-      });
-      await signIn({
-        user: result.user,
-        tokens: {
-          accessToken: result.accessToken,
-          refreshToken: result.refreshToken,
-        },
-      });
-      // (auth)/_layout will redirect on the next render based on the new
-      // store state — onboarding-required → /onboarding, else → /home.
+      await signInFromCode({ email, code: codeValue });
+      // Route guards redirect on the next render based on the new store
+      // state — onboarding-required → /onboarding, else → /home.
     } catch (err) {
       setHasError(true);
       otpRef.current?.clear();
@@ -108,7 +95,7 @@ export default function CodeScreen() {
             }}
             onComplete={onVerify}
             error={hasError}
-            disabled={verifyCode.isPending}
+            disabled={isVerifying}
           />
 
           <View className="flex-1" />
