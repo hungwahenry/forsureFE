@@ -6,24 +6,24 @@ import {
   type StoredTokens,
 } from '@/lib/auth/tokenStorage';
 import { create } from 'zustand';
+import { fetchMe } from '../api/me';
+import type { AuthUser } from '../types';
 
 export type AuthStatus =
   | 'bootstrapping'
   | 'unauthenticated'
   | 'authenticated';
 
-export interface AuthUser {
-  id: string;
-  email: string;
-  onboardingCompletedAt: string | null;
-}
-
 interface AuthState {
   status: AuthStatus;
   user: AuthUser | null;
   onboardingRequired: boolean;
 
-  /** Cold-start hydration: read SecureStore and decide initial status. */
+  /**
+   * Cold-start hydration. Reads SecureStore, then *always* verifies with
+   * the server via GET /auth/me before reporting `authenticated`. Stale or
+   * revoked sessions are caught here.
+   */
   bootstrap: () => Promise<void>;
   /** Called by the auth feature after a successful verify-code. */
   signIn: (params: { user: AuthUser; tokens: StoredTokens }) => Promise<void>;
@@ -48,10 +48,25 @@ export const useAuthStore = create<AuthState>((set) => ({
       });
       return;
     }
-    // Trust stored tokens optimistically. The 401-refresh interceptor will
-    // recover from an expired access token; if refresh itself fails, the
-    // signOut handler below clears state.
-    set({ status: 'authenticated' });
+
+    try {
+      const { user, onboardingRequired } = await fetchMe();
+      set({
+        status: 'authenticated',
+        user,
+        onboardingRequired,
+      });
+    } catch {
+      // Auth failures: the interceptor's onAuthFailed already cleared tokens
+      // and flipped to unauthenticated. Network/server errors leave tokens in
+      // place so a future launch can recover. Either way, this launch is
+      // unauthenticated.
+      set({
+        status: 'unauthenticated',
+        user: null,
+        onboardingRequired: true,
+      });
+    }
   },
 
   signIn: async ({ user, tokens }) => {
