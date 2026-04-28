@@ -10,16 +10,6 @@ interface FieldButtonProps extends React.ComponentProps<typeof Pressable> {
   /** Body content — usually a `<Text />`. */
   children: React.ReactNode;
 }
-
-/**
- * A `Pressable` styled to match `Input`'s adorned shell. Use it when a field
- * opens a picker / modal / sheet instead of accepting text directly.
- *
- * @example
- *   <FieldButton onPress={openPicker} leftIcon={<Icon as={Calendar} />}>
- *     <Text>{date ? formatDate(date) : 'tap to choose'}</Text>
- *   </FieldButton>
- */
 export function FieldButton({
   leftIcon,
   rightIcon,

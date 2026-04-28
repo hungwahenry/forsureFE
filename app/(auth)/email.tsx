@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { Input } from '@/components/ui/input';
+import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Text } from '@/components/ui/text';
 import { useRequestCode } from '@/features/auth/api/requestCode';
 import { emailSchema } from '@/features/auth/validation/schemas';
@@ -114,7 +115,11 @@ export default function EmailScreen() {
               )
             }
           >
-            <Text>{requestCode.isPending ? 'sending...' : 'send code'}</Text>
+            {requestCode.isPending ? (
+              <LoadingIndicator color="white" />
+            ) : (
+              <Text>send code</Text>
+            )}
           </Button>
         </View>
       </KeyboardAvoidingView>
