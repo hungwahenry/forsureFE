@@ -80,6 +80,10 @@ export function StepShell({
             </View>
           </View>
 
+          {/* Spacer — pushes title/body/CTA to the bottom of the screen.
+              Collapses when the keyboard is up so content stays visible. */}
+          <View className="flex-1" />
+
           {/* Title + subtitle */}
           <View className="mb-8 gap-2">
             <Text className="text-foreground text-3xl font-bold">{title}</Text>
@@ -89,7 +93,7 @@ export function StepShell({
           </View>
 
           {/* Step body */}
-          <View className="flex-1">{children}</View>
+          <View className="mb-12">{children}</View>
 
           {/* Continue */}
           {onContinue ? (
