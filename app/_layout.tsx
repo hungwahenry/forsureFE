@@ -49,7 +49,7 @@ export default function RootLayout() {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
           <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-          <Stack />
+          <Stack screenOptions={{ headerShown: false }} />
           <Toaster
             theme={colorScheme ?? 'light'}
             richColors
