@@ -2,7 +2,10 @@ import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
 import { useRequestCode } from '@/features/auth/api/requestCode';
 import { useVerifyCode } from '@/features/auth/api/verifyCode';
-import { OtpInput } from '@/features/auth/components/OtpInput';
+import {
+  OtpInput,
+  type OtpInputRef,
+} from '@/features/auth/components/OtpInput';
 import { useResendCooldown } from '@/features/auth/hooks/useResendCooldown';
 import { useAuthStore } from '@/features/auth/stores/authStore';
 import { ApiError } from '@/lib/api/types';
@@ -21,7 +24,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function CodeScreen() {
   const { email } = useLocalSearchParams<{ email: string }>();
-  const [code, setCode] = React.useState('');
+  const otpRef = React.useRef<OtpInputRef>(null);
   const [hasError, setHasError] = React.useState(false);
 
   const verifyCode = useVerifyCode();
@@ -54,11 +57,9 @@ export default function CodeScreen() {
       // store state — onboarding-required → /onboarding, else → /home.
     } catch (err) {
       setHasError(true);
-      setCode('');
+      otpRef.current?.clear();
       const message =
-        err instanceof ApiError
-          ? err.message
-          : 'wrong code. try again.';
+        err instanceof ApiError ? err.message : 'wrong code. try again.';
       toast.error(message);
     }
   };
@@ -68,7 +69,7 @@ export default function CodeScreen() {
     try {
       await requestCode.mutateAsync({ email });
       cooldown.start();
-      setCode('');
+      otpRef.current?.clear();
       setHasError(false);
       toast.success('new code sent');
     } catch (err) {
@@ -101,9 +102,8 @@ export default function CodeScreen() {
           </View>
 
           <OtpInput
-            value={code}
-            onChange={(v) => {
-              setCode(v);
+            ref={otpRef}
+            onChange={() => {
               if (hasError) setHasError(false);
             }}
             onComplete={onVerify}
