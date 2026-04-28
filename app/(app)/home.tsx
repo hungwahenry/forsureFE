@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Text } from '@/components/ui/text';
 import { useSignOut } from '@/features/auth/hooks/useSignOut';
 import { useAuthStore } from '@/features/auth/stores/authStore';
@@ -17,6 +18,7 @@ export default function HomeScreen() {
     <SafeAreaView className="bg-background flex-1" edges={['top', 'bottom']}>
       <View className="flex-1 items-center justify-center gap-6 p-6">
         <Text className="text-foreground text-3xl font-bold">home</Text>
+        <LoadingIndicator size={10} />
         <Text className="text-muted-foreground">
           (stub — activities feed lives here)
         </Text>

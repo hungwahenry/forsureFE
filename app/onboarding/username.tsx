@@ -1,5 +1,6 @@
 import { Icon } from '@/components/ui/icon';
 import { Input } from '@/components/ui/input';
+import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Text } from '@/components/ui/text';
 import { useCheckUsername } from '@/features/onboarding/api/checkUsername';
 import { StepShell } from '@/features/onboarding/components/StepShell';
@@ -13,7 +14,7 @@ import { cn } from '@/lib/utils';
 import { router } from 'expo-router';
 import { CloseCircle, TickCircle, User } from 'iconsax-react-nativejs';
 import * as React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { View } from 'react-native';
 
 const TOTAL_STEPS = 6;
 
@@ -99,7 +100,7 @@ function UsernameStatus({
   taken: boolean;
 }) {
   if (!hasInput) return null;
-  if (loading) return <ActivityIndicator size="small" />;
+  if (loading) return <LoadingIndicator size={6} />;
   if (!formatValid) return null;
   if (available)
     return <Icon as={TickCircle} variant="Bold" className="text-primary size-5" />;

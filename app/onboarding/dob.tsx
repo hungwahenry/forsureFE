@@ -1,6 +1,8 @@
+import { FieldButton } from '@/components/ui/field-button';
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
 import { StepShell } from '@/features/onboarding/components/StepShell';
+import { cn } from '@/lib/utils';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboardingStore';
 import {
   dateOfBirthSchema,
@@ -12,7 +14,7 @@ import DateTimePicker, {
 import { router } from 'expo-router';
 import { Calendar } from 'iconsax-react-nativejs';
 import * as React from 'react';
-import { Platform, Pressable, View } from 'react-native';
+import { Platform, View } from 'react-native';
 
 const TOTAL_STEPS = 6;
 const DEFAULT_DOB = (() => {
@@ -65,19 +67,21 @@ export default function DobStep() {
       continueDisabled={!canContinue}
     >
       <View className="gap-4">
-        <Pressable
+        <FieldButton
           onPress={() => setPickerVisible(true)}
-          className="border-foreground/15 bg-muted/40 h-14 flex-row items-center gap-3 rounded-full border-2 px-4"
+          leftIcon={
+            <Icon as={Calendar} className="text-muted-foreground size-5" />
+          }
         >
-          <Icon as={Calendar} className="text-muted-foreground size-5" />
           <Text
-            className={
-              date ? 'text-foreground text-base' : 'text-muted-foreground text-base'
-            }
+            className={cn(
+              'text-base',
+              date ? 'text-foreground' : 'text-muted-foreground'
+            )}
           >
             {date ? formatDate(date) : 'tap to choose'}
           </Text>
-        </Pressable>
+        </FieldButton>
 
         {tooYoung ? (
           <Text className="text-destructive text-sm">

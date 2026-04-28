@@ -42,7 +42,7 @@ export default function GenderStep() {
       onContinue={onContinue}
       continueDisabled={!selected}
     >
-      <View className="gap-3">
+      <View className="flex-row flex-wrap gap-3">
         {OPTIONS.map((opt) => {
           const active = selected === opt.value;
           return (
@@ -50,13 +50,14 @@ export default function GenderStep() {
               key={opt.value}
               onPress={() => onPick(opt.value)}
               className={cn(
-                'h-14 items-start justify-center rounded-full border-2 px-5',
+                'h-14 flex-1 basis-[45%] items-center justify-center rounded-full border-2 px-3',
                 active
                   ? 'border-primary bg-primary/5'
                   : 'border-foreground/15 bg-muted/40'
               )}
             >
               <Text
+                numberOfLines={1}
                 className={cn(
                   'text-base',
                   active ? 'text-primary font-semibold' : 'text-foreground'

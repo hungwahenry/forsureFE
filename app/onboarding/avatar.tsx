@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
+import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Text } from '@/components/ui/text';
 import { useUploadAvatar } from '@/features/onboarding/api/uploadAvatar';
 import { StepShell } from '@/features/onboarding/components/StepShell';
@@ -15,10 +16,9 @@ import { toast } from '@/lib/toast';
 import { router } from 'expo-router';
 import { Camera, Gallery } from 'iconsax-react-nativejs';
 import * as React from 'react';
-import { ActivityIndicator, Image, View } from 'react-native';
+import { Image, View } from 'react-native';
 
 const TOTAL_STEPS = 6;
-const PREVIEW_SIZE = 144;
 
 export default function AvatarStep() {
   const draftAvatarKey = useOnboardingStore((s) => s.draft.avatarKey);
@@ -82,14 +82,11 @@ export default function AvatarStep() {
       continueLoading={uploadAvatar.isPending}
     >
       <View className="items-center gap-8">
-        <View
-          style={{ width: PREVIEW_SIZE, height: PREVIEW_SIZE }}
-          className="bg-muted/40 border-foreground/15 items-center justify-center overflow-hidden rounded-full border-2"
-        >
+        <View className="bg-muted/40 border-foreground/15 size-36 items-center justify-center overflow-hidden rounded-full border-2">
           {previewSrc ? (
             <Image
               source={{ uri: previewSrc }}
-              style={{ width: PREVIEW_SIZE, height: PREVIEW_SIZE }}
+              className="size-36"
               resizeMode="cover"
             />
           ) : (
@@ -97,13 +94,14 @@ export default function AvatarStep() {
           )}
           {uploadAvatar.isPending ? (
             <View className="bg-background/60 absolute inset-0 items-center justify-center">
-              <ActivityIndicator />
+              <LoadingIndicator size={10} />
             </View>
           ) : null}
         </View>
 
-        <View className="w-full gap-3">
+        <View className="w-full flex-row gap-3">
           <Button
+            className="flex-1"
             variant="outline"
             onPress={() => handlePick(pickFromLibrary)}
             disabled={uploadAvatar.isPending}
@@ -111,9 +109,10 @@ export default function AvatarStep() {
               <Icon as={Gallery} className="text-foreground size-5" />
             }
           >
-            <Text>choose from library</Text>
+            <Text>library</Text>
           </Button>
           <Button
+            className="flex-1"
             variant="outline"
             onPress={() => handlePick(pickFromCamera)}
             disabled={uploadAvatar.isPending}
@@ -121,7 +120,7 @@ export default function AvatarStep() {
               <Icon as={Camera} className="text-foreground size-5" />
             }
           >
-            <Text>take a photo</Text>
+            <Text>camera</Text>
           </Button>
         </View>
       </View>

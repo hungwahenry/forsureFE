@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
+import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Text } from '@/components/ui/text';
 import { StepShell } from '@/features/onboarding/components/StepShell';
 import { useFinishOnboarding } from '@/features/onboarding/hooks/useFinishOnboarding';
@@ -15,7 +16,7 @@ import {
 import { toast } from '@/lib/toast';
 import { Location as LocationIcon, Setting2 } from 'iconsax-react-nativejs';
 import * as React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { View } from 'react-native';
 
 const TOTAL_STEPS = 6;
 
@@ -97,11 +98,11 @@ export default function LocationStep() {
             </Text>
           </View>
         ) : isFetching ? (
-          <ActivityIndicator />
+          <LoadingIndicator size={10} />
         ) : permission === 'denied' ? (
-          <View className="items-center gap-3">
+          <View className="w-full items-center gap-3">
             <Text className="text-muted-foreground text-center">
-              location was denied. open settings to enable it for forsure.
+              location was denied. enable it in settings, then come back.
             </Text>
             <Button
               variant="outline"
@@ -111,6 +112,13 @@ export default function LocationStep() {
               }
             >
               <Text>open settings</Text>
+            </Button>
+            <Button
+              variant="ghost"
+              onPress={enableLocation}
+              disabled={isFetching}
+            >
+              <Text>{isFetching ? 'checking...' : "i've enabled it"}</Text>
             </Button>
           </View>
         ) : (
