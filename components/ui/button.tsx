@@ -5,7 +5,7 @@ import { Platform, Pressable } from 'react-native';
 
 const buttonVariants = cva(
   cn(
-    'group shrink-0 flex-row items-center justify-center gap-2 rounded-md shadow-none',
+    'group shrink-0 flex-row items-center justify-center gap-2 rounded-full shadow-none',
     Platform.select({
       web: "focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive whitespace-nowrap outline-none transition-all focus-visible:ring-[3px] disabled:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
     })
@@ -40,10 +40,10 @@ const buttonVariants = cva(
         link: '',
       },
       size: {
-        default: cn('h-10 px-4 py-2 sm:h-9', Platform.select({ web: 'has-[>svg]:px-3' })),
-        sm: cn('h-9 gap-1.5 rounded-md px-3 sm:h-8', Platform.select({ web: 'has-[>svg]:px-2.5' })),
-        lg: cn('h-11 rounded-md px-6 sm:h-10', Platform.select({ web: 'has-[>svg]:px-4' })),
-        icon: 'h-10 w-10 sm:h-9 sm:w-9',
+        default: cn('h-10 px-5 py-2 sm:h-9', Platform.select({ web: 'has-[>svg]:px-4' })),
+        sm: cn('h-9 gap-1.5 rounded-full px-4 sm:h-8', Platform.select({ web: 'has-[>svg]:px-3' })),
+        lg: cn('h-11 rounded-full px-7 sm:h-10', Platform.select({ web: 'has-[>svg]:px-5' })),
+        icon: 'h-10 w-10 rounded-full sm:h-9 sm:w-9',
       },
     },
     defaultVariants: {
@@ -88,16 +88,45 @@ const buttonTextVariants = cva(
   }
 );
 
-type ButtonProps = React.ComponentProps<typeof Pressable> & VariantProps<typeof buttonVariants>;
+type ButtonProps = React.ComponentProps<typeof Pressable> &
+  VariantProps<typeof buttonVariants> & {
+    /** Rendered before children. */
+    leftIcon?: React.ReactNode;
+    /** Rendered after children. */
+    rightIcon?: React.ReactNode;
+  };
 
-function Button({ className, variant, size, ...props }: ButtonProps) {
+function Button({
+  className,
+  variant,
+  size,
+  leftIcon,
+  rightIcon,
+  children,
+  ...props
+}: ButtonProps) {
+  // Pressable's children may be a render-prop. In that case we pass through
+  // unchanged — adornment props are ignored. With static children we wrap.
+  const wrapped =
+    typeof children === 'function' ? (
+      children
+    ) : (
+      <>
+        {leftIcon}
+        {children}
+        {rightIcon}
+      </>
+    );
+
   return (
     <TextClassContext.Provider value={buttonTextVariants({ variant, size })}>
       <Pressable
         className={cn(props.disabled && 'opacity-50', buttonVariants({ variant, size }), className)}
         role="button"
         {...props}
-      />
+      >
+        {wrapped}
+      </Pressable>
     </TextClassContext.Provider>
   );
 }

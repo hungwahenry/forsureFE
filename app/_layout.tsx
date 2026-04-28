@@ -1,4 +1,6 @@
 import '@/global.css';
+// Must be first — react-native-gesture-handler patches global state.
+import 'react-native-gesture-handler';
 
 // Importing the auth store registers the API client's auth handlers as a
 // side-effect — must happen before any HTTP request is made.
@@ -13,6 +15,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useColorScheme } from 'nativewind';
 import { useEffect } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Toaster } from 'sonner-native';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -41,12 +45,20 @@ export default function RootLayout() {
   if (status === 'bootstrapping') return null;
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
-        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-        <Stack />
-        <PortalHost />
-      </ThemeProvider>
-    </QueryClientProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
+          <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+          <Stack />
+          <Toaster
+            theme={colorScheme ?? 'light'}
+            richColors
+            closeButton
+            position="top-center"
+          />
+          <PortalHost />
+        </ThemeProvider>
+      </QueryClientProvider>
+    </GestureHandlerRootView>
   );
 }

@@ -1,57 +1,71 @@
 import { TextClassContext } from '@/components/ui/text';
 import { cn } from '@/lib/utils';
-import type { LucideIcon, LucideProps } from 'lucide-react-native';
+import type {
+  Icon as IconsaxIcon,
+  IconProps as IconsaxIconProps,
+} from 'iconsax-react-nativejs';
 import { cssInterop } from 'nativewind';
 import * as React from 'react';
 
-type IconProps = LucideProps & {
-  as: LucideIcon;
+type IconProps = IconsaxIconProps & {
+  /** The Iconsax icon component to render, e.g. `as={Heart}`. */
+  as: IconsaxIcon;
 };
 
-function IconImpl({ as: IconComponent, ...props }: IconProps) {
-  return <IconComponent {...props} />;
+function IconImpl({ as: Component, ...props }: IconProps) {
+  return <Component {...props} />;
 }
 
+// Map className styles → component props.
+//   - `size-4`, `size-5` etc. set width/height in CSS, which we forward to
+//     iconsax's `size` prop (it draws square icons via that single number).
+//   - text colors (`text-primary`, `text-foreground`, ...) resolve to a
+//     `color` style which we forward to iconsax's `color` prop.
 cssInterop(IconImpl, {
   className: {
     target: 'style',
     nativeStyleToProp: {
       height: 'size',
       width: 'size',
+      color: 'color',
     },
   },
 });
 
 /**
- * A wrapper component for Lucide icons with Nativewind `className` support via `cssInterop`.
+ * Wrapper for Iconsax icons with NativeWind className support and inheritance
+ * of the surrounding text color (so icons inside Buttons/Texts pick up the
+ * right tone automatically).
  *
- * This component allows you to render any Lucide icon while applying utility classes
- * using `nativewind`. It avoids the need to wrap or configure each icon individually.
- *
- * @component
  * @example
- * ```tsx
- * import { ArrowRight } from 'lucide-react-native';
- * import { Icon } from '@/registry/components/ui/icon';
+ *   import { Heart } from 'iconsax-react-nativejs';
+ *   <Icon as={Heart} className="size-5 text-primary" />
  *
- * <Icon as={ArrowRight} className="text-red-500" size={16} />
- * ```
+ *   // Pick a different visual weight per call site:
+ *   <Icon as={Heart} variant="Bold" />
+ *   <Icon as={Heart} variant="TwoTone" />
  *
- * @param {LucideIcon} as - The Lucide icon component to render.
- * @param {string} className - Utility classes to style the icon using Nativewind.
- * @param {number} size - Icon size (defaults to 14).
- * @param {...LucideProps} ...props - Additional Lucide icon props passed to the "as" icon.
+ * Supported `variant` values: 'Linear' (default, outlined) | 'Outline' |
+ * 'Broken' | 'Bold' | 'Bulk' | 'TwoTone'.
  */
-function Icon({ as: IconComponent, className, size = 14, ...props }: IconProps) {
+function Icon({
+  as,
+  className,
+  size = 16,
+  variant = 'Linear',
+  ...props
+}: IconProps) {
   const textClass = React.useContext(TextClassContext);
   return (
     <IconImpl
-      as={IconComponent}
+      as={as}
       className={cn('text-foreground', textClass, className)}
       size={size}
+      variant={variant}
       {...props}
     />
   );
 }
 
 export { Icon };
+export type { IconProps };
