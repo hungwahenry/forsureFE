@@ -2,29 +2,25 @@ import { BottomSheet } from '@/components/ui/bottom-sheet';
 import { Button } from '@/components/ui/button';
 import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Text } from '@/components/ui/text';
-import { PlacePicker } from '@/features/places/components/PlacePicker';
 import { ApiError } from '@/lib/api/types';
-import { formatRelativeDateTime } from '@/lib/format';
 import { toast } from '@/lib/toast';
 import { type BottomSheetModal } from '@gorhom/bottom-sheet';
 import * as React from 'react';
 import { View } from 'react-native';
 import { useCreateActivityFlow } from '../hooks/useCreateActivityFlow';
 import { useDraftActivityStore } from '../stores/draftActivityStore';
-import type { ActivityGenderPreference } from '../types';
-import { CapacitySheet } from './CapacitySheet';
-import { DateTimeSheet } from './DateTimeSheet';
-import { EmojiSheet } from './EmojiSheet';
-import { GenderSheet } from './GenderSheet';
-import { Slot } from './Slot';
-import { TitleSheet } from './TitleSheet';
+import { CapacityField } from './fields/CapacityField';
+import { DateTimeField } from './fields/DateTimeField';
+import { EmojiField } from './fields/EmojiField';
+import { GenderField } from './fields/GenderField';
+import { PlaceField } from './fields/PlaceField';
+import { TitleField } from './fields/TitleField';
 
-const GENDER_LABEL: Record<ActivityGenderPreference, string> = {
-  ALL: 'people',
-  FEMALE: 'girls',
-  MALE: 'guys',
-};
-
+/**
+ * Mad-libs sentence as a flex-wrap row. Static text fragments are siblings
+ * of the input/picker fields; each field owns its own state and (where
+ * needed) sub-sheet. The sheet itself just holds the layout + submit.
+ */
 export const CreateActivitySheet = React.forwardRef<BottomSheetModal>(
   function CreateActivitySheet(_props, ref) {
     const draft = useDraftActivityStore((s) => s.draft);
@@ -32,14 +28,6 @@ export const CreateActivitySheet = React.forwardRef<BottomSheetModal>(
     const reset = useDraftActivityStore((s) => s.reset);
 
     const { submit, isPending } = useCreateActivityFlow();
-
-    // Sub-sheet refs — each slot's tap target.
-    const emojiRef = React.useRef<BottomSheetModal>(null);
-    const titleRef = React.useRef<BottomSheetModal>(null);
-    const datetimeRef = React.useRef<BottomSheetModal>(null);
-    const placeRef = React.useRef<BottomSheetModal>(null);
-    const capacityRef = React.useRef<BottomSheetModal>(null);
-    const genderRef = React.useRef<BottomSheetModal>(null);
 
     const canSubmit =
       !!draft.emoji &&
@@ -62,106 +50,74 @@ export const CreateActivitySheet = React.forwardRef<BottomSheetModal>(
     };
 
     return (
-      <>
-        <BottomSheet
-          ref={ref}
-          snapPoints={['62%']}
-          enableDynamicSizing={false}
-          onDismiss={reset}
-        >
-          <View className="flex-1 px-6 pt-2">
-            <Text className="text-foreground mb-2 text-base font-semibold">
-              new activity
-            </Text>
+      <BottomSheet
+        ref={ref}
+        snapPoints={['62%']}
+        enableDynamicSizing={false}
+        onDismiss={reset}
+      >
+        <View className="flex-1 px-6 pt-2">
+          <Text className="text-foreground mb-4 text-base font-semibold">
+            new activity
+          </Text>
 
-            <Text className="text-foreground text-3xl font-medium leading-relaxed">
-              you want to{' '}
-              <Slot
-                value={draft.emoji}
-                placeholder="🙂"
-                onPress={() => emojiRef.current?.present()}
-              />{' '}
-              <Slot
-                value={draft.title || null}
-                placeholder="activity"
-                onPress={() => titleRef.current?.present()}
-              />
-              {'\n'}on{' '}
-              <Slot
-                value={
-                  draft.startsAt
-                    ? formatRelativeDateTime(draft.startsAt)
-                    : null
-                }
-                placeholder="when"
-                onPress={() => datetimeRef.current?.present()}
-              />
-              {'\n'}at{' '}
-              <Slot
-                value={draft.place?.name}
-                placeholder="where"
-                onPress={() => placeRef.current?.present()}
-              />
-              {'\n'}with{' '}
-              <Slot
-                value={String(draft.capacity)}
-                placeholder="?"
-                onPress={() => capacityRef.current?.present()}
-              />{' '}
-              <Slot
-                value={GENDER_LABEL[draft.genderPreference]}
-                placeholder="people"
-                onPress={() => genderRef.current?.present()}
-              />
-              .
-            </Text>
-
-            <View className="flex-1" />
-
-            <Button
-              onPress={onSubmit}
-              size="lg"
-              disabled={!canSubmit || isPending}
-              className="mb-2"
-            >
-              {isPending ? (
-                <LoadingIndicator color="white" />
-              ) : (
-                <Text>create</Text>
-              )}
-            </Button>
+          {/* The mad-libs sentence. Each child is rendered inline; flex-wrap
+              + items-baseline handles line breaks naturally. */}
+          <View className="flex-row flex-wrap items-baseline gap-x-2 gap-y-1">
+            <Word>i want to</Word>
+            <TitleField
+              value={draft.title}
+              onChange={(t) => setField('title', t)}
+            />
+            <EmojiField
+              value={draft.emoji}
+              onChange={(e) => setField('emoji', e)}
+            />
+            <Word>on</Word>
+            <DateTimeField
+              value={draft.startsAt}
+              onChange={(d) => setField('startsAt', d)}
+            />
+            <Word>at</Word>
+            <PlaceField
+              value={draft.place}
+              onChange={(p) => setField('place', p)}
+            />
+            <Word>with</Word>
+            <CapacityField
+              value={draft.capacity}
+              onChange={(c) => setField('capacity', c)}
+            />
+            <GenderField
+              value={draft.genderPreference}
+              onChange={(g) => setField('genderPreference', g)}
+            />
+            <Word>.</Word>
           </View>
-        </BottomSheet>
 
-        <EmojiSheet
-          ref={emojiRef}
-          onSelect={(e) => setField('emoji', e)}
-        />
-        <TitleSheet
-          ref={titleRef}
-          initialValue={draft.title}
-          onSubmit={(t) => setField('title', t)}
-        />
-        <DateTimeSheet
-          ref={datetimeRef}
-          initialValue={draft.startsAt}
-          onSubmit={(d) => setField('startsAt', d)}
-        />
-        <PlacePicker
-          ref={placeRef}
-          onSelect={(p) => setField('place', p)}
-        />
-        <CapacitySheet
-          ref={capacityRef}
-          initialValue={draft.capacity}
-          onSubmit={(c) => setField('capacity', c)}
-        />
-        <GenderSheet
-          ref={genderRef}
-          initialValue={draft.genderPreference}
-          onSubmit={(g) => setField('genderPreference', g)}
-        />
-      </>
+          <View className="flex-1" />
+
+          <Button
+            onPress={onSubmit}
+            size="lg"
+            disabled={!canSubmit || isPending}
+            className="mb-2"
+          >
+            {isPending ? (
+              <LoadingIndicator color="white" />
+            ) : (
+              <Text>create</Text>
+            )}
+          </Button>
+        </View>
+      </BottomSheet>
     );
   },
 );
+
+/** Static word in the mad-libs sentence — sized to match the fields. */
+function Word({ children }: { children: React.ReactNode }) {
+  return (
+    <Text className="text-foreground text-3xl font-medium">{children}</Text>
+  );
+}
