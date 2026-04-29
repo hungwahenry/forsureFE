@@ -4,7 +4,7 @@ import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Text } from '@/components/ui/text';
 import { useCheckUsername } from '@/features/onboarding/api/checkUsername';
 import { StepShell } from '@/features/onboarding/components/StepShell';
-import { useDebouncedValue } from '@/features/onboarding/hooks/useDebouncedValue';
+import { useDebouncedValue } from '@/lib/hooks/useDebouncedValue';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboardingStore';
 import {
   USERNAME_PATTERN,

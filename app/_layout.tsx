@@ -7,6 +7,7 @@ import 'react-native-gesture-handler';
 import { useAuthStore } from '@/features/auth/stores/authStore';
 import { queryClient } from '@/lib/api/queryClient';
 import { NAV_THEME } from '@/lib/theme';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { ThemeProvider } from '@react-navigation/native';
 import { PortalHost } from '@rn-primitives/portal';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -48,15 +49,17 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
-          <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-          <Stack screenOptions={{ headerShown: false }} />
-          <Toaster
-            theme={colorScheme ?? 'light'}
-            richColors
-            closeButton
-            position="top-center"
-          />
-          <PortalHost />
+          <BottomSheetModalProvider>
+            <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+            <Stack screenOptions={{ headerShown: false }} />
+            <Toaster
+              theme={colorScheme ?? 'light'}
+              richColors
+              closeButton
+              position="top-center"
+            />
+            <PortalHost />
+          </BottomSheetModalProvider>
         </ThemeProvider>
       </QueryClientProvider>
     </GestureHandlerRootView>
