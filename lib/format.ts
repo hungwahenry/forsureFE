@@ -23,15 +23,16 @@ const MONTHS = [
   'dec',
 ];
 
-// today / tomorrow / weekday (within 6 days) / "month day" + " at <time>".
-export function formatRelativeDateTime(d: Date): string {
+function diffDaysFromToday(d: Date): number {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const target = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-  const diffDays = Math.round(
-    (target.getTime() - today.getTime()) / 86_400_000,
-  );
+  return Math.round((target.getTime() - today.getTime()) / 86_400_000);
+}
 
+// today / tomorrow / weekday (within 6 days) / "month day" + " at <time>".
+export function formatRelativeDateTime(d: Date): string {
+  const diffDays = diffDaysFromToday(d);
   let dayPart: string;
   if (diffDays === 0) dayPart = 'today';
   else if (diffDays === 1) dayPart = 'tomorrow';
@@ -39,6 +40,12 @@ export function formatRelativeDateTime(d: Date): string {
   else dayPart = `${MONTHS[d.getMonth()]} ${d.getDate()}`;
 
   return `${dayPart} at ${formatTime(d)}`;
+}
+
+//"on friday at 8am" reads naturally; "on today at 7pm" doesn't. Use this to format it correctly.
+export function relativeDateUsesOnConnector(d: Date): boolean {
+  const diff = diffDaysFromToday(d);
+  return diff !== 0 && diff !== 1;
 }
 
 function formatTime(d: Date): string {

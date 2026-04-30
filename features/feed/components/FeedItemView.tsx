@@ -1,7 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { GENDER_LABEL } from '@/features/activities/labels';
-import { formatRelativeDateTime } from '@/lib/format';
+import {
+  formatRelativeDateTime,
+  relativeDateUsesOnConnector,
+} from '@/lib/format';
 import { THEME } from '@/lib/theme';
 import { cn } from '@/lib/utils';
 import { useColorScheme } from 'nativewind';
@@ -48,7 +51,9 @@ export function FeedItemView({
         <SentenceText>wants to</SentenceText>
         <SentenceText>{item.emoji}</SentenceText>
         <SentenceText className="font-bold">{item.title}</SentenceText>
-        <SentenceText>on</SentenceText>
+        {relativeDateUsesOnConnector(date) ? (
+          <SentenceText>on</SentenceText>
+        ) : null}
         <SentenceText className="text-primary">
           {formatRelativeDateTime(date)}
         </SentenceText>

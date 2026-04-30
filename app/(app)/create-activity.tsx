@@ -17,6 +17,7 @@ import { InlineDateTimePicker } from '@/features/activities/create/components/In
 import { useCreateActivityFlow } from '@/features/activities/create/hooks/useCreateActivityFlow';
 import { useDraftActivityStore } from '@/features/activities/create/stores/draftActivityStore';
 import { ApiError } from '@/lib/api/types';
+import { relativeDateUsesOnConnector } from '@/lib/format';
 import { toast } from '@/lib/toast';
 import { useRouter } from 'expo-router';
 import { CloseCircle } from 'iconsax-react-nativejs';
@@ -84,7 +85,10 @@ export default function CreateActivityScreen() {
               value={draft.emoji}
               onPress={() => setEmojiOpen(true)}
             />
-            <Word>on</Word>
+            {draft.startsAt === null ||
+            relativeDateUsesOnConnector(draft.startsAt) ? (
+              <Word>on</Word>
+            ) : null}
             <DateTimeField
               value={draft.startsAt}
               onPress={() => setDatePickerOpen((v) => !v)}
