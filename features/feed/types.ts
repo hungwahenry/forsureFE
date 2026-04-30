@@ -20,9 +20,14 @@ export interface FeedItem {
   startsAt: string;
   place: FeedItemPlace;
   capacity: number;
+  genderPreference: 'ALL' | 'MALE' | 'FEMALE';
   spotsLeft: number;
   distanceKm: number;
   host: FeedHost;
+  /** Up to 3 most-recent participant avatars (excludes host). */
+  participantAvatarUrls: string[];
+  /** Total people going (host + participants). */
+  goingCount: number;
   isOwn: boolean;
 }
 

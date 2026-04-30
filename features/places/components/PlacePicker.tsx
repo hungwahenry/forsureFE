@@ -1,9 +1,6 @@
 import { ApiError } from '@/lib/api/types';
 import { useDebouncedValue } from '@/lib/hooks/useDebouncedValue';
-import {
-  checkLocationPermission,
-  getCurrentLocation,
-} from '@/lib/permissions/location';
+import { useDeviceLocation } from '@/lib/hooks/useDeviceLocation';
 import { toast } from '@/lib/toast';
 import * as React from 'react';
 import { View } from 'react-native';
@@ -28,31 +25,11 @@ export function PlacePicker({ onSelect }: PlacePickerProps) {
 
   const [query, setQuery] = React.useState('');
   const debounced = useDebouncedValue(query.trim(), 300);
-  const [proximity, setProximity] = React.useState<{
-    lat: number;
-    lng: number;
-  } | null>(null);
-
-  React.useEffect(() => {
-    let cancelled = false;
-    void (async () => {
-      const status = await checkLocationPermission();
-      if (status !== 'granted' || cancelled) return;
-      try {
-        const loc = await getCurrentLocation();
-        if (!cancelled) setProximity({ lat: loc.lat, lng: loc.lng });
-      } catch {
-        // Best-effort — picker still works without proximity.
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const { location } = useDeviceLocation({ autoFetchIfGranted: true });
 
   const suggestions = useSuggestPlaces({
     q: debounced,
-    proximity: proximity ?? undefined,
+    proximity: location ? { lat: location.lat, lng: location.lng } : undefined,
     sessionToken,
     enabled: debounced.length > 0,
   });

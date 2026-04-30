@@ -1,6 +1,8 @@
 import { Icon } from '@/components/ui/icon';
 import { Screen } from '@/components/ui/screen';
 import { Text } from '@/components/ui/text';
+import { FeedList } from '@/features/feed/components/FeedList';
+import { FeedLocationGate } from '@/features/feed/components/FeedLocationGate';
 import { haptics } from '@/lib/haptics';
 import { useRouter } from 'expo-router';
 import { Add } from 'iconsax-react-nativejs';
@@ -16,12 +18,13 @@ export default function FeedScreen() {
 
   return (
     <Screen edges={['top']} noKeyboardAvoidance>
-      <View className="flex-1 items-center justify-center gap-2 p-6">
+      <View className="px-6 pb-3 pt-2">
         <Text className="text-foreground text-3xl font-bold">feed</Text>
-        <Text className="text-muted-foreground">
-          (stub — activities live here next sprint)
-        </Text>
       </View>
+
+      <FeedLocationGate>
+        {(location) => <FeedList lat={location.lat} lng={location.lng} />}
+      </FeedLocationGate>
 
       <Pressable
         onPress={openCreate}

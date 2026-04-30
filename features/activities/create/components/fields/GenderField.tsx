@@ -3,6 +3,7 @@ import { THEME } from '@/lib/theme';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { Text } from 'react-native';
+import { GENDER_LABEL } from '../../../labels';
 import type { ActivityGenderPreference } from '../../../types';
 import { Pill, pillTextStyle } from './Pill';
 
@@ -12,11 +13,6 @@ interface GenderFieldProps {
 }
 
 const ORDER: ActivityGenderPreference[] = ['ALL', 'FEMALE', 'MALE'];
-const LABEL: Record<ActivityGenderPreference, string> = {
-  ALL: 'people',
-  FEMALE: 'girls',
-  MALE: 'guys',
-};
 
 // Always rendered as filled — the default `ALL` is a meaningful value.
 export function GenderField({ value, onChange }: GenderFieldProps) {
@@ -37,7 +33,7 @@ export function GenderField({ value, onChange }: GenderFieldProps) {
           { width: 110, textAlign: 'center' },
         ]}
       >
-        {LABEL[value]}
+        {GENDER_LABEL[value]}
       </Text>
     </Pill>
   );
