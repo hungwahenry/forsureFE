@@ -7,7 +7,7 @@ export default function AuthLayout() {
 
   // Already signed in — bounce to the right destination.
   if (status === 'authenticated') {
-    return <Redirect href={onboardingRequired ? '/onboarding' : '/home'} />;
+    return <Redirect href={onboardingRequired ? '/onboarding' : '/feed'} />;
   }
 
   return (

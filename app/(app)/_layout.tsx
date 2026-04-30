@@ -10,7 +10,7 @@ export default function AppLayout() {
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="home" />
+      <Stack.Screen name="(tabs)" />
       <Stack.Screen
         name="create-activity"
         options={{ presentation: 'fullScreenModal' }}

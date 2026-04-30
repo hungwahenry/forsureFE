@@ -6,7 +6,7 @@ export default function OnboardingLayout() {
   const onboardingRequired = useAuthStore((s) => s.onboardingRequired);
 
   if (status !== 'authenticated') return <Redirect href="/welcome" />;
-  if (!onboardingRequired) return <Redirect href="/home" />;
+  if (!onboardingRequired) return <Redirect href="/feed" />;
 
   return <Stack screenOptions={{ headerShown: false }} />;
 }

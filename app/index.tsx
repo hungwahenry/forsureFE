@@ -7,7 +7,7 @@ export default function Index() {
   const onboardingRequired = useAuthStore((s) => s.onboardingRequired);
 
   if (status === 'authenticated') {
-    return <Redirect href={onboardingRequired ? '/onboarding' : '/home'} />;
+    return <Redirect href={onboardingRequired ? '/onboarding' : '/feed'} />;
   }
   return <Redirect href="/welcome" />;
 }
