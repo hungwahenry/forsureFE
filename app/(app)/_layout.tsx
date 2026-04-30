@@ -19,6 +19,10 @@ export default function AppLayout() {
         name="place-picker"
         options={{ presentation: 'fullScreenModal' }}
       />
+      <Stack.Screen
+        name="place-view"
+        options={{ presentation: 'fullScreenModal' }}
+      />
     </Stack>
   );
 }

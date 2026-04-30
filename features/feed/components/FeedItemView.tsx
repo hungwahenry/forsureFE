@@ -7,6 +7,7 @@ import {
 } from '@/lib/format';
 import { THEME } from '@/lib/theme';
 import { cn } from '@/lib/utils';
+import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { Image, Pressable, View } from 'react-native';
@@ -29,7 +30,19 @@ export function FeedItemView({
   onJoinPress,
   onPress,
 }: FeedItemViewProps) {
+  const router = useRouter();
   const date = React.useMemo(() => new Date(item.startsAt), [item.startsAt]);
+
+  const openPlaceView = () => {
+    router.push({
+      pathname: '/place-view',
+      params: {
+        name: item.place.name,
+        lat: String(item.place.lat),
+        lng: String(item.place.lng),
+      },
+    });
+  };
   const goingAvatars = [
     item.host.avatarUrl,
     ...item.participantAvatarUrls.slice(0, 2),
@@ -58,7 +71,11 @@ export function FeedItemView({
           {formatRelativeDateTime(date)}
         </SentenceText>
         <SentenceText>at</SentenceText>
-        <SentenceText className="text-primary">{item.place.name}</SentenceText>
+        <Pressable onPress={openPlaceView} hitSlop={6}>
+          <SentenceText className="text-primary underline">
+            {item.place.name}
+          </SentenceText>
+        </Pressable>
         <SentenceText>with</SentenceText>
         <SentenceText className="text-primary">{item.capacity}</SentenceText>
         <SentenceText className="text-primary">
