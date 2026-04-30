@@ -1,13 +1,6 @@
 import { z } from 'zod';
 
-/**
- * Hand-mirrored from backend DTOs:
- *   - RequestCodeDto / VerifyCodeDto in /modules/auth/dto/
- *
- * Server is the source of truth — schema here is for fast UX feedback only.
- * Backend DTOs already trim/lowercase the email server-side.
- */
-
+// Client-side mirror of backend RequestCodeDto/VerifyCodeDto for fast UX feedback.
 export const emailSchema = z
   .email('please enter a valid email')
   .max(254, 'email is too long');

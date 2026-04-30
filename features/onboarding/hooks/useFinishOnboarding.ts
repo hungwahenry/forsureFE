@@ -7,16 +7,7 @@ import type {
   CompleteOnboardingResponse,
 } from '../types';
 
-/**
- * Submits the onboarding draft and finalises the auth session:
- *   - shapes the draft into the API payload (date → ISO)
- *   - swaps the stored access token for the new `onboarded:true` one;
- *     the refresh token stays unchanged
- *   - updates the auth store user (which flips `onboardingRequired` to false)
- *   - resets the onboarding draft
- *
- * Throws if the draft is incomplete or the API rejects.
- */
+// Swaps the access token for one with `onboarded:true`; refresh token stays unchanged.
 export function useFinishOnboarding() {
   const completeOnboarding = useCompleteOnboarding();
   const setUser = useAuthStore((s) => s.setUser);

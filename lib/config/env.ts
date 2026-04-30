@@ -1,11 +1,4 @@
-/**
- * Typed env reader for Expo's EXPO_PUBLIC_* variables.
- *
- * Anything prefixed EXPO_PUBLIC_* is inlined into the bundle at build time.
- * Validate at boot — easier to fix a missing env var than to debug a runtime
- * undefined.
- */
-
+// EXPO_PUBLIC_* vars are inlined at build time. Validate at boot to fail fast on missing config.
 interface Env {
   apiUrl: string;
 }

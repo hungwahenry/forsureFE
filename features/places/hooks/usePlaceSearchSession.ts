@@ -1,11 +1,6 @@
 import * as React from 'react';
 
-/**
- * Generates a UUIDv4-format session token. Math.random is not
- * cryptographically secure, but session tokens just need to be
- * unique per user-search interaction for billing correlation —
- * not secrets.
- */
+// Math.random is fine here — session tokens correlate billing, not secrets.
 function uuidv4(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
     const r = (Math.random() * 16) | 0;
@@ -14,14 +9,7 @@ function uuidv4(): string {
   });
 }
 
-/**
- * Manages the session-token lifecycle for a place picker. The same token is
- * sent with every suggest call + the final retrieve so the provider
- * (Mapbox / Google) bills the whole interaction as one session unit.
- *
- * Call `renewSession` after a successful retrieve (or when the picker
- * closes) so the next interaction starts a fresh session.
- */
+// One token spans every suggest + the final retrieve so the provider bills as a single session.
 export function usePlaceSearchSession() {
   const [sessionToken, setSessionToken] = React.useState(uuidv4);
 

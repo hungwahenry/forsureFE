@@ -10,7 +10,6 @@ export interface OtpInputRef {
 
 interface OtpInputProps {
   onChange?: (value: string) => void;
-  /** Fired when the user has filled all `length` digits. */
   onComplete: (value: string) => void;
   error?: boolean;
   disabled?: boolean;
@@ -22,11 +21,6 @@ interface OtpInputProps {
 const BOX_HEIGHT = 56;
 const BOX_WIDTH = 48;
 
-/**
- * Brand-themed wrapper around `react-native-otp-entry`. Uncontrolled
- * internally — parents observe via `onChange` / `onComplete` and clear
- * via the forwarded ref.
- */
 export function OtpInput({
   onChange,
   onComplete,
@@ -96,7 +90,6 @@ export function OtpInput({
   );
 }
 
-/** Apply alpha to an `hsl(...)` string used by our theme. */
 function withAlpha(hsl: string, alpha: number): string {
   const inner = hsl.match(/hsl\(([^)]+)\)/)?.[1];
   return inner ? `hsla(${inner} / ${alpha})` : hsl;

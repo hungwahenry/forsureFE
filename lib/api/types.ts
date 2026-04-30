@@ -1,10 +1,4 @@
-/**
- * Mirrors the backend's response envelope and error codes.
- *
- * Kept in sync manually with /backend/src/common/constants/error-codes.ts.
- * When we add a shared package later, this duplication goes away.
- */
-
+// Mirrors backend response envelope + error codes (manual sync with backend/src/common/constants/error-codes.ts).
 export interface ApiSuccessEnvelope<T> {
   success: true;
   data: T;
@@ -40,10 +34,6 @@ export const ErrorCode = {
 
 export type ErrorCode = (typeof ErrorCode)[keyof typeof ErrorCode];
 
-/**
- * Thrown by the API client for every non-2xx response (and network failures).
- * Catch with `error instanceof ApiError` and read `.code` to branch.
- */
 export class ApiError extends Error {
   readonly code: ErrorCode | string;
   readonly httpStatus: number | null;

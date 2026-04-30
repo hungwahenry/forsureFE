@@ -17,9 +17,7 @@ interface RetryableConfig extends InternalAxiosRequestConfig {
 }
 
 export interface AuthHandlers {
-  /** Read the currently stored token pair (or null if signed out). */
   getTokens: () => Promise<StoredTokens | null>;
-  /** Persist a refreshed token pair. */
   onTokensRefreshed: (tokens: StoredTokens) => Promise<void>;
   /** Called when refresh fails — caller should clear tokens and route to welcome. */
   onAuthFailed: () => Promise<void> | void;
@@ -27,11 +25,7 @@ export interface AuthHandlers {
 
 let handlers: AuthHandlers | null = null;
 
-/**
- * The auth store calls this once at module load so the API client can read
- * tokens, persist refreshed pairs, and notify on auth failure. Keeps `lib/`
- * decoupled from `features/`.
- */
+// Inverted dependency: keeps `lib/` decoupled from `features/`. Auth store wires this on import.
 export function setAuthHandlers(h: AuthHandlers): void {
   handlers = h;
 }
@@ -42,7 +36,6 @@ export const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// ---------- Request: attach Bearer token ----------
 api.interceptors.request.use(async (config) => {
   const tokens = await handlers?.getTokens();
   if (tokens?.accessToken) {
@@ -51,7 +44,6 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
-// ---------- Response: unwrap envelope, refresh on AUTH_TOKEN_EXPIRED ----------
 api.interceptors.response.use(
   (response) => unwrapSuccess(response),
   async (error: AxiosError<ApiErrorEnvelope>) => {
@@ -85,7 +77,7 @@ api.interceptors.response.use(
   },
 );
 
-// ---------- Single-flight refresh ----------
+// Single-flight refresh: concurrent 401s share one in-flight request.
 let refreshInflight: Promise<StoredTokens> | null = null;
 
 async function refreshOnce(): Promise<StoredTokens> {
@@ -96,7 +88,7 @@ async function refreshOnce(): Promise<StoredTokens> {
       if (!tokens?.refreshToken) {
         throw new Error('No refresh token available');
       }
-      // Bare axios call — bypasses our interceptors so we don't recurse.
+      // Bare axios — bypasses interceptors to avoid recursion.
       const res = await axios.post<ApiSuccessEnvelope<StoredTokens>>(
         `${env.apiUrl}/v1/auth/refresh`,
         { refreshToken: tokens.refreshToken },
@@ -115,8 +107,6 @@ async function refreshOnce(): Promise<StoredTokens> {
   return refreshInflight;
 }
 
-// ---------- Helpers ----------
-
 function unwrapSuccess(response: AxiosResponse): AxiosResponse {
   const body = response.data;
   if (
@@ -132,7 +122,6 @@ function unwrapSuccess(response: AxiosResponse): AxiosResponse {
 }
 
 function toApiError(error: AxiosError<ApiErrorEnvelope>): ApiError {
-  // Server responded with our standard error envelope
   if (error.response?.data && typeof error.response.data === 'object') {
     const body = error.response.data as ApiErrorEnvelope;
     if (body.success === false && body.error) {
@@ -146,7 +135,7 @@ function toApiError(error: AxiosError<ApiErrorEnvelope>): ApiError {
     }
   }
 
-  // Server responded but not in our envelope (proxy error, server crash before filter)
+  // Non-envelope response (proxy error, server crash before filter ran).
   if (error.response) {
     return new ApiError({
       code: ErrorCode.UNKNOWN,
@@ -155,7 +144,6 @@ function toApiError(error: AxiosError<ApiErrorEnvelope>): ApiError {
     });
   }
 
-  // No response — network or timeout
   if (error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT') {
     return new ApiError({
       code: ErrorCode.TIMEOUT,

@@ -1,11 +1,7 @@
 import { DarkTheme, DefaultTheme, type Theme } from '@react-navigation/native';
 
-/**
- * Resolved theme values for @react-navigation/native (which can't read CSS
- * vars). KEEP IN SYNC with the values in `global.css` — same HSL, written as
- * `hsl(...)` strings. NativeWind/Tailwind components read from global.css;
- * navigation chrome (header, tab bar, status bar contrast) reads from here.
- */
+// Resolved values for @react-navigation/native (can't read CSS vars).
+// KEEP IN SYNC with global.css — same HSL, written as `hsl(...)` strings.
 export const THEME = {
   light: {
     background: 'hsl(0 0% 100%)',

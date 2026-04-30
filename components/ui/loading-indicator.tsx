@@ -13,13 +13,11 @@ import Animated, {
 } from 'react-native-reanimated';
 
 interface LoadingIndicatorProps {
-  /** Dot diameter in pixels. Default 8. */
+  /** Dot diameter in pixels. */
   size?: number;
-  /** Dot color. Defaults to the brand `primary`. */
+  /** Defaults to brand primary. */
   color?: string;
-  /** Number of dots. Default 3. */
   count?: number;
-  /** Tailwind classes for the container row. */
   className?: string;
 }
 
@@ -69,15 +67,6 @@ function Dot({ delay, size, color }: DotProps) {
   );
 }
 
-/**
- * App-wide loading indicator. Three dots pulsing with a staggered scale —
- * lower-key than a spinning ring, plays nicely with our rounded UI vocabulary.
- *
- * @example
- *   <LoadingIndicator />
- *   <LoadingIndicator size={12} className="my-6" />
- *   <LoadingIndicator color="white" />   // override on dark surfaces
- */
 export function LoadingIndicator({
   size = 8,
   color,

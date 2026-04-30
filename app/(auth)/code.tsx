@@ -1,4 +1,5 @@
 import { Icon } from '@/components/ui/icon';
+import { Screen } from '@/components/ui/screen';
 import { Text } from '@/components/ui/text';
 import { useRequestCode } from '@/features/auth/api/requestCode';
 import {
@@ -13,13 +14,7 @@ import { cn } from '@/lib/utils';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ArrowLeft } from 'iconsax-react-nativejs';
 import * as React from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  View,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, View } from 'react-native';
 
 export default function CodeScreen() {
   const { email } = useLocalSearchParams<{ email: string }>();
@@ -40,8 +35,7 @@ export default function CodeScreen() {
     setHasError(false);
     try {
       await signInFromCode({ email, code: codeValue });
-      // Route guards redirect on the next render based on the new store
-      // state — onboarding-required → /onboarding, else → /home.
+      // Route guards handle redirect on next render.
     } catch (err) {
       setHasError(true);
       otpRef.current?.clear();
@@ -69,12 +63,8 @@ export default function CodeScreen() {
   };
 
   return (
-    <SafeAreaView className="bg-background flex-1" edges={['top', 'bottom']}>
-      <KeyboardAvoidingView
-        className="flex-1"
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-        <View className="flex-1 p-6">
+    <Screen>
+      <View className="flex-1 p-6">
           <Pressable onPress={() => router.back()} className="mb-8">
             <Icon as={ArrowLeft} className="text-foreground size-6" />
           </Pressable>
@@ -124,8 +114,7 @@ export default function CodeScreen() {
           <Pressable onPress={() => router.back()} className="self-center">
             <Text className="text-muted-foreground">wrong email?</Text>
           </Pressable>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </View>
+    </Screen>
   );
 }

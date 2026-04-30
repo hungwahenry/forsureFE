@@ -1,17 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
+import { Screen } from '@/components/ui/screen';
 import { Text } from '@/components/ui/text';
 import { cn } from '@/lib/utils';
 import { router } from 'expo-router';
 import { ArrowLeft, ArrowRight } from 'iconsax-react-nativejs';
 import * as React from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  View,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, View } from 'react-native';
 
 interface StepShellProps {
   /** 1-based current step index. */
@@ -47,12 +42,8 @@ export function StepShell({
   const handleBack = onBack ?? (() => router.back());
 
   return (
-    <SafeAreaView className="bg-background flex-1" edges={['top', 'bottom']}>
-      <KeyboardAvoidingView
-        className="flex-1"
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-        <View className="flex-1 p-6">
+    <Screen>
+      <View className="flex-1 p-6">
           {/* Header: back button + progress segments */}
           <View className="mb-8 flex-row items-center gap-4">
             {hideBack ? (
@@ -113,8 +104,7 @@ export function StepShell({
               <Text>{continueLoading ? '...' : continueLabel}</Text>
             </Button>
           ) : null}
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </View>
+    </Screen>
   );
 }

@@ -7,11 +7,7 @@ interface RetrieveArgs {
   sessionToken: string;
 }
 
-/**
- * Closes the place-search session. Use the SAME sessionToken that was sent
- * with the preceding suggest calls so the provider bills the whole
- * interaction as one billable session unit.
- */
+// `sessionToken` must match the one sent with preceding suggest calls (single billable session).
 export function useRetrievePlace() {
   return useMutation<PlaceDetails, unknown, RetrieveArgs>({
     mutationFn: async ({ id, sessionToken }) => {

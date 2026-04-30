@@ -18,18 +18,10 @@ interface AuthState {
   status: AuthStatus;
   user: AuthUser | null;
   onboardingRequired: boolean;
-
-  /**
-   * Cold-start hydration. Reads SecureStore, then *always* verifies with
-   * the server via GET /auth/me before reporting `authenticated`. Stale or
-   * revoked sessions are caught here.
-   */
+  /** Reads SecureStore + verifies via GET /auth/me — catches stale/revoked sessions. */
   bootstrap: () => Promise<void>;
-  /** Called by the auth feature after a successful verify-code. */
   signIn: (params: { user: AuthUser; tokens: StoredTokens }) => Promise<void>;
-  /** Called by the auth feature on logout, or by the API client on auth failure. */
   signOut: () => Promise<void>;
-  /** Update the cached user (e.g. after onboarding completes). */
   setUser: (user: AuthUser) => void;
 }
 
@@ -57,10 +49,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         onboardingRequired,
       });
     } catch {
-      // Auth failures: the interceptor's onAuthFailed already cleared tokens
-      // and flipped to unauthenticated. Network/server errors leave tokens in
-      // place so a future launch can recover. Either way, this launch is
-      // unauthenticated.
+      // Auth failure clears tokens via interceptor; network/server errors leave tokens for retry on next launch.
       set({
         status: 'unauthenticated',
         user: null,
@@ -91,9 +80,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ user, onboardingRequired: !user.onboardingCompletedAt }),
 }));
 
-// Wire the API client's auth handlers. This module must be imported once
-// during app boot (root layout pulls it in) so these handlers are registered
-// before any HTTP request is made.
+// Side-effect: registers auth handlers on import. Root layout pulls this in before any HTTP request fires.
 setAuthHandlers({
   getTokens,
   onTokensRefreshed: setTokens,

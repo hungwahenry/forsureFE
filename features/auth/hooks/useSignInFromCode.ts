@@ -7,11 +7,6 @@ interface SignInArgs {
   code: string;
 }
 
-/**
- * Verifies a one-time code and signs the user in. Encapsulates the
- * shape-shifting between the verify-code response and the auth store
- * so screens never touch the auth response directly.
- */
 export function useSignInFromCode() {
   const verifyCode = useVerifyCode();
   const signIn = useAuthStore((s) => s.signIn);

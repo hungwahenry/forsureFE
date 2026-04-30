@@ -1,22 +1,23 @@
 import { THEME } from '@/lib/theme';
-import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
+import { TextInput, View } from 'react-native';
 import {
   ACTIVITY_CAPACITY_MAX,
   ACTIVITY_CAPACITY_MIN,
 } from '../../validation/schemas';
+import {
+  PILL_VERTICAL_PADDING,
+  pillClassName,
+  SLOT_FONT_SIZE,
+  SLOT_LINE_HEIGHT,
+} from './Pill';
 
 interface CapacityFieldProps {
   value: number;
   onChange: (value: number) => void;
 }
 
-/**
- * Inline numeric input for capacity. Lives in the sentence flow as an
- * always-on TextInput. Clamps to [1, 25] on commit; while typing we just
- * mirror the raw string so users can clear and retype.
- */
 export function CapacityField({ value, onChange }: CapacityFieldProps) {
   const { colorScheme } = useColorScheme();
   const colors = THEME[colorScheme === 'dark' ? 'dark' : 'light'];
@@ -28,7 +29,6 @@ export function CapacityField({ value, onChange }: CapacityFieldProps) {
   }, [value]);
 
   const onChangeText = (next: string) => {
-    // Strip non-digits so the input never accepts garbage.
     setDraft(next.replace(/\D/g, '').slice(0, 2));
   };
 
@@ -47,24 +47,29 @@ export function CapacityField({ value, onChange }: CapacityFieldProps) {
   };
 
   return (
-    <BottomSheetTextInput
-      value={draft}
-      onChangeText={onChangeText}
-      onBlur={commit}
-      onSubmitEditing={commit}
-      keyboardType="number-pad"
-      maxLength={2}
-      returnKeyType="done"
-      selectTextOnFocus
-      style={{
-        color: colors.primary,
-        fontSize: 28,
-        fontWeight: '600',
-        lineHeight: 38,
-        padding: 0,
-        minWidth: 32,
-        textAlign: 'center',
-      }}
-    />
+    <View
+      className={pillClassName(true)}
+      style={{ paddingVertical: PILL_VERTICAL_PADDING }}
+    >
+      <TextInput
+        value={draft}
+        onChangeText={onChangeText}
+        onBlur={commit}
+        onSubmitEditing={commit}
+        keyboardType="number-pad"
+        maxLength={2}
+        returnKeyType="done"
+        selectTextOnFocus
+        style={{
+          color: colors.primary,
+          fontSize: SLOT_FONT_SIZE,
+          lineHeight: SLOT_LINE_HEIGHT,
+          fontWeight: '600',
+          padding: 0,
+          minWidth: 32,
+          textAlign: 'center',
+        }}
+      />
+    </View>
   );
 }

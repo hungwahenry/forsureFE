@@ -8,7 +8,7 @@ import { cssInterop } from 'nativewind';
 import * as React from 'react';
 
 type IconProps = IconsaxIconProps & {
-  /** The Iconsax icon component to render, e.g. `as={Heart}`. */
+  /** The iconsax icon component to render, e.g. `as={Heart}`. */
   as: IconsaxIcon;
 };
 
@@ -16,11 +16,7 @@ function IconImpl({ as: Component, ...props }: IconProps) {
   return <Component {...props} />;
 }
 
-// Map className styles → component props.
-//   - `size-4`, `size-5` etc. set width/height in CSS, which we forward to
-//     iconsax's `size` prop (it draws square icons via that single number).
-//   - text colors (`text-primary`, `text-foreground`, ...) resolve to a
-//     `color` style which we forward to iconsax's `color` prop.
+// Forward `size-*` and `text-*` classes to iconsax's `size` and `color` props.
 cssInterop(IconImpl, {
   className: {
     target: 'style',
@@ -32,22 +28,7 @@ cssInterop(IconImpl, {
   },
 });
 
-/**
- * Wrapper for Iconsax icons with NativeWind className support and inheritance
- * of the surrounding text color (so icons inside Buttons/Texts pick up the
- * right tone automatically).
- *
- * @example
- *   import { Heart } from 'iconsax-react-nativejs';
- *   <Icon as={Heart} className="size-5 text-primary" />
- *
- *   // Pick a different visual weight per call site:
- *   <Icon as={Heart} variant="Bold" />
- *   <Icon as={Heart} variant="TwoTone" />
- *
- * Supported `variant` values: 'Linear' (default, outlined) | 'Outline' |
- * 'Broken' | 'Bold' | 'Bulk' | 'TwoTone'.
- */
+// Inherits surrounding text color so icons inside Buttons/Texts pick up the right tone.
 function Icon({
   as,
   className,

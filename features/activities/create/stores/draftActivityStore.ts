@@ -1,6 +1,6 @@
 import type { PickedPlace } from '@/features/places/types';
 import { create } from 'zustand';
-import type { ActivityGenderPreference } from '../types';
+import type { ActivityGenderPreference } from '../../types';
 
 export interface ActivityDraft {
   emoji: string | null;
@@ -29,13 +29,18 @@ interface DraftActivityState {
   reset: () => void;
 }
 
-/**
- * Holds the in-progress activity while the user fills the mad-libs sheet.
- * Reset on close + on successful submit.
- */
 export const useDraftActivityStore = create<DraftActivityState>((set) => ({
   draft: initialDraft,
   setField: (key, value) =>
     set((s) => ({ draft: { ...s.draft, [key]: value } })),
   reset: () => set({ draft: initialDraft }),
 }));
+
+export function isDraftActivityComplete(draft: ActivityDraft): boolean {
+  return (
+    !!draft.emoji &&
+    !!draft.title.trim() &&
+    !!draft.startsAt &&
+    !!draft.place
+  );
+}

@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { Input } from '@/components/ui/input';
 import { LoadingIndicator } from '@/components/ui/loading-indicator';
+import { Screen } from '@/components/ui/screen';
 import { Text } from '@/components/ui/text';
 import { useRequestCode } from '@/features/auth/api/requestCode';
 import { emailSchema } from '@/features/auth/validation/schemas';
@@ -11,13 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { router } from 'expo-router';
 import { ArrowLeft, ArrowRight, Sms } from 'iconsax-react-nativejs';
 import { Controller, useForm } from 'react-hook-form';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  View,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, View } from 'react-native';
 import { z } from 'zod';
 
 const formSchema = z.object({ email: emailSchema });
@@ -49,12 +44,8 @@ export default function EmailScreen() {
   };
 
   return (
-    <SafeAreaView className="bg-background flex-1" edges={['top', 'bottom']}>
-      <KeyboardAvoidingView
-        className="flex-1"
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-        <View className="flex-1 p-6">
+    <Screen>
+      <View className="flex-1 p-6">
           <Pressable onPress={() => router.back()} className="mb-8">
             <Icon as={ArrowLeft} className="text-foreground size-6" />
           </Pressable>
@@ -121,8 +112,7 @@ export default function EmailScreen() {
               <Text>send code</Text>
             )}
           </Button>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </View>
+    </Screen>
   );
 }

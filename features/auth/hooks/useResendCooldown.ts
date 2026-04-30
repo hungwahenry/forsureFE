@@ -1,13 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-/**
- * Tracks a countdown after sending an OTP. Call `start()` once you've
- * dispatched a request-code mutation; the hook ticks down `secondsLeft`
- * to 0 and exposes a `canResend` flag.
- *
- * Server enforces a 60s cooldown too — this is purely UX so the resend
- * button is visibly disabled and shows the timer.
- */
+// Pure UX timer; server enforces its own 60s cooldown server-side.
 export function useResendCooldown(initialSeconds = 60) {
   const [secondsLeft, setSecondsLeft] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);

@@ -1,8 +1,10 @@
-import { Text } from '@/components/ui/text';
 import { haptics } from '@/lib/haptics';
+import { THEME } from '@/lib/theme';
+import { useColorScheme } from 'nativewind';
 import * as React from 'react';
-import { Pressable } from 'react-native';
-import type { ActivityGenderPreference } from '../../types';
+import { Text } from 'react-native';
+import type { ActivityGenderPreference } from '../../../types';
+import { Pill, pillTextStyle } from './Pill';
 
 interface GenderFieldProps {
   value: ActivityGenderPreference;
@@ -16,8 +18,11 @@ const LABEL: Record<ActivityGenderPreference, string> = {
   MALE: 'guys',
 };
 
-/** Inline cycler — tap to advance through people → girls → guys. */
+// Always rendered as filled — the default `ALL` is a meaningful value.
 export function GenderField({ value, onChange }: GenderFieldProps) {
+  const { colorScheme } = useColorScheme();
+  const colors = THEME[colorScheme === 'dark' ? 'dark' : 'light'];
+
   const cycle = () => {
     haptics.selection();
     const next = ORDER[(ORDER.indexOf(value) + 1) % ORDER.length];
@@ -25,10 +30,15 @@ export function GenderField({ value, onChange }: GenderFieldProps) {
   };
 
   return (
-    <Pressable onPress={cycle} hitSlop={8}>
-      <Text className="text-primary text-3xl font-semibold">
+    <Pill filled onPress={cycle}>
+      <Text
+        style={[
+          pillTextStyle(true, colors),
+          { width: 110, textAlign: 'center' },
+        ]}
+      >
         {LABEL[value]}
       </Text>
-    </Pressable>
+    </Pill>
   );
 }

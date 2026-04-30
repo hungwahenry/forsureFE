@@ -1,10 +1,6 @@
 import { z } from 'zod';
 
-/**
- * Mirrored from backend CreateActivityDto. Server is the source of truth —
- * these schemas just give the form fast UX feedback.
- */
-
+// Client-side mirror of the backend CreateActivityDto for fast form feedback.
 export const ACTIVITY_TITLE_MAX = 100;
 export const ACTIVITY_CAPACITY_MIN = 1;
 export const ACTIVITY_CAPACITY_MAX = 25;

@@ -1,28 +1,26 @@
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
+import { Screen } from '@/components/ui/screen';
 import { Text } from '@/components/ui/text';
-import { CreateActivitySheet } from '@/features/activities/components/CreateActivitySheet';
 import { useSignOut } from '@/features/auth/hooks/useSignOut';
 import { useAuthStore } from '@/features/auth/stores/authStore';
 import { haptics } from '@/lib/haptics';
-import { type BottomSheetModal } from '@gorhom/bottom-sheet';
+import { useRouter } from 'expo-router';
 import { Add } from 'iconsax-react-nativejs';
-import * as React from 'react';
 import { Pressable, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
+  const router = useRouter();
   const user = useAuthStore((s) => s.user);
   const { signOut, isPending } = useSignOut();
-  const createSheetRef = React.useRef<BottomSheetModal>(null);
 
   const openCreate = () => {
     haptics.press();
-    createSheetRef.current?.present();
+    router.push('/create-activity');
   };
 
   return (
-    <SafeAreaView className="bg-background flex-1" edges={['top', 'bottom']}>
+    <Screen noKeyboardAvoidance>
       <View className="flex-1 items-center justify-center gap-6 p-6">
         <Text className="text-foreground text-3xl font-bold">home</Text>
         <Text className="text-muted-foreground">
@@ -38,7 +36,6 @@ export default function HomeScreen() {
         </Button>
       </View>
 
-      {/* Floating + button, opens the mad-libs create sheet */}
       <Pressable
         onPress={openCreate}
         className="bg-primary absolute bottom-8 right-6 size-16 items-center justify-center rounded-full shadow-lg shadow-black/20"
@@ -47,8 +44,6 @@ export default function HomeScreen() {
       >
         <Icon as={Add} className="text-primary-foreground size-8" />
       </Pressable>
-
-      <CreateActivitySheet ref={createSheetRef} />
-    </SafeAreaView>
+    </Screen>
   );
 }

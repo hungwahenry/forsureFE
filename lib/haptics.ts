@@ -1,19 +1,8 @@
 import * as Haptics from 'expo-haptics';
 
-/**
- * Thin wrapper over expo-haptics so callers don't have to remember the
- * impact-style/notification-type enum names. All methods are fire-and-forget
- * (Promises are swallowed) — haptics are advisory and never block UI.
- *
- * Convention:
- *   tap()       — minor tap, secondary buttons, toggles
- *   press()     — primary action button
- *   thump()     — significant action (post created, joined activity)
- *   selection() — picker/segmented-control change
- *   success()   — operation succeeded (verify-code accepted, profile saved)
- *   warning()   — soft warning (validation error, pre-confirmation)
- *   error()     — operation failed
- */
+// Fire-and-forget — haptics are advisory.
+// tap: minor / press: primary action / thump: significant / selection: picker change /
+// success/warning/error: operation outcome.
 export const haptics = {
   tap: () => {
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);

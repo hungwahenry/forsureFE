@@ -1,6 +1,6 @@
 import { api } from '@/lib/api/client';
 import { useMutation } from '@tanstack/react-query';
-import type { Activity, CreateActivityPayload } from '../types';
+import type { Activity, CreateActivityPayload } from '../../types';
 
 export function useCreateActivity() {
   return useMutation<Activity, unknown, CreateActivityPayload>({

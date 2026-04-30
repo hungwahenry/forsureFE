@@ -8,11 +8,7 @@ interface SuggestArgs {
   sessionToken: string;
 }
 
-/**
- * Backend forwards to whichever provider is active (Mapbox / Google) and
- * normalizes the response. Caller is responsible for debouncing the query
- * upstream — this hook just runs whenever args change.
- */
+// Caller debounces — this fires on every arg change.
 export function useSuggestPlaces({
   q,
   proximity,

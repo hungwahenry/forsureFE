@@ -1,7 +1,4 @@
-/**
- * Cross-cutting formatters. Lowercase output to match the brand voice.
- */
-
+// Lowercase to match brand voice.
 const WEEKDAYS = [
   'sunday',
   'monday',
@@ -26,15 +23,7 @@ const MONTHS = [
   'dec',
 ];
 
-/**
- * Renders dates relative to "now":
- *   today              if same calendar day
- *   tomorrow           if calendar day + 1
- *   <weekday>          if within the next 6 days
- *   <month> <day>      otherwise
- *
- * Time is appended as `at 7pm` / `at 7:30pm` (no leading zero, lowercase).
- */
+// today / tomorrow / weekday (within 6 days) / "month day" + " at <time>".
 export function formatRelativeDateTime(d: Date): string {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());

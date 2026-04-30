@@ -1,13 +1,11 @@
 import '@/global.css';
-// Must be first — react-native-gesture-handler patches global state.
+// Must be first — patches global state.
 import 'react-native-gesture-handler';
 
-// Importing the auth store registers the API client's auth handlers as a
-// side-effect — must happen before any HTTP request is made.
+// Side-effect import: registers API client auth handlers before any request.
 import { useAuthStore } from '@/features/auth/stores/authStore';
 import { queryClient } from '@/lib/api/queryClient';
 import { NAV_THEME } from '@/lib/theme';
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { ThemeProvider } from '@react-navigation/native';
 import { PortalHost } from '@rn-primitives/portal';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -17,12 +15,10 @@ import { StatusBar } from 'expo-status-bar';
 import { useColorScheme } from 'nativewind';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Toaster } from 'sonner-native';
 
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router';
+export { ErrorBoundary } from 'expo-router';
 
 void SplashScreen.preventAutoHideAsync();
 
@@ -41,15 +37,14 @@ export default function RootLayout() {
     }
   }, [status]);
 
-  // Hold render until bootstrap resolves so route guards can read a
-  // settled auth status from the store on first paint.
+  // Block first paint until bootstrap settles so route guards see resolved auth state.
   if (status === 'bootstrapping') return null;
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
-          <BottomSheetModalProvider>
+      <SafeAreaProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
             <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
             <Stack screenOptions={{ headerShown: false }} />
             <Toaster
@@ -59,9 +54,9 @@ export default function RootLayout() {
               position="top-center"
             />
             <PortalHost />
-          </BottomSheetModalProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 }

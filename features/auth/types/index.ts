@@ -1,8 +1,4 @@
-/**
- * Mirrors the backend's auth response shapes.
- * Source of truth: backend /modules/auth/auth.controller.ts and /auth.service.ts.
- */
-
+// Mirrors backend auth response shapes.
 export type UserStatus = 'ACTIVE' | 'SUSPENDED' | 'DELETED';
 
 export interface AuthUser {
