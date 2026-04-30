@@ -1,5 +1,15 @@
-import { QueryClient } from '@tanstack/react-query';
+import { focusManager, QueryClient } from '@tanstack/react-query';
+import { AppState, type AppStateStatus } from 'react-native';
 import { ApiError } from './types';
+
+// React Native equivalent of "window focus": app foreground/background. Without
+// this, refetchOnWindowFocus is a no-op on mobile. Run once at module load.
+focusManager.setEventListener((handleFocus) => {
+  const sub = AppState.addEventListener('change', (status: AppStateStatus) => {
+    handleFocus(status === 'active');
+  });
+  return () => sub.remove();
+});
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -13,8 +23,7 @@ export const queryClient = new QueryClient({
       },
       retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 8000),
       staleTime: 30_000,
-      // RN doesn't have window focus, but keep it explicit.
-      refetchOnWindowFocus: false,
+      refetchOnWindowFocus: true,
     },
     mutations: {
       retry: false,

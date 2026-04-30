@@ -2,11 +2,12 @@ import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/ui/empty-state';
 import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Text } from '@/components/ui/text';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { Calendar } from 'iconsax-react-nativejs';
 import * as React from 'react';
 import { FlatList, RefreshControl, View } from 'react-native';
 import { useFeed } from '../api/feed';
+import { useFeedJoinAction } from '../hooks/useFeedJoinAction';
 import type { FeedItem } from '../types';
 import { FeedItemView } from './FeedItemView';
 
@@ -18,10 +19,17 @@ interface FeedListProps {
 export function FeedList({ lat, lng }: FeedListProps) {
   const router = useRouter();
   const feed = useFeed({ lat, lng });
+  const join = useFeedJoinAction();
 
   const items: FeedItem[] = React.useMemo(
     () => feed.data?.pages.flatMap((p) => p.items) ?? [],
     [feed.data],
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      void feed.refetch();
+    }, [feed.refetch]),
   );
 
   const onEndReached = () => {
@@ -61,7 +69,7 @@ export function FeedList({ lat, lng }: FeedListProps) {
         <FeedItemView
           item={item}
           onPress={() => undefined}
-          onJoinPress={() => undefined}
+          onJoinPress={() => void join(item.id)}
         />
       )}
       onEndReached={onEndReached}
