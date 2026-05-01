@@ -36,6 +36,7 @@ export interface ActivityDetails {
   participantCount: number;
   genderPreference: ActivityGenderPreference;
   status: ActivityStatus;
+  memoriesShareablePublicly: boolean;
   host: ActivityParticipant;
   members: ActivityParticipant[];
   pinnedMessage: ChatMessage | null;
@@ -50,6 +51,7 @@ export interface EditActivityPayload {
   placeLng?: number;
   capacity?: number;
   genderPreference?: ActivityGenderPreference;
+  memoriesShareablePublicly?: boolean;
 }
 
 export interface CreateActivityPayload {
@@ -61,4 +63,5 @@ export interface CreateActivityPayload {
   placeLng: number;
   capacity: number;
   genderPreference: ActivityGenderPreference;
+  memoriesShareablePublicly?: boolean;
 }

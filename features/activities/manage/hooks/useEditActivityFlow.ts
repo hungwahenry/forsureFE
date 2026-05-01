@@ -26,6 +26,8 @@ function computeDelta(
   if (draft.capacity !== original.capacity) patch.capacity = draft.capacity;
   if (draft.genderPreference !== original.genderPreference)
     patch.genderPreference = draft.genderPreference;
+  if (draft.memoriesShareablePublicly !== original.memoriesShareablePublicly)
+    patch.memoriesShareablePublicly = draft.memoriesShareablePublicly;
 
   return patch;
 }

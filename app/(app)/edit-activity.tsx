@@ -66,6 +66,7 @@ export default function EditActivityScreen() {
       participantCount: 1,
       genderPreference: 'ALL',
       status: 'OPEN',
+      memoriesShareablePublicly: false,
       host: { userId: '', username: '', displayName: '', avatarUrl: '', joinedAt: '' },
       members: [],
       pinnedMessage: null,

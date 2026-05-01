@@ -8,6 +8,11 @@ export type PickerResult =
   | { status: 'unsupported'; mimeType: string }
   | { status: 'picked'; asset: PickedAsset };
 
+export type MultiPickerResult =
+  | { status: 'denied' }
+  | { status: 'cancelled' }
+  | { status: 'picked'; assets: PickedAsset[] };
+
 const SUPPORTED_IMAGE_MIMES = new Set([
   'image/jpeg',
   'image/png',
@@ -44,6 +49,21 @@ export async function pickFreeformFromLibrary(): Promise<PickerResult> {
   const result = await ImagePicker.launchImageLibraryAsync(FREEFORM_OPTIONS);
   if (result.canceled) return { status: 'cancelled' };
   return classify(result.assets[0]);
+}
+
+export async function pickMultipleFromLibrary(
+  selectionLimit: number,
+): Promise<MultiPickerResult> {
+  const result = await ImagePicker.launchImageLibraryAsync({
+    ...FREEFORM_OPTIONS,
+    allowsMultipleSelection: true,
+    selectionLimit,
+  });
+  if (result.canceled) return { status: 'cancelled' };
+  const supported = result.assets.filter(
+    (a) => !a.mimeType || SUPPORTED_IMAGE_MIMES.has(a.mimeType),
+  );
+  return { status: 'picked', assets: supported };
 }
 
 export async function pickFromCamera(): Promise<PickerResult> {

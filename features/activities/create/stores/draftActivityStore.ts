@@ -9,6 +9,7 @@ export interface ActivityDraft {
   place: PickedPlace | null;
   capacity: number;
   genderPreference: ActivityGenderPreference;
+  memoriesShareablePublicly: boolean;
 }
 
 const initialDraft: ActivityDraft = {
@@ -18,6 +19,7 @@ const initialDraft: ActivityDraft = {
   place: null,
   capacity: 3,
   genderPreference: 'ALL',
+  memoriesShareablePublicly: false,
 };
 
 interface DraftActivityState {

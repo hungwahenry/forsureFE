@@ -10,6 +10,7 @@ export interface EditDraft {
   place: PickedPlace;
   capacity: number;
   genderPreference: ActivityGenderPreference;
+  memoriesShareablePublicly: boolean;
 }
 
 interface EditDraftState {
@@ -39,6 +40,7 @@ export const useEditDraftStore = create<EditDraftState>((set) => ({
         },
         capacity: details.capacity,
         genderPreference: details.genderPreference,
+        memoriesShareablePublicly: details.memoriesShareablePublicly,
       },
     }),
   setField: (key, value) =>

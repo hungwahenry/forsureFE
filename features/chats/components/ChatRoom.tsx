@@ -1,11 +1,13 @@
 import { EmptyState } from '@/components/ui/empty-state';
+import { Icon } from '@/components/ui/icon';
 import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Text } from '@/components/ui/text';
 import { useActivityDetails } from '@/features/activities/details/api/getDetails';
 import type { ActivityStatus } from '@/features/activities/types';
-import { Message } from 'iconsax-react-nativejs';
+import { useRouter } from 'expo-router';
+import { Camera, Message } from 'iconsax-react-nativejs';
 import { AnimatePresence, MotiView } from 'moti';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useChatRoomController } from '../hooks/useChatRoomController';
 import { MessageComposer } from './composer/MessageComposer';
 import { MessageList } from './messages/MessageList';
@@ -26,10 +28,12 @@ export function ChatRoom({
   hostUserId,
   status,
 }: ChatRoomProps) {
+  const router = useRouter();
   const c = useChatRoomController({ activityId, viewerUserId, hostUserId });
   const details = useActivityDetails(activityId);
   const pinnedMessage = details.data?.pinnedMessage ?? null;
   const isLocked = LOCKED_STATUSES.includes(status);
+  const isEnded = status === 'DONE';
 
   if (c.isPending) {
     return (
@@ -81,13 +85,27 @@ export function ChatRoom({
         />
       )}
       {isLocked ? (
-        <View className="border-border/40 bg-muted/30 border-t px-6 py-4">
-          <Text className="text-muted-foreground text-center text-sm">
-            {status === 'CANCELLED'
-              ? 'this activity was cancelled'
-              : 'this activity has ended'}
-          </Text>
-        </View>
+        isEnded ? (
+          <Pressable
+            onPress={() =>
+              router.push({ pathname: '/post', params: { activityId } })
+            }
+            className="border-border/40 bg-background active:bg-muted/40 border-t px-6 py-4"
+          >
+            <View className="flex-row items-center justify-center gap-2">
+              <Icon as={Camera} className="text-foreground size-4" />
+              <Text className="text-foreground text-sm font-medium">
+                share photos from this hangout
+              </Text>
+            </View>
+          </Pressable>
+        ) : (
+          <View className="border-border/40 bg-background border-t px-6 py-4">
+            <Text className="text-muted-foreground text-center text-sm">
+              this activity was cancelled
+            </Text>
+          </View>
+        )
       ) : (
         <MessageComposer
           replyTarget={c.replyTarget}

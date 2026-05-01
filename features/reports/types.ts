@@ -1,4 +1,4 @@
-export type ReportTargetType = 'USER' | 'ACTIVITY' | 'MESSAGE';
+export type ReportTargetType = 'USER' | 'ACTIVITY' | 'MESSAGE' | 'POST';
 
 export type ReportStatus = 'PENDING' | 'REVIEWED' | 'DISMISSED';
 

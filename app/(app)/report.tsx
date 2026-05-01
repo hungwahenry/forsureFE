@@ -19,6 +19,7 @@ const TARGET_LABEL: Record<ReportTargetType, string> = {
   USER: 'this person',
   ACTIVITY: 'this activity',
   MESSAGE: 'this message',
+  POST: 'this post',
 };
 
 const DETAILS_MAX = 1000;

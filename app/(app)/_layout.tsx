@@ -29,6 +29,10 @@ export default function AppLayout() {
         name="report"
         options={{ presentation: 'fullScreenModal' }}
       />
+      <Stack.Screen
+        name="post"
+        options={{ presentation: 'fullScreenModal' }}
+      />
       <Stack.Screen name="chat/[id]" />
     </Stack>
   );

@@ -18,6 +18,7 @@ import { HostActions } from '@/features/activities/details/components/HostAction
 import { LeaveButton } from '@/features/activities/details/components/LeaveButton';
 import { ParticipantsList } from '@/features/activities/details/components/ParticipantsList';
 import { ReportActivityButton } from '@/features/activities/details/components/ReportActivityButton';
+import { MemoriesSection } from '@/features/memories/components/MemoriesSection';
 import { useActivityAction } from '@/features/activities/manage/hooks/useActivityAction';
 import { useAuthStore } from '@/features/auth/stores/authStore';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -80,6 +81,13 @@ export default function ChatDetailsScreen() {
               disabled={leavePending}
             />
           )}
+          {data.status === 'DONE' ? (
+            <MemoriesSection
+              activityId={activityId}
+              viewerUserId={viewerUserId}
+              viewerIsHost={viewerIsHost}
+            />
+          ) : null}
           {!viewerIsHost ? (
             <ReportActivityButton activityId={activityId} />
           ) : null}
