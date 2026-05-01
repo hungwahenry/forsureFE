@@ -7,16 +7,13 @@ import { useMarkChatRead } from '../api/markRead';
 import { useSendMessage } from '../api/sendMessage';
 import type { PendingImage } from '../components/MessageComposer';
 import type { ChatMessage } from '../types';
-import { useChatRoom } from './useChatRoom';
 
 interface UseChatRoomControllerArgs {
   activityId: string;
-  onRemoved: () => void;
 }
 
 export function useChatRoomController({
   activityId,
-  onRemoved,
 }: UseChatRoomControllerArgs) {
   const messagesQuery = useListMessages(activityId);
   const sendMutation = useSendMessage();
@@ -25,8 +22,6 @@ export function useChatRoomController({
   const [replyTarget, setReplyTarget] = React.useState<ChatMessage | null>(
     null,
   );
-
-  useChatRoom({ activityId, onRemoved });
 
   const newestId = messagesQuery.data?.pages[0]?.items[0]?.id ?? null;
   React.useEffect(() => {

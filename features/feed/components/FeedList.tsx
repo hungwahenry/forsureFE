@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/ui/empty-state';
 import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Text } from '@/components/ui/text';
+import { usePullRefresh } from '@/lib/hooks/usePullRefresh';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { Calendar } from 'iconsax-react-nativejs';
 import * as React from 'react';
@@ -20,6 +21,7 @@ export function FeedList({ lat, lng }: FeedListProps) {
   const router = useRouter();
   const feed = useFeed({ lat, lng });
   const join = useFeedJoinAction();
+  const refresh = usePullRefresh(feed.refetch);
 
   const items: FeedItem[] = React.useMemo(
     () => feed.data?.pages.flatMap((p) => p.items) ?? [],
@@ -74,12 +76,7 @@ export function FeedList({ lat, lng }: FeedListProps) {
       )}
       onEndReached={onEndReached}
       onEndReachedThreshold={0.5}
-      refreshControl={
-        <RefreshControl
-          refreshing={feed.isRefetching && !feed.isFetchingNextPage}
-          onRefresh={() => void feed.refetch()}
-        />
-      }
+      refreshControl={<RefreshControl {...refresh} />}
       ListFooterComponent={
         feed.isFetchingNextPage ? (
           <View className="items-center py-6">

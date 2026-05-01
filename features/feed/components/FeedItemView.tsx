@@ -96,17 +96,9 @@ export function FeedItemView({
         >
           {item.goingCount} going · {formatDistance(item.distanceKm)}
         </Text>
-        {item.isOwn ? (
-          <View className="bg-muted/60 rounded-full px-3 py-1.5">
-            <Text className="text-muted-foreground text-xs font-semibold">
-              your activity
-            </Text>
-          </View>
-        ) : (
-          <Button onPress={onJoinPress} size="sm">
-            <Text>join</Text>
-          </Button>
-        )}
+        <Button onPress={onJoinPress} size="sm">
+          <Text>join</Text>
+        </Button>
       </View>
     </Pressable>
   );

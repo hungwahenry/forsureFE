@@ -1,27 +1,26 @@
 import { env } from '@/lib/config/env';
 import { io, type Socket } from 'socket.io-client';
 
-let chatsSocket: Socket | null = null;
+let appSocket: Socket | null = null;
 
 interface ConnectArgs {
   accessToken: string;
 }
 
 /**
- * Singleton Socket.IO client for /chats. Reused across screens — opening the
- * tab joins a room, leaving the tab leaves it, but the underlying connection
- * persists until logout.
+ * Singleton Socket.IO client for the whole app. Connects on sign-in (or app
+ * boot if already signed in), survives screen navigation, disconnects on
+ * sign-out. Features tap in by registering listeners; they don't manage the
+ * connection itself.
  */
-export function getChatsSocket({ accessToken }: ConnectArgs): Socket {
-  if (chatsSocket && chatsSocket.connected) {
-    return chatsSocket;
+export function getAppSocket({ accessToken }: ConnectArgs): Socket {
+  if (appSocket && appSocket.connected) return appSocket;
+  if (appSocket) {
+    appSocket.auth = { token: accessToken };
+    appSocket.connect();
+    return appSocket;
   }
-  if (chatsSocket) {
-    chatsSocket.auth = { token: accessToken };
-    chatsSocket.connect();
-    return chatsSocket;
-  }
-  chatsSocket = io(`${env.apiUrl}/chats`, {
+  appSocket = io(env.apiUrl, {
     auth: { token: accessToken },
     transports: ['websocket'],
     autoConnect: true,
@@ -29,20 +28,20 @@ export function getChatsSocket({ accessToken }: ConnectArgs): Socket {
     reconnectionDelay: 1_000,
     reconnectionDelayMax: 5_000,
   });
-  return chatsSocket;
+  return appSocket;
 }
 
-export function disconnectChatsSocket(): void {
-  if (chatsSocket) {
-    chatsSocket.removeAllListeners();
-    chatsSocket.disconnect();
-    chatsSocket = null;
+export function disconnectAppSocket(): void {
+  if (appSocket) {
+    appSocket.removeAllListeners();
+    appSocket.disconnect();
+    appSocket = null;
   }
 }
 
-export function refreshChatsSocketAuth(accessToken: string): void {
-  if (chatsSocket) {
-    chatsSocket.auth = { token: accessToken };
-    if (!chatsSocket.connected) chatsSocket.connect();
+export function refreshAppSocketAuth(accessToken: string): void {
+  if (appSocket) {
+    appSocket.auth = { token: accessToken };
+    if (!appSocket.connected) appSocket.connect();
   }
 }

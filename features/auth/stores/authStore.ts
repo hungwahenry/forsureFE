@@ -1,8 +1,5 @@
 import { setAuthHandlers } from '@/lib/api/client';
-import {
-  disconnectChatsSocket,
-  refreshChatsSocketAuth,
-} from '@/lib/api/socket';
+import { disconnectAppSocket, refreshAppSocketAuth } from '@/lib/api/socket';
 import {
   clearTokens,
   getTokens,
@@ -72,7 +69,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   signOut: async () => {
-    disconnectChatsSocket();
+    disconnectAppSocket();
     await clearTokens();
     set({
       status: 'unauthenticated',
@@ -90,7 +87,7 @@ setAuthHandlers({
   getTokens,
   onTokensRefreshed: async (tokens) => {
     await setTokens(tokens);
-    refreshChatsSocketAuth(tokens.accessToken);
+    refreshAppSocketAuth(tokens.accessToken);
   },
   onAuthFailed: () => useAuthStore.getState().signOut(),
 });

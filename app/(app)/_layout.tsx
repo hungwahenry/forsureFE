@@ -1,9 +1,11 @@
 import { useAuthStore } from '@/features/auth/stores/authStore';
+import { useAppRealtime } from '@/features/realtime/useAppRealtime';
 import { Redirect, Stack } from 'expo-router';
 
 export default function AppLayout() {
   const status = useAuthStore((s) => s.status);
   const onboardingRequired = useAuthStore((s) => s.onboardingRequired);
+  useAppRealtime();
 
   if (status !== 'authenticated') return <Redirect href="/welcome" />;
   if (onboardingRequired) return <Redirect href="/onboarding" />;

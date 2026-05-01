@@ -22,6 +22,14 @@ export default function ChatDetailScreen() {
     [chats.data, activityId],
   );
 
+  const everFound = React.useRef(false);
+  React.useEffect(() => {
+    if (preview) everFound.current = true;
+    if (!preview && everFound.current && chats.isFetched) {
+      router.back();
+    }
+  }, [preview, chats.isFetched, router]);
+
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="flex-row items-center justify-between px-6 py-4">
@@ -42,7 +50,6 @@ export default function ChatDetailScreen() {
           activityId={activityId}
           viewerUserId={viewerUserId}
           hostUserId={preview.hostUserId}
-          onRemoved={() => router.back()}
         />
       ) : (
         <View className="flex-1 items-center justify-center">

@@ -26,9 +26,8 @@ export interface FeedItem {
   host: FeedHost;
   /** Up to 3 most-recent participant avatars (excludes host). */
   participantAvatarUrls: string[];
-  /** Total people going (host + participants). */
+  /** Total people going (host + members). */
   goingCount: number;
-  isOwn: boolean;
 }
 
 export interface FeedPageInfo {

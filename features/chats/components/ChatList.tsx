@@ -1,5 +1,6 @@
 import { EmptyState } from '@/components/ui/empty-state';
 import { LoadingIndicator } from '@/components/ui/loading-indicator';
+import { usePullRefresh } from '@/lib/hooks/usePullRefresh';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { Message } from 'iconsax-react-nativejs';
 import * as React from 'react';
@@ -10,6 +11,7 @@ import { ChatListItem } from './ChatListItem';
 export function ChatList() {
   const router = useRouter();
   const chats = useListChats();
+  const refresh = usePullRefresh(chats.refetch);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -51,12 +53,7 @@ export function ChatList() {
           }
         />
       )}
-      refreshControl={
-        <RefreshControl
-          refreshing={chats.isRefetching}
-          onRefresh={() => void chats.refetch()}
-        />
-      }
+      refreshControl={<RefreshControl {...refresh} />}
     />
   );
 }

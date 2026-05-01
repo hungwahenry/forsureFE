@@ -10,16 +10,14 @@ interface ChatRoomProps {
   activityId: string;
   viewerUserId: string;
   hostUserId: string;
-  onRemoved: () => void;
 }
 
 export function ChatRoom({
   activityId,
   viewerUserId,
   hostUserId,
-  onRemoved,
 }: ChatRoomProps) {
-  const c = useChatRoomController({ activityId, onRemoved });
+  const c = useChatRoomController({ activityId });
 
   if (c.isPending) {
     return (

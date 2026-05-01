@@ -17,12 +17,14 @@ export function useSendMessage() {
       if (parentMessageId) formData.append('parentMessageId', parentMessageId);
       if (image) {
         const ext = image.mimeType.split('/')[1] || 'jpg';
-        formData.append('image', {
-          uri: image.uri,
-          type: image.mimeType,
-          name: `chat-image.${ext}`,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any);
+        formData.append(
+          'image',
+          {
+            uri: image.uri,
+            type: image.mimeType,
+            name: `chat-image.${ext}`,
+          } as unknown as Blob,
+        );
       }
       const res = await api.post<ChatMessage>(
         `/v1/chats/${activityId}/messages`,

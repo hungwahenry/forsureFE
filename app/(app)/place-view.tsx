@@ -9,15 +9,13 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { CloseCircle, RouteSquare } from 'iconsax-react-nativejs';
 import { Pressable, View } from 'react-native';
 
-interface PlaceViewParams {
-  name: string;
-  lat: string;
-  lng: string;
-}
-
 export default function PlaceViewScreen() {
   const router = useRouter();
-  const params = useLocalSearchParams<PlaceViewParams>();
+  const params = useLocalSearchParams<{
+    name: string;
+    lat: string;
+    lng: string;
+  }>();
   const { location } = useDeviceLocation({ autoFetchIfGranted: true });
 
   const lat = Number(params.lat);
