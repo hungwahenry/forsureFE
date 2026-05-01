@@ -1,4 +1,5 @@
 import { api } from '@/lib/api/client';
+import { activityDetailsQueryKey } from '@/features/activities/details/api/getDetails';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { Activity, EditActivityPayload } from '../../types';
 
@@ -17,7 +18,10 @@ export function useEditActivity() {
       );
       return res.data;
     },
-    onSuccess: () => {
+    onSuccess: (_data, { activityId }) => {
+      void queryClient.invalidateQueries({
+        queryKey: activityDetailsQueryKey(activityId),
+      });
       void queryClient.invalidateQueries({ queryKey: ['feed'] });
     },
   });

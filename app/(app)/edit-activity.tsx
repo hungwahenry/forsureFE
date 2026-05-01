@@ -3,6 +3,7 @@ import { Icon } from '@/components/ui/icon';
 import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Screen } from '@/components/ui/screen';
 import { Text } from '@/components/ui/text';
+import { useActivityDetails } from '@/features/activities/details/api/getDetails';
 import { CapacityField } from '@/features/activities/components/fields/CapacityField';
 import { DateTimeField } from '@/features/activities/components/fields/DateTimeField';
 import { EmojiField } from '@/features/activities/components/fields/EmojiField';
@@ -14,43 +15,84 @@ import {
 import { PlaceField } from '@/features/activities/components/fields/PlaceField';
 import { TitleField } from '@/features/activities/components/fields/TitleField';
 import { InlineDateTimePicker } from '@/features/activities/components/InlineDateTimePicker';
-import { useCreateActivityFlow } from '@/features/activities/create/hooks/useCreateActivityFlow';
-import { useDraftActivityStore } from '@/features/activities/create/stores/draftActivityStore';
+import { useEditActivityFlow } from '@/features/activities/manage/hooks/useEditActivityFlow';
+import { useEditDraftStore } from '@/features/activities/manage/stores/editDraftStore';
 import { ApiError } from '@/lib/api/types';
 import { relativeDateUsesOnConnector } from '@/lib/format';
 import { toast } from '@/lib/toast';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ArrowLeft } from 'iconsax-react-nativejs';
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
 import EmojiPicker from 'rn-emoji-keyboard';
 
-export default function CreateActivityScreen() {
+export default function EditActivityScreen() {
   const router = useRouter();
-  const draft = useDraftActivityStore((s) => s.draft);
-  const setField = useDraftActivityStore((s) => s.setField);
-  const reset = useDraftActivityStore((s) => s.reset);
+  const params = useLocalSearchParams<{ activityId: string }>();
+  const activityId = params.activityId;
+
+  const details = useActivityDetails(activityId, !!activityId);
+  const initialize = useEditDraftStore((s) => s.initialize);
+  const reset = useEditDraftStore((s) => s.reset);
+  const draft = useEditDraftStore((s) => s.draft);
+  const setField = useEditDraftStore((s) => s.setField);
+
+  // Initialize once when details load
+  const initialized = React.useRef(false);
+  React.useEffect(() => {
+    if (details.data && !initialized.current) {
+      initialize(details.data);
+      initialized.current = true;
+    }
+  }, [details.data, initialize]);
+
+  // Reset on unmount
+  React.useEffect(() => () => { reset(); initialized.current = false; }, [reset]);
 
   const [emojiOpen, setEmojiOpen] = React.useState(false);
   const [datePickerOpen, setDatePickerOpen] = React.useState(false);
 
-  const { submit, canSubmit, isPending } = useCreateActivityFlow();
+  const data = details.data ?? null;
+  const genderLocked = data != null && data.participantCount > 1;
 
-  React.useEffect(() => () => reset(), [reset]);
+  const { submit, canSubmit, isPending } = useEditActivityFlow(
+    data ?? {
+      id: activityId,
+      emoji: '',
+      title: '',
+      startsAt: new Date().toISOString(),
+      place: { name: '', lat: 0, lng: 0 },
+      capacity: 3,
+      participantCount: 1,
+      genderPreference: 'ALL',
+      status: 'OPEN',
+      host: { userId: '', username: '', displayName: '', avatarUrl: '', joinedAt: '' },
+      members: [],
+      pinnedMessage: null,
+    },
+  );
 
   const onSubmit = async () => {
     try {
       await submit();
-      toast.success('activity posted.');
+      toast.success('activity updated.');
       router.back();
     } catch (err) {
       const message =
-        err instanceof ApiError
-          ? err.message
-          : "couldn't post that. try again.";
+        err instanceof ApiError ? err.message : "couldn't save that. try again.";
       toast.error(message);
     }
   };
+
+  if (!draft) {
+    return (
+      <Screen>
+        <View className="flex-1 items-center justify-center">
+          <LoadingIndicator size={10} />
+        </View>
+      </Screen>
+    );
+  }
 
   return (
     <>
@@ -60,7 +102,7 @@ export default function CreateActivityScreen() {
             <Icon as={ArrowLeft} className="text-muted-foreground size-7" />
           </Pressable>
           <Text className="text-foreground text-base font-semibold">
-            new activity
+            edit activity
           </Text>
           <View className="size-7" />
         </View>
@@ -96,7 +138,7 @@ export default function CreateActivityScreen() {
             <Word>at</Word>
             <PlaceField
               value={draft.place}
-              onPress={() => router.push('/place-picker')}
+              onPress={() => router.push('/place-picker?mode=edit')}
             />
             <Word>with</Word>
             <CapacityField
@@ -106,6 +148,7 @@ export default function CreateActivityScreen() {
             <GenderField
               value={draft.genderPreference}
               onChange={(g) => setField('genderPreference', g)}
+              disabled={genderLocked}
             />
           </View>
 
@@ -117,7 +160,7 @@ export default function CreateActivityScreen() {
             {isPending ? (
               <LoadingIndicator color="white" />
             ) : (
-              <Text>create</Text>
+              <Text>save changes</Text>
             )}
           </Button>
         </View>

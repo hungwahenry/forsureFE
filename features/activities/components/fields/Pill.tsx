@@ -7,6 +7,7 @@ import { Pressable } from 'react-native';
 interface PillProps {
   filled: boolean;
   onPress?: () => void;
+  disabled?: boolean;
   children: React.ReactNode;
 }
 
@@ -24,12 +25,13 @@ export function pillClassName(filled: boolean): string {
   );
 }
 
-export function Pill({ filled, onPress, children }: PillProps) {
+export function Pill({ filled, onPress, disabled, children }: PillProps) {
   return (
     <Pressable
       onPress={onPress}
       hitSlop={6}
-      className={pillClassName(filled)}
+      disabled={disabled}
+      className={cn(pillClassName(filled), disabled && 'opacity-40')}
       style={{ paddingVertical: PILL_VERTICAL_PADDING }}
     >
       {children}

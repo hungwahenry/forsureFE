@@ -3,7 +3,7 @@ import { GENDER_LABEL } from '../../labels';
 import {
   SLOT_FONT_SIZE,
   SLOT_LINE_HEIGHT,
-} from '../../create/components/fields/Pill';
+} from '../../components/fields/Pill';
 import { formatRelativeDateTime, relativeDateUsesOnConnector } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import { Image } from 'expo-image';

@@ -129,7 +129,7 @@ export default function ChatDetailsScreen() {
           {viewerIsHost ? (
             <HostActions
               status={data.status}
-              onEdit={() => toast.info('edit coming soon')}
+              onEdit={() => router.push(`/edit-activity?activityId=${activityId}` as never)}
               onCancel={() => setPending({ kind: 'cancel' })}
             />
           ) : (
