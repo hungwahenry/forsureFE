@@ -1,4 +1,11 @@
 import { Button } from '@/components/ui/button';
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from '@/components/ui/context-menu';
+import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
 import { GENDER_LABEL } from '@/features/activities/labels';
 import {
@@ -8,6 +15,7 @@ import {
 import { THEME } from '@/lib/theme';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'expo-router';
+import { Flag } from 'iconsax-react-nativejs';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { Image } from 'expo-image';
@@ -53,16 +61,24 @@ export function FeedItemView({
   ];
   const overflow = Math.max(0, item.goingCount - goingAvatars.length);
 
+  const onReport = () =>
+    router.push({
+      pathname: '/report',
+      params: { targetType: 'ACTIVITY', targetId: item.id },
+    });
+
   return (
     <MotiView
       from={{ opacity: 0, translateY: 8 }}
       animate={{ opacity: 1, translateY: 0 }}
       transition={{ type: 'timing', duration: 280, delay: Math.min(index, 6) * 40 }}
     >
-      <Pressable
-        onPress={onPress}
-        className="border-border/40 border-b px-6 py-5 active:bg-muted/30"
-      >
+      <ContextMenu>
+        <ContextMenuTrigger asChild>
+          <Pressable
+            onPress={onPress}
+            className="border-border/40 border-b px-6 py-5 active:bg-muted/30"
+          >
       <View
         className="flex-row flex-wrap items-center gap-x-2 gap-y-1"
       >
@@ -109,7 +125,15 @@ export function FeedItemView({
           <Text>join</Text>
         </Button>
       </View>
-    </Pressable>
+          </Pressable>
+        </ContextMenuTrigger>
+        <ContextMenuContent>
+          <ContextMenuItem onPress={onReport}>
+            <Icon as={Flag} className="size-4" />
+            <Text>report</Text>
+          </ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
     </MotiView>
   );
 }

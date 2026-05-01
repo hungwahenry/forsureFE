@@ -4,11 +4,20 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from '@/components/ui/context-menu';
+import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
 import { THEME } from '@/lib/theme';
 import { cn } from '@/lib/utils';
 import { useColorScheme } from 'nativewind';
 import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
+import {
+  ArrowLeft,
+  Bookmark,
+  Flag,
+  Refresh,
+  Trash,
+} from 'iconsax-react-nativejs';
 import { Dimensions, Pressable, View } from 'react-native';
 import type { ChatMessage } from '../../types';
 import { BubbleImage } from './BubbleImage';
@@ -46,6 +55,7 @@ export function MessageBubble({
   onCancel,
   onPin,
 }: MessageBubbleProps) {
+  const router = useRouter();
   const { colorScheme } = useColorScheme();
   const colors = THEME[colorScheme === 'dark' ? 'dark' : 'light'];
   const bubbleColor = isOwn ? colors.primary : colors.muted;
@@ -53,6 +63,11 @@ export function MessageBubble({
   const isFailed = message.failed === true;
   const hasImage = message.imageUrl != null;
   const hasBody = message.body != null && message.body.length > 0;
+  const onReport = () =>
+    router.push({
+      pathname: '/report',
+      params: { targetType: 'MESSAGE', targetId: message.id },
+    });
 
   return (
     <View className={cn('px-4 py-1', isOwn ? 'items-end' : 'items-start')}>
@@ -133,20 +148,30 @@ export function MessageBubble({
             {isFailed ? (
               <>
                 <ContextMenuItem onPress={onRetry}>
+                  <Icon as={Refresh} className="size-4" />
                   <Text>retry</Text>
                 </ContextMenuItem>
                 <ContextMenuItem variant="destructive" onPress={onCancel}>
+                  <Icon as={Trash} className="size-4" />
                   <Text>remove</Text>
                 </ContextMenuItem>
               </>
             ) : (
               <>
                 <ContextMenuItem onPress={onReply} disabled={isPending}>
+                  <Icon as={ArrowLeft} className="size-4" />
                   <Text>reply</Text>
                 </ContextMenuItem>
                 {canPin ? (
                   <ContextMenuItem onPress={onPin} disabled={isPending}>
+                    <Icon as={Bookmark} className="size-4" />
                     <Text>pin</Text>
+                  </ContextMenuItem>
+                ) : null}
+                {!isOwn ? (
+                  <ContextMenuItem onPress={onReport} disabled={isPending}>
+                    <Icon as={Flag} className="size-4" />
+                    <Text>report</Text>
                   </ContextMenuItem>
                 ) : null}
                 {canDelete ? (
@@ -155,6 +180,7 @@ export function MessageBubble({
                     onPress={onDelete}
                     disabled={isPending}
                   >
+                    <Icon as={Trash} className="size-4" />
                     <Text>delete</Text>
                   </ContextMenuItem>
                 ) : null}
