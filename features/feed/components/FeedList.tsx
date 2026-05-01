@@ -1,4 +1,14 @@
 import { Button } from '@/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { EmptyState } from '@/components/ui/empty-state';
 import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Text } from '@/components/ui/text';
@@ -20,7 +30,7 @@ interface FeedListProps {
 export function FeedList({ lat, lng }: FeedListProps) {
   const router = useRouter();
   const feed = useFeed({ lat, lng });
-  const join = useFeedJoinAction();
+  const { join, warning, confirm, cancel } = useFeedJoinAction();
   const refresh = usePullRefresh(feed.refetch);
 
   const items: FeedItem[] = React.useMemo(
@@ -64,14 +74,15 @@ export function FeedList({ lat, lng }: FeedListProps) {
   }
 
   return (
-    <FlatList
+    <View className="flex-1">
+      <FlatList
       data={items}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => (
         <FeedItemView
           item={item}
           onPress={() => undefined}
-          onJoinPress={() => void join(item.id)}
+          onJoinPress={() => void join(item)}
         />
       )}
       onEndReached={onEndReached}
@@ -85,5 +96,25 @@ export function FeedList({ lat, lng }: FeedListProps) {
         ) : null
       }
     />
+
+    <AlertDialog open={!!warning}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>heads up</AlertDialogTitle>
+          <AlertDialogDescription>
+            you're already going to "{warning?.conflictTitle}" around the same time. still want to join?
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel onPress={cancel}>
+            <Text>cancel</Text>
+          </AlertDialogCancel>
+          <AlertDialogAction onPress={confirm}>
+            <Text>join anyway</Text>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+    </View>
   );
 }
