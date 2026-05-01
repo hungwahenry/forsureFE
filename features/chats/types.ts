@@ -35,6 +35,7 @@ export interface ChatPreview {
   title: string;
   emoji: string;
   startsAt: string;
+  placeName: string;
   status: ActivityStatus;
   hostUserId: string;
   unreadCount: number;

@@ -1,4 +1,8 @@
 import { Text } from '@/components/ui/text';
+import {
+  formatRelativeDateTime,
+  relativeDateUsesOnConnector,
+} from '@/lib/format';
 import { cn } from '@/lib/utils';
 import { MotiView } from 'moti';
 import { Pressable, View } from 'react-native';
@@ -26,11 +30,16 @@ export function ChatListItem({ preview, index = 0, onPress }: ChatListItemProps)
         <Text className="text-2xl">{preview.emoji}</Text>
       </View>
       <View className="flex-1">
-        <Text
-          className="text-foreground text-base font-semibold"
-          numberOfLines={1}
-        >
-          {preview.title}
+        <Text className="text-foreground text-base" numberOfLines={1}>
+          <Text className="font-semibold">{preview.title}</Text>
+          <Text className="text-muted-foreground">
+            {' '}
+            {relativeDateUsesOnConnector(new Date(preview.startsAt))
+              ? 'on '
+              : ''}
+            {formatRelativeDateTime(new Date(preview.startsAt))} at{' '}
+            {preview.placeName}
+          </Text>
         </Text>
         <Text
           className={cn(
