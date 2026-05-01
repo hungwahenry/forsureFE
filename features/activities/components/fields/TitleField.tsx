@@ -41,7 +41,8 @@ export function TitleField({ value, onChange }: TitleFieldProps) {
           lineHeight: SLOT_LINE_HEIGHT,
           fontFamily: FONTS.semibold,
           padding: 0,
-          width: 130,
+          minWidth: 80,
+          maxWidth: 220,
         }}
       />
     </View>

@@ -20,7 +20,8 @@ export function ParticipantRow({
     <View className="flex-row items-center gap-3 px-6 py-3">
       <Image
         source={{ uri: participant.avatarUrl }}
-        className="bg-muted size-10 rounded-full"
+        className="bg-muted"
+        style={{ width: 40, height: 40, borderRadius: 20 }}
       />
       <View className="flex-1">
         <Text

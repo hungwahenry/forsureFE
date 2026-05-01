@@ -5,6 +5,7 @@ import { Text } from '@/components/ui/text';
 import { useAuthStore } from '@/features/auth/stores/authStore';
 import { useListChats } from '@/features/chats/api/listChats';
 import { ChatRoom } from '@/features/chats/components/ChatRoom';
+import { useAutoRedirectIfChatRemoved } from '@/features/chats/hooks/useAutoRedirectIfChatRemoved';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ArrowLeft } from 'iconsax-react-nativejs';
 import * as React from 'react';
@@ -22,13 +23,7 @@ export default function ChatDetailScreen() {
     [chats.data, activityId],
   );
 
-  const everFound = React.useRef(false);
-  React.useEffect(() => {
-    if (preview) everFound.current = true;
-    if (!preview && everFound.current && chats.isFetched) {
-      router.back();
-    }
-  }, [preview, chats.isFetched, router]);
+  useAutoRedirectIfChatRemoved(preview, chats.isFetched);
 
   const openDetails = () =>
     router.push(`/chat/${activityId}/details` as never);

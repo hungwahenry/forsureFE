@@ -1,9 +1,11 @@
 import { useAuthStore } from '@/features/auth/stores/authStore';
+import { useListChats } from '@/features/chats/api/listChats';
 import { THEME } from '@/lib/theme';
 import { Tabs } from 'expo-router';
 import { Home2, Message, Profile } from 'iconsax-react-nativejs';
 import { useColorScheme } from 'nativewind';
 import { Image } from 'expo-image';
+import { View } from 'react-native';
 
 const TAB_ICON_SIZE = 30;
 
@@ -11,6 +13,8 @@ export default function TabsLayout() {
   const { colorScheme } = useColorScheme();
   const colors = THEME[colorScheme === 'dark' ? 'dark' : 'light'];
   const avatarUrl = useAuthStore((s) => s.user?.avatarUrl);
+  const { data: chats } = useListChats();
+  const hasUnread = (chats ?? []).some((c) => c.unreadCount > 0);
 
   return (
     <Tabs
@@ -45,11 +49,26 @@ export default function TabsLayout() {
         name="chat"
         options={{
           tabBarIcon: ({ color, focused }) => (
-            <Message
-              color={color}
-              size={TAB_ICON_SIZE}
-              variant={focused ? 'Bold' : 'Linear'}
-            />
+            <View>
+              <Message
+                color={color}
+                size={TAB_ICON_SIZE}
+                variant={focused ? 'Bold' : 'Linear'}
+              />
+              {hasUnread ? (
+                <View
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    width: 12,
+                    height: 12,
+                    borderRadius: 6,
+                    backgroundColor: colors.primary,
+                  }}
+                />
+              ) : null}
+            </View>
           ),
         }}
       />

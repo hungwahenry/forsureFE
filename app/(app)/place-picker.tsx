@@ -1,8 +1,7 @@
 import { Icon } from '@/components/ui/icon';
 import { Screen } from '@/components/ui/screen';
 import { Text } from '@/components/ui/text';
-import { useDraftActivityStore } from '@/features/activities/create/stores/draftActivityStore';
-import { useEditDraftStore } from '@/features/activities/manage/stores/editDraftStore';
+import { usePlaceSelection } from '@/features/activities/hooks/usePlaceSelection';
 import { PlacePicker } from '@/features/places/components/PlacePicker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ArrowLeft } from 'iconsax-react-nativejs';
@@ -11,10 +10,7 @@ import { Pressable, View } from 'react-native';
 export default function PlacePickerScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ mode?: string }>();
-  const isEdit = params.mode === 'edit';
-
-  const setCreateField = useDraftActivityStore((s) => s.setField);
-  const setEditField = useEditDraftStore((s) => s.setField);
+  const { selectPlace } = usePlaceSelection(params.mode);
 
   return (
     <Screen>
@@ -29,16 +25,7 @@ export default function PlacePickerScreen() {
       </View>
 
       <View className="flex-1 px-4 pb-4">
-        <PlacePicker
-          onSelect={(p) => {
-            if (isEdit) {
-              setEditField('place', p);
-            } else {
-              setCreateField('place', p);
-            }
-            router.back();
-          }}
-        />
+        <PlacePicker onSelect={selectPlace} />
       </View>
     </Screen>
   );

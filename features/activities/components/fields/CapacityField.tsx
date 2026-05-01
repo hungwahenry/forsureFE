@@ -6,6 +6,8 @@ import { TextInput, View } from 'react-native';
 import {
   ACTIVITY_CAPACITY_MAX,
   ACTIVITY_CAPACITY_MIN,
+  clampCapacity,
+  sanitizeCapacityInput,
 } from '../../validation/schemas';
 import {
   PILL_VERTICAL_PADDING,
@@ -30,7 +32,7 @@ export function CapacityField({ value, onChange }: CapacityFieldProps) {
   }, [value]);
 
   const onChangeText = (next: string) => {
-    setDraft(next.replace(/\D/g, '').slice(0, 2));
+    setDraft(sanitizeCapacityInput(next));
   };
 
   const commit = () => {
@@ -39,10 +41,7 @@ export function CapacityField({ value, onChange }: CapacityFieldProps) {
       setDraft(String(value));
       return;
     }
-    const clamped = Math.max(
-      ACTIVITY_CAPACITY_MIN,
-      Math.min(ACTIVITY_CAPACITY_MAX, n),
-    );
+    const clamped = clampCapacity(n);
     onChange(clamped);
     setDraft(String(clamped));
   };

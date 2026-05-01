@@ -17,22 +17,12 @@ import { ActivityHeader } from '@/features/activities/details/components/Activit
 import { HostActions } from '@/features/activities/details/components/HostActions';
 import { LeaveButton } from '@/features/activities/details/components/LeaveButton';
 import { ParticipantsList } from '@/features/activities/details/components/ParticipantsList';
-import { useLeaveActivity } from '@/features/activities/join/api/joinActivity';
-import { useCancelActivity } from '@/features/activities/manage/api/cancelActivity';
-import { useKickMember } from '@/features/activities/manage/api/kickMember';
-import type { ActivityParticipant } from '@/features/activities/types';
+import { useActivityAction } from '@/features/activities/manage/hooks/useActivityAction';
 import { useAuthStore } from '@/features/auth/stores/authStore';
-import { ApiError } from '@/lib/api/types';
-import { toast } from '@/lib/toast';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ArrowLeft } from 'iconsax-react-nativejs';
 import * as React from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
-
-type PendingAction =
-  | { kind: 'cancel' }
-  | { kind: 'leave' }
-  | { kind: 'kick'; target: ActivityParticipant };
 
 export default function ChatDetailsScreen() {
   const router = useRouter();
@@ -40,61 +30,12 @@ export default function ChatDetailsScreen() {
   const activityId = params.id;
   const viewerUserId = useAuthStore((s) => s.user?.id ?? '');
   const details = useActivityDetails(activityId, !!viewerUserId);
-  const cancelMutation = useCancelActivity();
-  const kickMutation = useKickMember();
-  const leaveMutation = useLeaveActivity();
-  const [pending, setPending] = React.useState<PendingAction | null>(null);
+  const { pending, setPending, onConfirm, dialogText, leavePending } =
+    useActivityAction(activityId);
 
   const data = details.data ?? null;
-  const viewerIsHost =
-    !!data && data.host.userId === viewerUserId;
+  const viewerIsHost = !!data && data.host.userId === viewerUserId;
 
-  const onConfirm = async () => {
-    if (!pending) return;
-    const current = pending;
-    setPending(null);
-    try {
-      if (current.kind === 'cancel') {
-        await cancelMutation.mutateAsync(activityId);
-        toast.success('activity cancelled');
-      } else if (current.kind === 'leave') {
-        await leaveMutation.mutateAsync(activityId);
-        toast.success('left activity');
-        router.back();
-      } else {
-        await kickMutation.mutateAsync({
-          activityId,
-          userId: current.target.userId,
-        });
-        toast.success(`removed @${current.target.username}`);
-      }
-    } catch (err) {
-      const message =
-        err instanceof ApiError ? err.message : "couldn't complete that.";
-      toast.error(message);
-    }
-  };
-
-  const dialogText = (() => {
-    if (!pending) return null;
-    if (pending.kind === 'cancel')
-      return {
-        title: 'cancel this activity?',
-        body: 'everyone in the chat will be told. this can’t be undone.',
-        confirm: 'cancel activity',
-      };
-    if (pending.kind === 'leave')
-      return {
-        title: 'leave this activity?',
-        body: 'you’ll lose access to the chat.',
-        confirm: 'leave',
-      };
-    return {
-      title: `remove @${pending.target.username}?`,
-      body: 'they’ll be removed from the chat immediately.',
-      confirm: 'remove',
-    };
-  })();
 
   return (
     <Screen edges={['top', 'bottom']} noKeyboardAvoidance>
@@ -135,7 +76,7 @@ export default function ChatDetailsScreen() {
           ) : (
             <LeaveButton
               onLeave={() => setPending({ kind: 'leave' })}
-              disabled={leaveMutation.isPending}
+              disabled={leavePending}
             />
           )}
         </ScrollView>

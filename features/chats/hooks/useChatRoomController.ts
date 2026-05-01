@@ -9,7 +9,7 @@ import {
   useSendMessage,
   type SendMessageArgs,
 } from '../api/sendMessage';
-import type { PendingImage } from '../components/composer/MessageComposer';
+import type { PendingImage } from '../types';
 import type { ChatMessage, MessagesPage } from '../types';
 
 interface UseChatRoomControllerArgs {

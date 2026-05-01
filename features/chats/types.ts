@@ -2,6 +2,11 @@ import type { ActivityStatus } from '../activities/types';
 
 export type ChatMessageKind = 'TEXT' | 'SYSTEM';
 
+export interface PendingImage {
+  uri: string;
+  mimeType: string;
+}
+
 export interface ChatMessage {
   id: string;
   activityId: string;

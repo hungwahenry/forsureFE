@@ -37,3 +37,11 @@ export const capacitySchema = z
   .max(ACTIVITY_CAPACITY_MAX, `at most ${ACTIVITY_CAPACITY_MAX} people`);
 
 export const genderPreferenceSchema = z.enum(['ALL', 'MALE', 'FEMALE']);
+
+export function sanitizeCapacityInput(value: string): string {
+  return value.replace(/\D/g, '').slice(0, 2);
+}
+
+export function clampCapacity(value: number): number {
+  return Math.max(ACTIVITY_CAPACITY_MIN, Math.min(ACTIVITY_CAPACITY_MAX, value));
+}

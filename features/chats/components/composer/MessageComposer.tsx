@@ -1,25 +1,20 @@
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
-import { pickFreeformFromLibrary } from '@/lib/permissions/imagePicker';
-import { toast } from '@/lib/toast';
 import { cn } from '@/lib/utils';
-import { MESSAGE_IMAGE_MAX_BYTES, MESSAGE_MAX_LENGTH, messageBodySchema } from '../../validation/schemas';
+import { MESSAGE_MAX_LENGTH, messageBodySchema } from '../../validation/schemas';
 import { Camera, Send } from 'iconsax-react-nativejs';
 import * as React from 'react';
 import { Pressable, TextInput, View } from 'react-native';
-import type { ChatMessage } from '../../types';
+import type { ChatMessage, PendingImage } from '../../types';
+import { useMessageImagePicker } from '../../hooks/useMessageImagePicker';
 import { PendingImagePreview } from './PendingImagePreview';
 import { ReplyPreview } from './ReplyPreview';
+export type { PendingImage } from '../../types';
 
 const LINE_HEIGHT = 20; // leading-5
 const V_PADDING = 16;   // py-2 top + bottom
 const MIN_INPUT_HEIGHT = LINE_HEIGHT + V_PADDING;     // 1 line  = 36px
 const MAX_INPUT_HEIGHT = LINE_HEIGHT * 3 + V_PADDING; // 3 lines = 76px
-
-export interface PendingImage {
-  uri: string;
-  mimeType: string;
-}
 
 interface MessageComposerProps {
   replyTarget: ChatMessage | null;
@@ -35,31 +30,10 @@ export function MessageComposer({
   disabled,
 }: MessageComposerProps) {
   const [body, setBody] = React.useState('');
-  const [image, setImage] = React.useState<PendingImage | null>(null);
+  const { image, pick: handlePickImage, clearImage } = useMessageImagePicker();
 
   const bodyValid = image != null || messageBodySchema.safeParse(body).success;
   const canSend = !disabled && bodyValid;
-
-  const handlePickImage = async () => {
-    const result = await pickFreeformFromLibrary();
-    if (result.status === 'denied') {
-      toast.error('photo library access denied');
-      return;
-    }
-    if (result.status === 'unsupported') {
-      toast.error('unsupported image format. use jpeg, png, or webp.');
-      return;
-    }
-    if (result.status !== 'picked') return;
-    if (result.asset.fileSize != null && result.asset.fileSize > MESSAGE_IMAGE_MAX_BYTES) {
-      toast.error('image is too large. max 10 MB.');
-      return;
-    }
-    setImage({
-      uri: result.asset.uri,
-      mimeType: result.asset.mimeType ?? 'image/jpeg',
-    });
-  };
 
   const handleSend = async () => {
     if (!canSend) return;
@@ -68,7 +42,7 @@ export function MessageComposer({
       image: image ?? undefined,
     };
     setBody('');
-    setImage(null);
+    clearImage();
     await onSend(payload);
   };
 
@@ -91,7 +65,7 @@ export function MessageComposer({
         <ReplyPreview target={replyTarget} onClear={onClearReply} />
       ) : null}
       {image ? (
-        <PendingImagePreview uri={image.uri} onClear={() => setImage(null)} />
+        <PendingImagePreview uri={image.uri} onClear={clearImage} />
       ) : null}
       <View className="border-border/40 bg-background flex-row items-end gap-2 border-t px-4 py-2">
         <Pressable
