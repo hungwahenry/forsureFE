@@ -1,3 +1,4 @@
+import { FONTS } from '@/lib/fonts';
 import { THEME } from '@/lib/theme';
 import { cn } from '@/lib/utils';
 import * as React from 'react';
@@ -41,6 +42,6 @@ export function pillTextStyle(filled: boolean, colors: typeof THEME.light) {
     color: filled ? colors.primary : colors.mutedForeground,
     fontSize: SLOT_FONT_SIZE,
     lineHeight: SLOT_LINE_HEIGHT,
-    fontWeight: '600' as const,
+    fontFamily: FONTS.semibold,
   };
 }

@@ -25,7 +25,7 @@ function Input({
         ref={ref}
         autoCapitalize="none"
         className={cn(
-          'dark:bg-input/30 border-input bg-background text-foreground flex h-10 w-full min-w-0 flex-row items-center rounded-full border px-4 py-1 text-base leading-5 shadow-sm shadow-black/5 sm:h-9',
+          'dark:bg-input/30 border-input bg-background text-foreground font-sans flex h-10 w-full min-w-0 flex-row items-center rounded-full border px-4 py-1 text-base leading-5 shadow-sm shadow-black/5 sm:h-9',
           props.editable === false &&
             cn(
               'opacity-50',
@@ -64,7 +64,7 @@ function Input({
         ref={ref}
         autoCapitalize="none"
         className={cn(
-          'text-foreground h-full flex-1 bg-transparent text-base leading-5',
+          'text-foreground font-sans h-full flex-1 bg-transparent text-base leading-5',
           Platform.select({
             web: cn(
               'placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground outline-none md:text-sm'

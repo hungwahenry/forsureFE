@@ -1,3 +1,4 @@
+import { FONTS } from '@/lib/fonts';
 import { THEME } from '@/lib/theme';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
@@ -64,7 +65,7 @@ export function CapacityField({ value, onChange }: CapacityFieldProps) {
           color: colors.primary,
           fontSize: SLOT_FONT_SIZE,
           lineHeight: SLOT_LINE_HEIGHT,
-          fontWeight: '600',
+          fontFamily: FONTS.semibold,
           padding: 0,
           minWidth: 32,
           textAlign: 'center',

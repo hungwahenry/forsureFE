@@ -10,6 +10,8 @@
     "clean": "rm -rf .expo node_modules"
   },
   "dependencies": {
+    "@expo-google-fonts/albert-sans": "^0.4.2",
+    "@expo-google-fonts/fredoka": "^0.4.1",
     "@gorhom/bottom-sheet": "^5.2.12",
     "@hookform/resolvers": "^5.2.2",
     "@react-native-community/datetimepicker": "8.6.0",
@@ -44,6 +46,7 @@
     "clsx": "^2.1.1",
     "expo": "~55.0.9",
     "expo-constants": "~55.0.9",
+    "expo-font": "~55.0.6",
     "expo-haptics": "~55.0.14",
     "expo-image-picker": "~55.0.19",
     "expo-linking": "~55.0.9",
