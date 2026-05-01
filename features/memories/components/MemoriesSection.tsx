@@ -19,23 +19,25 @@ import { useRouter } from 'expo-router';
 import { Camera } from 'iconsax-react-nativejs';
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
-import { useDeleteActivityPost } from '../api/deletePost';
-import { useActivityPosts } from '../api/listPosts';
-import type { ActivityPost } from '../types';
-import { PostCard } from './PostCard';
+import type { ActivityDetails } from '@/features/activities/types';
+import { useDeleteActivityPost } from '@/features/posts/api/deletePost';
+import { useActivityPosts } from '@/features/posts/api/listPosts';
+import { PostCard } from '@/features/posts/components/PostCard';
+import type { ActivityPost } from '@/features/posts/types';
 
 interface MemoriesSectionProps {
-  activityId: string;
+  activity: ActivityDetails;
   viewerUserId: string;
   viewerIsHost: boolean;
 }
 
 export function MemoriesSection({
-  activityId,
+  activity,
   viewerUserId,
   viewerIsHost,
 }: MemoriesSectionProps) {
   const router = useRouter();
+  const activityId = activity.id;
   const posts = useActivityPosts(activityId);
   const deleteMutation = useDeleteActivityPost();
   const [pendingDelete, setPendingDelete] = React.useState<ActivityPost | null>(
@@ -112,6 +114,11 @@ export function MemoriesSection({
               post={p}
               viewerIsAuthor={p.author.id === viewerUserId}
               viewerIsHost={viewerIsHost}
+              activityContext={{
+                emoji: activity.emoji,
+                title: activity.title,
+                hostUsername: activity.host.username,
+              }}
               onEdit={goCompose}
               onDelete={() => setPendingDelete(p)}
               onReport={() => goReport(p.id)}

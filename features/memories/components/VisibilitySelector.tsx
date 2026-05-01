@@ -2,7 +2,7 @@ import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
 import { Lock1 } from 'iconsax-react-nativejs';
 import { Pressable, View } from 'react-native';
-import type { PostVisibility } from '../types';
+import type { PostVisibility } from '@/features/posts/types';
 
 interface VisibilitySelectorProps {
   value: PostVisibility;

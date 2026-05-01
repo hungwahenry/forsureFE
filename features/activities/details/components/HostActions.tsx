@@ -4,14 +4,23 @@ import { Text } from '@/components/ui/text';
 import { Edit2, Slash } from 'iconsax-react-nativejs';
 import { View } from 'react-native';
 import type { ActivityStatus } from '../../types';
+import { MemoriesShareToggle } from './MemoriesShareToggle';
 
 interface HostActionsProps {
+  activityId: string;
   status: ActivityStatus;
+  memoriesShareablePublicly: boolean;
   onEdit: () => void;
   onCancel: () => void;
 }
 
-export function HostActions({ status, onEdit, onCancel }: HostActionsProps) {
+export function HostActions({
+  activityId,
+  status,
+  memoriesShareablePublicly,
+  onEdit,
+  onCancel,
+}: HostActionsProps) {
   const editable = status === 'OPEN';
   const cancelable = status === 'OPEN' || status === 'FULL';
 
@@ -21,6 +30,10 @@ export function HostActions({ status, onEdit, onCancel }: HostActionsProps) {
         host actions
       </Text>
       <View className="gap-2">
+        <MemoriesShareToggle
+          activityId={activityId}
+          value={memoriesShareablePublicly}
+        />
         <Button onPress={onEdit} disabled={!editable} variant="outline">
           <Icon as={Edit2} className="size-4" />
           <Text>edit activity</Text>

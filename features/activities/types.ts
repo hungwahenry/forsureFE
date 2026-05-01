@@ -63,5 +63,4 @@ export interface CreateActivityPayload {
   placeLng: number;
   capacity: number;
   genderPreference: ActivityGenderPreference;
-  memoriesShareablePublicly?: boolean;
 }

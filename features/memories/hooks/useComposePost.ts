@@ -1,12 +1,12 @@
 import { useActivityDetails } from '@/features/activities/details/api/getDetails';
 import type { ActivityDetails } from '@/features/activities/types';
 import * as React from 'react';
-import { useMyActivityPost } from '../api/getMyPost';
+import { useMyActivityPost } from '@/features/posts/api/getMyPost';
 import {
   useCreateActivityPost,
   useUpdateActivityPost,
-} from '../api/upsertPost';
-import type { PendingPhoto, PostVisibility } from '../types';
+} from '@/features/posts/api/upsertPost';
+import type { PendingPhoto, PostVisibility } from '@/features/posts/types';
 
 export const POST_MAX_PHOTOS = 5;
 export const POST_CAPTION_MAX = 500;

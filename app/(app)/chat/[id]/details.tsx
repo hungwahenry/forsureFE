@@ -71,7 +71,9 @@ export default function ChatDetailsScreen() {
           />
           {viewerIsHost ? (
             <HostActions
+              activityId={activityId}
               status={data.status}
+              memoriesShareablePublicly={data.memoriesShareablePublicly}
               onEdit={() => router.push(`/edit-activity?activityId=${activityId}` as never)}
               onCancel={() => setPending({ kind: 'cancel' })}
             />
@@ -83,7 +85,7 @@ export default function ChatDetailsScreen() {
           )}
           {data.status === 'DONE' ? (
             <MemoriesSection
-              activityId={activityId}
+              activity={data}
               viewerUserId={viewerUserId}
               viewerIsHost={viewerIsHost}
             />

@@ -1,7 +1,7 @@
 import type {
   ActivityPostAuthor,
   ActivityPostPhoto,
-} from '@/features/memories/types';
+} from '@/features/posts/types';
 
 export interface ExplorePostActivity {
   id: string;
@@ -9,6 +9,7 @@ export interface ExplorePostActivity {
   title: string;
   startsAt: string;
   placeName: string;
+  hostUsername: string;
 }
 
 export interface ExplorePost {

@@ -20,10 +20,17 @@ import { Pressable, View } from 'react-native';
 import type { ActivityPost } from '../types';
 import { PostPhotoCarousel } from './PostPhotoCarousel';
 
+export interface PostActivityContext {
+  emoji: string;
+  title: string;
+  hostUsername: string;
+}
+
 interface PostCardProps {
   post: ActivityPost;
   viewerIsAuthor: boolean;
   viewerIsHost: boolean;
+  activityContext: PostActivityContext;
   onEdit: () => void;
   onDelete: () => void;
   onReport: () => void;
@@ -33,25 +40,41 @@ export function PostCard({
   post,
   viewerIsAuthor,
   viewerIsHost,
+  activityContext,
   onEdit,
   onDelete,
   onReport,
 }: PostCardProps) {
   const canDelete = viewerIsAuthor || viewerIsHost;
+  const authorIsHost =
+    post.author.username === activityContext.hostUsername;
   return (
     <View className="border-border/40 border-b py-4">
-      <View className="mb-3 flex-row items-center justify-between px-6">
-        <View className="flex-row items-center gap-2">
+      <View className="mb-3 flex-row items-start justify-between gap-3 px-6">
+        <View className="flex-1 flex-row items-start gap-2">
           <Image
             source={{ uri: post.author.avatarUrl }}
-            style={{ width: 32, height: 32, borderRadius: 16 }}
+            style={{ width: 36, height: 36, borderRadius: 18 }}
             className="bg-muted"
           />
-          <View>
-            <Text className="text-foreground text-sm font-semibold">
-              @{post.author.username}
+          <View className="flex-1">
+            <Text className="text-foreground text-base leading-6">
+              <Text className="text-primary font-medium">
+                @{activityContext.hostUsername}
+              </Text>
+              {' wanted to '}
+              {activityContext.emoji} {activityContext.title}
             </Text>
-            <View className="flex-row items-center gap-1">
+            <View className="flex-row flex-wrap items-center gap-1">
+              {!authorIsHost ? (
+                <Text className="text-muted-foreground text-xs">
+                  shared by{' '}
+                  <Text className="text-foreground font-medium">
+                    @{post.author.username}
+                  </Text>
+                  {' · '}
+                </Text>
+              ) : null}
               <Icon
                 as={post.visibility === 'PUBLIC' ? Global : People}
                 className="text-muted-foreground size-3"
@@ -93,15 +116,15 @@ export function PostCard({
         </DropdownMenu>
       </View>
 
-      <View className="px-6">
-        <PostPhotoCarousel photos={post.photos} />
-      </View>
-
       {post.caption ? (
-        <Text className="text-foreground px-6 pt-3 text-sm">
+        <Text className="text-foreground mb-3 px-6 text-sm">
           {post.caption}
         </Text>
       ) : null}
+
+      <View className="px-6">
+        <PostPhotoCarousel photos={post.photos} />
+      </View>
     </View>
   );
 }

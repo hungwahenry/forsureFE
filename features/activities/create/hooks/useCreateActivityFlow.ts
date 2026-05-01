@@ -26,7 +26,6 @@ export function useCreateActivityFlow() {
       placeLng: draft.place!.lng,
       capacity: draft.capacity,
       genderPreference: draft.genderPreference,
-      memoriesShareablePublicly: draft.memoriesShareablePublicly,
     };
 
     const activity = await createActivity.mutateAsync(payload);
