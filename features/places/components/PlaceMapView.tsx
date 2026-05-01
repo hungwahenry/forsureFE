@@ -25,8 +25,6 @@ export function PlaceMapView({ destination, viewer }: PlaceMapViewProps) {
     [destination, viewer],
   );
 
-  // When viewer location resolves *after* the map has mounted (permission
-  // prompt, GPS fix), re-fit so both pins are visible.
   React.useEffect(() => {
     if (!viewer) return;
     ref.current?.fitToCoordinates(

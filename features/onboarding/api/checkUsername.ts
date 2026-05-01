@@ -13,7 +13,6 @@ export async function checkUsername(username: string): Promise<boolean> {
   return res.data.available;
 }
 
-// Caller debounces — this fires on every username change.
 export function useCheckUsername(username: string, enabled: boolean) {
   return useQuery({
     queryKey: ['onboarding', 'username-available', username],

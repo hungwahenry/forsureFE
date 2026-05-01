@@ -8,30 +8,16 @@ import {
 import * as React from 'react';
 
 interface UseDeviceLocationOptions {
-  /**
-   * If true, the hook fetches GPS automatically on mount when permission is
-   * already granted (won't prompt). Use for screens that should "just work"
-   * for returning users (feed, place proximity). Default: false.
-   */
   autoFetchIfGranted?: boolean;
 }
 
 interface UseDeviceLocationResult {
-  /** `null` while the initial permission check is pending. */
   permission: PermissionStatus | null;
   location: ResolvedLocation | null;
   isFetching: boolean;
-  /**
-   * Triggers permission request (if undetermined) and GPS fetch.
-   * Returns the resolved location, or `null` if denied/failed.
-   */
   fetch: () => Promise<ResolvedLocation | null>;
 }
 
-/**
- * Encapsulates the standard "check → request → fetch" location dance plus the
- * permission/location/isFetching state every consumer otherwise re-rolls.
- */
 export function useDeviceLocation(
   options: UseDeviceLocationOptions = {},
 ): UseDeviceLocationResult {
