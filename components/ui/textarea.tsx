@@ -10,6 +10,7 @@ function Textarea({
 }: React.ComponentProps<typeof TextInput>) {
   return (
     <TextInput
+      autoCapitalize="none"
       className={cn(
         'text-foreground border-input dark:bg-input/30 flex min-h-16 w-full flex-row rounded-md border bg-transparent px-3 py-2 text-base shadow-sm shadow-black/5 md:text-sm',
         Platform.select({

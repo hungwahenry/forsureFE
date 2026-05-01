@@ -23,6 +23,7 @@ export default function AppLayout() {
         name="place-view"
         options={{ presentation: 'fullScreenModal' }}
       />
+      <Stack.Screen name="chat/[id]" />
     </Stack>
   );
 }

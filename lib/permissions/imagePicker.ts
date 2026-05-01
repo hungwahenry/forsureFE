@@ -29,3 +29,17 @@ export async function pickFromCamera(): Promise<PickerResult> {
   if (result.canceled) return { status: 'cancelled' };
   return { status: 'picked', asset: result.assets[0] };
 }
+
+const FREEFORM_OPTIONS: ImagePicker.ImagePickerOptions = {
+  mediaTypes: ['images'],
+  allowsEditing: false,
+  quality: 0.85,
+};
+
+export async function pickFreeformFromLibrary(): Promise<PickerResult> {
+  const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  if (status !== 'granted') return { status: 'denied' };
+  const result = await ImagePicker.launchImageLibraryAsync(FREEFORM_OPTIONS);
+  if (result.canceled) return { status: 'cancelled' };
+  return { status: 'picked', asset: result.assets[0] };
+}

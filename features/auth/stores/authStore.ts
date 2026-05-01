@@ -1,5 +1,9 @@
 import { setAuthHandlers } from '@/lib/api/client';
 import {
+  disconnectChatsSocket,
+  refreshChatsSocketAuth,
+} from '@/lib/api/socket';
+import {
   clearTokens,
   getTokens,
   setTokens,
@@ -68,6 +72,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   signOut: async () => {
+    disconnectChatsSocket();
     await clearTokens();
     set({
       status: 'unauthenticated',
@@ -83,6 +88,9 @@ export const useAuthStore = create<AuthState>((set) => ({
 // Side-effect: registers auth handlers on import. Root layout pulls this in before any HTTP request fires.
 setAuthHandlers({
   getTokens,
-  onTokensRefreshed: setTokens,
+  onTokensRefreshed: async (tokens) => {
+    await setTokens(tokens);
+    refreshChatsSocketAuth(tokens.accessToken);
+  },
   onAuthFailed: () => useAuthStore.getState().signOut(),
 });
