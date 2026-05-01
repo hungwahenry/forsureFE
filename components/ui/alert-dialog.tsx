@@ -27,16 +27,17 @@ function AlertDialogOverlay({
     <FullWindowOverlay>
       <AlertDialogPrimitive.Overlay
         className={cn(
-          'absolute bottom-0 left-0 right-0 top-0 z-50 flex items-center justify-center bg-black/50 p-2',
+          'absolute bottom-0 left-0 right-0 top-0 z-50 flex items-center justify-center bg-black/50 px-6',
           Platform.select({
-            web: 'animate-in fade-in-0 fixed',
+            web: 'animate-in fade-in-0 fixed p-2',
           }),
           className
         )}
         {...props}>
         <NativeOnlyAnimatedView
           entering={FadeIn.duration(200).delay(50)}
-          exiting={FadeOut.duration(150)}>
+          exiting={FadeOut.duration(150)}
+          style={Platform.OS !== 'web' ? { width: '100%' } : undefined}>
           <>{children}</>
         </NativeOnlyAnimatedView>
       </AlertDialogPrimitive.Overlay>

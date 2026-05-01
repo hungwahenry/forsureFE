@@ -58,8 +58,8 @@ export function MessageBubble({
         {!isOwn ? (
           <Image
             source={{ uri: message.sender.avatarUrl }}
-            style={{ width: AVATAR_SIZE, height: AVATAR_SIZE }}
-            className="bg-muted rounded-full"
+            style={{ width: AVATAR_SIZE, height: AVATAR_SIZE, borderRadius: AVATAR_SIZE / 2 }}
+            className="bg-muted"
           />
         ) : null}
         <ContextMenu>

@@ -13,12 +13,12 @@ export function BubbleImage({ uri, width, pending }: BubbleImageProps) {
     <View className="relative">
       <Image
         source={{ uri }}
-        style={{ width, aspectRatio: 1 }}
-        className="bg-muted rounded-xl"
+        style={{ width, aspectRatio: 1, borderRadius: 12 }}
+        className="bg-muted"
         contentFit="cover"
       />
       {pending ? (
-        <View className="absolute inset-0 items-center justify-center rounded-xl bg-black/30">
+        <View className="absolute inset-0 items-center justify-center bg-black/30" style={{ borderRadius: 12 }}>
           <LoadingIndicator size={8} />
         </View>
       ) : null}

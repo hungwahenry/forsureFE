@@ -109,6 +109,7 @@ export function MessageComposer({
           placeholderTextColor="rgba(128,128,128,0.5)"
           multiline
           scrollEnabled={false}
+          autoCapitalize="none"
           editable={!disabled}
           textAlignVertical="top"
           style={{ minHeight: MIN_INPUT_HEIGHT, maxHeight: MAX_INPUT_HEIGHT }}
