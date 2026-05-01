@@ -6,7 +6,7 @@ import { PlaceMapView } from '@/features/places/components/PlaceMapView';
 import { openInMaps } from '@/features/places/utils/openInMaps';
 import { useDeviceLocation } from '@/lib/hooks/useDeviceLocation';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { CloseCircle, RouteSquare } from 'iconsax-react-nativejs';
+import { ArrowLeft, RouteSquare } from 'iconsax-react-nativejs';
 import { Pressable, View } from 'react-native';
 
 export default function PlaceViewScreen() {
@@ -27,7 +27,7 @@ export default function PlaceViewScreen() {
     <Screen edges={['top', 'bottom']} noKeyboardAvoidance>
       <View className="flex-row items-center justify-between px-6 py-4">
         <Pressable onPress={() => router.back()} hitSlop={8}>
-          <Icon as={CloseCircle} className="text-muted-foreground size-7" />
+          <Icon as={ArrowLeft} className="text-muted-foreground size-7" />
         </Pressable>
         <Text
           className="text-foreground flex-1 text-center text-base font-semibold"

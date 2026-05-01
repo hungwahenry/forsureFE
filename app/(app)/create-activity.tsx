@@ -20,7 +20,7 @@ import { ApiError } from '@/lib/api/types';
 import { relativeDateUsesOnConnector } from '@/lib/format';
 import { toast } from '@/lib/toast';
 import { useRouter } from 'expo-router';
-import { CloseCircle } from 'iconsax-react-nativejs';
+import { ArrowLeft } from 'iconsax-react-nativejs';
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
 import EmojiPicker from 'rn-emoji-keyboard';
@@ -57,7 +57,7 @@ export default function CreateActivityScreen() {
       <Screen>
         <View className="flex-row items-center justify-between px-6 py-4">
           <Pressable onPress={() => router.back()} hitSlop={8}>
-            <Icon as={CloseCircle} className="text-muted-foreground size-7" />
+            <Icon as={ArrowLeft} className="text-muted-foreground size-7" />
           </Pressable>
           <Text className="text-foreground text-base font-semibold">
             new activity

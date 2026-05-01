@@ -28,7 +28,7 @@ export function TitleField({ value, onChange }: TitleFieldProps) {
       <TextInput
         value={value}
         onChangeText={onChange}
-        placeholder="activity"
+        placeholder="do stuff"
         placeholderTextColor={colors.mutedForeground}
         autoCapitalize="none"
         autoCorrect={false}

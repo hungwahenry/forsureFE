@@ -4,7 +4,7 @@ import { Text } from '@/components/ui/text';
 import { useDraftActivityStore } from '@/features/activities/create/stores/draftActivityStore';
 import { PlacePicker } from '@/features/places/components/PlacePicker';
 import { useRouter } from 'expo-router';
-import { CloseCircle } from 'iconsax-react-nativejs';
+import { ArrowLeft } from 'iconsax-react-nativejs';
 import { Pressable, View } from 'react-native';
 
 export default function PlacePickerScreen() {
@@ -15,7 +15,7 @@ export default function PlacePickerScreen() {
     <Screen>
       <View className="flex-row items-center justify-between px-6 py-4">
         <Pressable onPress={() => router.back()} hitSlop={8}>
-          <Icon as={CloseCircle} className="text-muted-foreground size-7" />
+          <Icon as={ArrowLeft} className="text-muted-foreground size-7" />
         </Pressable>
         <Text className="text-foreground text-base font-semibold">
           where?
