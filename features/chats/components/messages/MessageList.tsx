@@ -10,12 +10,14 @@ interface MessageListProps {
   messages: ChatMessage[];
   viewerUserId: string;
   hostUserId: string;
+  viewerIsHost: boolean;
   isFetchingOlder: boolean;
   onEndReached: () => void;
   onReply: (m: ChatMessage) => void;
   onDelete: (m: ChatMessage) => void;
   onRetry: (m: ChatMessage) => void;
   onCancel: (m: ChatMessage) => void;
+  onPin: (m: ChatMessage) => void;
 }
 
 function isSameDay(a: Date, b: Date): boolean {
@@ -30,12 +32,14 @@ export function MessageList({
   messages,
   viewerUserId,
   hostUserId,
+  viewerIsHost,
   isFetchingOlder,
   onEndReached,
   onReply,
   onDelete,
   onRetry,
   onCancel,
+  onPin,
 }: MessageListProps) {
   return (
     <FlatList
@@ -61,10 +65,12 @@ export function MessageList({
                   message={item}
                   isOwn={isOwn}
                   canDelete={canDelete}
+                  canPin={viewerIsHost}
                   onReply={() => onReply(item)}
                   onDelete={() => onDelete(item)}
                   onRetry={() => onRetry(item)}
                   onCancel={() => onCancel(item)}
+                  onPin={() => onPin(item)}
                 />
               );
             })()

@@ -26,20 +26,24 @@ interface MessageBubbleProps {
   message: ChatMessage;
   isOwn: boolean;
   canDelete: boolean;
+  canPin: boolean;
   onReply: () => void;
   onDelete: () => void;
   onRetry: () => void;
   onCancel: () => void;
+  onPin: () => void;
 }
 
 export function MessageBubble({
   message,
   isOwn,
   canDelete,
+  canPin,
   onReply,
   onDelete,
   onRetry,
   onCancel,
+  onPin,
 }: MessageBubbleProps) {
   const { colorScheme } = useColorScheme();
   const colors = THEME[colorScheme === 'dark' ? 'dark' : 'light'];
@@ -138,6 +142,11 @@ export function MessageBubble({
                 <ContextMenuItem onPress={onReply} disabled={isPending}>
                   <Text>reply</Text>
                 </ContextMenuItem>
+                {canPin ? (
+                  <ContextMenuItem onPress={onPin} disabled={isPending}>
+                    <Text>pin</Text>
+                  </ContextMenuItem>
+                ) : null}
                 {canDelete ? (
                   <ContextMenuItem
                     variant="destructive"

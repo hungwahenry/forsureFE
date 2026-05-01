@@ -5,6 +5,7 @@ import * as React from 'react';
 import { useDeleteMessage } from '../api/deleteMessage';
 import { useListMessages, messagesQueryKey } from '../api/listMessages';
 import { useMarkChatRead } from '../api/markRead';
+import { usePinMessage, useUnpinMessage } from '../api/pinMessage';
 import {
   useSendMessage,
   type SendMessageArgs,
@@ -15,6 +16,7 @@ import type { ChatMessage, MessagesPage } from '../types';
 interface UseChatRoomControllerArgs {
   activityId: string;
   viewerUserId: string;
+  hostUserId: string;
 }
 
 interface InfiniteMessages {
@@ -28,11 +30,14 @@ const tempId = () =>
 export function useChatRoomController({
   activityId,
   viewerUserId,
+  hostUserId,
 }: UseChatRoomControllerArgs) {
   const qc = useQueryClient();
   const messagesQuery = useListMessages(activityId);
   const sendMutation = useSendMessage();
   const deleteMutation = useDeleteMessage();
+  const pinMutation = usePinMessage();
+  const unpinMutation = useUnpinMessage();
   const markRead = useMarkChatRead();
   const [replyTarget, setReplyTarget] = React.useState<ChatMessage | null>(
     null,
@@ -205,6 +210,24 @@ export function useChatRoomController({
     removeMessage(m.id);
   };
 
+  const pin = async (m: ChatMessage): Promise<void> => {
+    try {
+      await pinMutation.mutateAsync({ activityId, messageId: m.id });
+    } catch (err) {
+      const message = err instanceof ApiError ? err.message : "couldn't pin message.";
+      toast.error(message);
+    }
+  };
+
+  const unpin = async (): Promise<void> => {
+    try {
+      await unpinMutation.mutateAsync(activityId);
+    } catch (err) {
+      const message = err instanceof ApiError ? err.message : "couldn't unpin message.";
+      toast.error(message);
+    }
+  };
+
   const remove = async (m: ChatMessage): Promise<void> => {
     if (m.pending || m.failed) {
       removeMessage(m.id);
@@ -227,6 +250,7 @@ export function useChatRoomController({
 
   return {
     messages,
+    viewerIsHost: viewerUserId === hostUserId,
     isPending: messagesQuery.isPending,
     isFetchingOlder: messagesQuery.isFetchingNextPage,
     isSending: sendMutation.isPending,
@@ -238,5 +262,7 @@ export function useChatRoomController({
     remove,
     retry,
     cancelFailed,
+    pin,
+    unpin,
   };
 }

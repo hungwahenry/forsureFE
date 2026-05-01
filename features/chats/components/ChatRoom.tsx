@@ -1,12 +1,14 @@
 import { EmptyState } from '@/components/ui/empty-state';
 import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Text } from '@/components/ui/text';
+import { useActivityDetails } from '@/features/activities/details/api/getDetails';
 import type { ActivityStatus } from '@/features/activities/types';
 import { Message } from 'iconsax-react-nativejs';
 import { View } from 'react-native';
 import { useChatRoomController } from '../hooks/useChatRoomController';
 import { MessageComposer } from './composer/MessageComposer';
 import { MessageList } from './messages/MessageList';
+import { PinnedMessageBanner } from './PinnedMessageBanner';
 
 interface ChatRoomProps {
   activityId: string;
@@ -23,7 +25,9 @@ export function ChatRoom({
   hostUserId,
   status,
 }: ChatRoomProps) {
-  const c = useChatRoomController({ activityId, viewerUserId });
+  const c = useChatRoomController({ activityId, viewerUserId, hostUserId });
+  const details = useActivityDetails(activityId);
+  const pinnedMessage = details.data?.pinnedMessage ?? null;
   const isLocked = LOCKED_STATUSES.includes(status);
 
   if (c.isPending) {
@@ -36,6 +40,13 @@ export function ChatRoom({
 
   return (
     <View className="flex-1">
+      {pinnedMessage ? (
+        <PinnedMessageBanner
+          message={pinnedMessage}
+          canUnpin={c.viewerIsHost}
+          onUnpin={() => void c.unpin()}
+        />
+      ) : null}
       {c.messages.length === 0 ? (
         <EmptyState
           icon={Message}
@@ -48,12 +59,14 @@ export function ChatRoom({
           messages={c.messages}
           viewerUserId={viewerUserId}
           hostUserId={hostUserId}
+          viewerIsHost={c.viewerIsHost}
           isFetchingOlder={c.isFetchingOlder}
           onEndReached={c.fetchOlder}
           onReply={c.setReplyTarget}
           onDelete={(m) => void c.remove(m)}
           onRetry={(m) => void c.retry(m)}
           onCancel={c.cancelFailed}
+          onPin={(m) => void c.pin(m)}
         />
       )}
       {isLocked ? (
