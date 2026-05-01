@@ -4,6 +4,7 @@ import { Text } from '@/components/ui/text';
 import { useActivityDetails } from '@/features/activities/details/api/getDetails';
 import type { ActivityStatus } from '@/features/activities/types';
 import { Message } from 'iconsax-react-nativejs';
+import { AnimatePresence, MotiView } from 'moti';
 import { View } from 'react-native';
 import { useChatRoomController } from '../hooks/useChatRoomController';
 import { MessageComposer } from './composer/MessageComposer';
@@ -40,13 +41,23 @@ export function ChatRoom({
 
   return (
     <View className="flex-1">
-      {pinnedMessage ? (
-        <PinnedMessageBanner
-          message={pinnedMessage}
-          canUnpin={c.viewerIsHost}
-          onUnpin={() => void c.unpin()}
-        />
-      ) : null}
+      <AnimatePresence>
+        {pinnedMessage ? (
+          <MotiView
+            key={pinnedMessage.id}
+            from={{ opacity: 0, translateY: -6 }}
+            animate={{ opacity: 1, translateY: 0 }}
+            exit={{ opacity: 0, translateY: -6 }}
+            transition={{ type: 'timing', duration: 220 }}
+          >
+            <PinnedMessageBanner
+              message={pinnedMessage}
+              canUnpin={c.viewerIsHost}
+              onUnpin={() => void c.unpin()}
+            />
+          </MotiView>
+        ) : null}
+      </AnimatePresence>
       {c.messages.length === 0 ? (
         <EmptyState
           icon={Message}

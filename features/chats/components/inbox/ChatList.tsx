@@ -80,9 +80,10 @@ export function ChatList() {
         <FlatList
           data={items}
           keyExtractor={(c) => c.activityId}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <ChatListItem
               preview={item}
+              index={index}
               onPress={() =>
                 router.push({
                   pathname: '/chat/[id]',

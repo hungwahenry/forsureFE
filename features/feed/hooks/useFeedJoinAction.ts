@@ -7,6 +7,7 @@ import {
   useQueryClient,
   type InfiniteData,
 } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
 import type { FeedItem, FeedPage } from '../types';
 
 const PROXIMITY_MS = 2 * 60 * 60 * 1000; // 2 hours
@@ -18,15 +19,20 @@ export interface ProximityWarning {
 
 export interface FeedJoinAction {
   join: (item: FeedItem) => void;
+  confirmation: FeedItem | null;
+  confirmJoin: () => void;
+  cancelJoin: () => void;
   warning: ProximityWarning | null;
   confirm: () => void;
   cancel: () => void;
 }
 
 export function useFeedJoinAction(): FeedJoinAction {
+  const router = useRouter();
   const queryClient = useQueryClient();
   const joinMutation = useJoinActivity();
   const chats = useListChats();
+  const [confirmation, setConfirmation] = React.useState<FeedItem | null>(null);
   const [warning, setWarning] = React.useState<ProximityWarning | null>(null);
 
   const execute = React.useCallback(
@@ -52,7 +58,8 @@ export function useFeedJoinAction(): FeedJoinAction {
 
       try {
         await joinMutation.mutateAsync(item.id);
-        toast.success("you're going.");
+      toast.success("you're going.");
+      router.push({ pathname: '/chat/[id]', params: { id: item.id } });
       } catch (err) {
         snapshot.forEach(([key, data]) => queryClient.setQueryData(key, data));
         const message =
@@ -64,6 +71,13 @@ export function useFeedJoinAction(): FeedJoinAction {
   );
 
   const join = React.useCallback(
+    (item: FeedItem) => {
+      setConfirmation(item);
+    },
+    [],
+  );
+
+  const proceedAfterConfirm = React.useCallback(
     (item: FeedItem) => {
       const targetTime = new Date(item.startsAt).getTime();
       const conflict = (chats.data ?? []).find(
@@ -80,6 +94,15 @@ export function useFeedJoinAction(): FeedJoinAction {
     [chats.data, execute],
   );
 
+  const confirmJoin = React.useCallback(() => {
+    if (!confirmation) return;
+    const item = confirmation;
+    setConfirmation(null);
+    proceedAfterConfirm(item);
+  }, [confirmation, proceedAfterConfirm]);
+
+  const cancelJoin = React.useCallback(() => setConfirmation(null), []);
+
   const confirm = React.useCallback(() => {
     if (!warning) return;
     const item = warning.item;
@@ -89,5 +112,5 @@ export function useFeedJoinAction(): FeedJoinAction {
 
   const cancel = React.useCallback(() => setWarning(null), []);
 
-  return { join, warning, confirm, cancel };
+  return { join, confirmation, confirmJoin, cancelJoin, warning, confirm, cancel };
 }

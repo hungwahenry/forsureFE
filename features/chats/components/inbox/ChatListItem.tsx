@@ -1,16 +1,23 @@
 import { Text } from '@/components/ui/text';
 import { cn } from '@/lib/utils';
+import { MotiView } from 'moti';
 import { Pressable, View } from 'react-native';
 import type { ChatPreview } from '../../types';
 
 interface ChatListItemProps {
   preview: ChatPreview;
+  index?: number;
   onPress: () => void;
 }
 
-export function ChatListItem({ preview, onPress }: ChatListItemProps) {
+export function ChatListItem({ preview, index = 0, onPress }: ChatListItemProps) {
   const hasUnread = preview.unreadCount > 0;
   return (
+    <MotiView
+      from={{ opacity: 0, translateY: 6 }}
+      animate={{ opacity: 1, translateY: 0 }}
+      transition={{ type: 'timing', duration: 260, delay: Math.min(index, 8) * 35 }}
+    >
     <Pressable
       onPress={onPress}
       className="border-border/40 active:bg-muted/30 flex-row items-center gap-3 border-b px-6 py-4"
@@ -45,6 +52,7 @@ export function ChatListItem({ preview, onPress }: ChatListItemProps) {
         </View>
       ) : null}
     </Pressable>
+    </MotiView>
   );
 }
 

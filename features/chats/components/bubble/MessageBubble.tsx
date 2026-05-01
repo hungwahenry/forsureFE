@@ -15,6 +15,7 @@ import { BubbleImage } from './BubbleImage';
 import { BubbleReplyChip } from './BubbleReplyChip';
 import { BubbleTail } from './BubbleTail';
 import { BubbleTime } from './BubbleTime';
+import { SwipeToReply } from './SwipeToReply';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const ROW_MAX_WIDTH = Math.floor(SCREEN_WIDTH * 0.78);
@@ -55,6 +56,7 @@ export function MessageBubble({
 
   return (
     <View className={cn('px-4 py-1', isOwn ? 'items-end' : 'items-start')}>
+      <SwipeToReply onReply={onReply} disabled={isPending || isFailed}>
       <View
         style={{ maxWidth: ROW_MAX_WIDTH, gap: !isOwn ? ROW_GAP : 0 }}
         className="flex-row items-end"
@@ -161,6 +163,7 @@ export function MessageBubble({
           </ContextMenuContent>
         </ContextMenu>
       </View>
+      </SwipeToReply>
       {isFailed ? (
         <Text className="text-destructive mt-0.5 text-xs">
           failed · tap to retry

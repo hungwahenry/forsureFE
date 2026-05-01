@@ -12,6 +12,7 @@ import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { Image } from 'expo-image';
 import { Pressable, View } from 'react-native';
+import { MotiView } from 'moti';
 import type { FeedItem } from '../types';
 
 const SENTENCE_FONT_SIZE = 26;
@@ -22,12 +23,14 @@ const STACK_OVERLAP = 10;
 
 interface FeedItemViewProps {
   item: FeedItem;
+  index?: number;
   onJoinPress: () => void;
   onPress: () => void;
 }
 
 export function FeedItemView({
   item,
+  index = 0,
   onJoinPress,
   onPress,
 }: FeedItemViewProps) {
@@ -51,10 +54,15 @@ export function FeedItemView({
   const overflow = Math.max(0, item.goingCount - goingAvatars.length);
 
   return (
-    <Pressable
-      onPress={onPress}
-      className="border-border/40 border-b px-6 py-5 active:bg-muted/30"
+    <MotiView
+      from={{ opacity: 0, translateY: 8 }}
+      animate={{ opacity: 1, translateY: 0 }}
+      transition={{ type: 'timing', duration: 280, delay: Math.min(index, 6) * 40 }}
     >
+      <Pressable
+        onPress={onPress}
+        className="border-border/40 border-b px-6 py-5 active:bg-muted/30"
+      >
       <View
         className="flex-row flex-wrap items-center gap-x-2 gap-y-1"
       >
@@ -102,6 +110,7 @@ export function FeedItemView({
         </Button>
       </View>
     </Pressable>
+    </MotiView>
   );
 }
 

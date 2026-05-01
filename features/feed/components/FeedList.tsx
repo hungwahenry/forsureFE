@@ -30,7 +30,7 @@ interface FeedListProps {
 export function FeedList({ lat, lng }: FeedListProps) {
   const router = useRouter();
   const feed = useFeed({ lat, lng });
-  const { join, warning, confirm, cancel } = useFeedJoinAction();
+  const { join, confirmation, confirmJoin, cancelJoin, warning, confirm, cancel } = useFeedJoinAction();
   const refresh = usePullRefresh(feed.refetch);
 
   const items: FeedItem[] = React.useMemo(
@@ -78,9 +78,10 @@ export function FeedList({ lat, lng }: FeedListProps) {
       <FlatList
       data={items}
       keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
+      renderItem={({ item, index }) => (
         <FeedItemView
           item={item}
+          index={index}
           onPress={() => undefined}
           onJoinPress={() => void join(item)}
         />
@@ -96,6 +97,25 @@ export function FeedList({ lat, lng }: FeedListProps) {
         ) : null
       }
     />
+
+    <AlertDialog open={!!confirmation}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>join {confirmation?.emoji} {confirmation?.title}?</AlertDialogTitle>
+          <AlertDialogDescription>
+            you'll be added to the group chat and your spot will be reserved.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel onPress={cancelJoin}>
+            <Text>cancel</Text>
+          </AlertDialogCancel>
+          <AlertDialogAction onPress={confirmJoin}>
+            <Text>join</Text>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
 
     <AlertDialog open={!!warning}>
       <AlertDialogContent>
