@@ -41,7 +41,6 @@ export function useChatRoomController({
   const newestId = messagesQuery.data?.pages[0]?.items[0]?.id ?? null;
   React.useEffect(() => {
     markRead.mutate({ activityId });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activityId, newestId]);
 
   const messages = React.useMemo(
@@ -123,6 +122,7 @@ export function useChatRoomController({
   }): ChatMessage => ({
     id: tempId(),
     activityId,
+    kind: 'TEXT',
     body: input.body ?? null,
     imageUrl: input.image?.uri ?? null,
     createdAt: new Date().toISOString(),

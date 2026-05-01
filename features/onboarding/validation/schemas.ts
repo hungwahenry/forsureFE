@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-// Client-side mirror of backend onboarding DTOs for fast UX feedback.
 export const USERNAME_PATTERN = /^[a-z][a-z0-9_]{2,19}$/;
 
 export const usernameSchema = z

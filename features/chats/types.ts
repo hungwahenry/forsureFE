@@ -1,6 +1,11 @@
+import type { ActivityStatus } from '../activities/types';
+
+export type ChatMessageKind = 'TEXT' | 'SYSTEM';
+
 export interface ChatMessage {
   id: string;
   activityId: string;
+  kind: ChatMessageKind;
   body: string | null;
   imageUrl: string | null;
   createdAt: string;
@@ -25,6 +30,7 @@ export interface ChatPreview {
   title: string;
   emoji: string;
   startsAt: string;
+  status: ActivityStatus;
   hostUserId: string;
   unreadCount: number;
   lastMessage: {

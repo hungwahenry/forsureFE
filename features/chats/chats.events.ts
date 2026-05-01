@@ -4,6 +4,7 @@ export const ChatEvents = {
   MessageNew: 'chat.message.new',
   MessageDeleted: 'chat.message.deleted',
   MemberRemoved: 'chat.member.removed',
+  ActivityUpdated: 'chat.activity.updated',
 } as const;
 
 export interface ChatMessageNewPayload {
@@ -16,5 +17,9 @@ export interface ChatMessageDeletedPayload {
 }
 
 export interface ChatMemberRemovedPayload {
+  activityId: string;
+}
+
+export interface ChatActivityUpdatedPayload {
   activityId: string;
 }

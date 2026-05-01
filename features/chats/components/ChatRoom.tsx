@@ -1,5 +1,7 @@
 import { EmptyState } from '@/components/ui/empty-state';
 import { LoadingIndicator } from '@/components/ui/loading-indicator';
+import { Text } from '@/components/ui/text';
+import type { ActivityStatus } from '@/features/activities/types';
 import { Message } from 'iconsax-react-nativejs';
 import { View } from 'react-native';
 import { useChatRoomController } from '../hooks/useChatRoomController';
@@ -10,14 +12,19 @@ interface ChatRoomProps {
   activityId: string;
   viewerUserId: string;
   hostUserId: string;
+  status: ActivityStatus;
 }
+
+const LOCKED_STATUSES: ActivityStatus[] = ['CANCELLED', 'DONE'];
 
 export function ChatRoom({
   activityId,
   viewerUserId,
   hostUserId,
+  status,
 }: ChatRoomProps) {
   const c = useChatRoomController({ activityId, viewerUserId });
+  const isLocked = LOCKED_STATUSES.includes(status);
 
   if (c.isPending) {
     return (
@@ -49,12 +56,22 @@ export function ChatRoom({
           onCancel={c.cancelFailed}
         />
       )}
-      <MessageComposer
-        replyTarget={c.replyTarget}
-        onClearReply={c.clearReply}
-        onSend={c.send}
-        disabled={c.isSending}
-      />
+      {isLocked ? (
+        <View className="border-border/40 bg-muted/30 border-t px-6 py-4">
+          <Text className="text-muted-foreground text-center text-sm">
+            {status === 'CANCELLED'
+              ? 'this activity was cancelled'
+              : 'this activity has ended'}
+          </Text>
+        </View>
+      ) : (
+        <MessageComposer
+          replyTarget={c.replyTarget}
+          onClearReply={c.clearReply}
+          onSend={c.send}
+          disabled={c.isSending}
+        />
+      )}
     </View>
   );
 }

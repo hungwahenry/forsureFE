@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-// Client-side mirror of backend RequestCodeDto/VerifyCodeDto for fast UX feedback.
 export const emailSchema = z
   .email('please enter a valid email')
   .max(254, 'email is too long');

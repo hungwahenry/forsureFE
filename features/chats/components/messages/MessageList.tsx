@@ -4,6 +4,7 @@ import { FlatList, View } from 'react-native';
 import type { ChatMessage } from '../../types';
 import { MessageBubble } from '../bubble/MessageBubble';
 import { MessageSeparator } from './MessageSeparator';
+import { SystemMessage } from './SystemMessage';
 
 interface MessageListProps {
   messages: ChatMessage[];
@@ -43,24 +44,35 @@ export function MessageList({
       keyExtractor={(m) => m.id}
       contentContainerStyle={{ paddingVertical: 12 }}
       renderItem={({ item, index }) => {
-        const isOwn = item.sender.id === viewerUserId;
-        const canDelete = isOwn || viewerUserId === hostUserId;
-        // List is inverted; index+1 is the older message in time.
         const older = messages[index + 1];
         const itemDate = new Date(item.createdAt);
         const showSeparator =
           !older || !isSameDay(new Date(older.createdAt), itemDate);
+
+        const body =
+          item.kind === 'SYSTEM' ? (
+            <SystemMessage body={item.body ?? ''} />
+          ) : (
+            (() => {
+              const isOwn = item.sender.id === viewerUserId;
+              const canDelete = isOwn || viewerUserId === hostUserId;
+              return (
+                <MessageBubble
+                  message={item}
+                  isOwn={isOwn}
+                  canDelete={canDelete}
+                  onReply={() => onReply(item)}
+                  onDelete={() => onDelete(item)}
+                  onRetry={() => onRetry(item)}
+                  onCancel={() => onCancel(item)}
+                />
+              );
+            })()
+          );
+
         return (
           <>
-            <MessageBubble
-              message={item}
-              isOwn={isOwn}
-              canDelete={canDelete}
-              onReply={() => onReply(item)}
-              onDelete={() => onDelete(item)}
-              onRetry={() => onRetry(item)}
-              onCancel={() => onCancel(item)}
-            />
+            {body}
             {showSeparator ? <MessageSeparator when={itemDate} /> : null}
           </>
         );

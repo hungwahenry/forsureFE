@@ -7,7 +7,7 @@ export default function ChatScreen() {
   return (
     <Screen edges={['top']} noKeyboardAvoidance>
       <View className="px-6 pb-3 pt-2">
-        <Text className="text-foreground text-3xl font-bold">chats</Text>
+        <Text className="text-foreground text-3xl font-bold">DMs</Text>
       </View>
       <ChatList />
     </Screen>

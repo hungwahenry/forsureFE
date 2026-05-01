@@ -1,9 +1,11 @@
+import { activityDetailsQueryKey } from '@/features/activities/details/api/getDetails';
 import type { QueryClient } from '@tanstack/react-query';
 import type { Socket } from 'socket.io-client';
 import { CHATS_QUERY_KEY } from '../api/listChats';
 import { messagesQueryKey } from '../api/listMessages';
 import {
   ChatEvents,
+  type ChatActivityUpdatedPayload,
   type ChatMemberRemovedPayload,
   type ChatMessageDeletedPayload,
   type ChatMessageNewPayload,
@@ -58,13 +60,22 @@ export function registerChatRealtime(
     qc.invalidateQueries({ queryKey: CHATS_QUERY_KEY });
   };
 
+  const onActivityUpdated = (payload: ChatActivityUpdatedPayload) => {
+    qc.invalidateQueries({
+      queryKey: activityDetailsQueryKey(payload.activityId),
+    });
+    qc.invalidateQueries({ queryKey: CHATS_QUERY_KEY });
+  };
+
   socket.on(ChatEvents.MessageNew, onMessageNew);
   socket.on(ChatEvents.MessageDeleted, onMessageDeleted);
   socket.on(ChatEvents.MemberRemoved, onMemberRemoved);
+  socket.on(ChatEvents.ActivityUpdated, onActivityUpdated);
 
   return () => {
     socket.off(ChatEvents.MessageNew, onMessageNew);
     socket.off(ChatEvents.MessageDeleted, onMessageDeleted);
     socket.off(ChatEvents.MemberRemoved, onMemberRemoved);
+    socket.off(ChatEvents.ActivityUpdated, onActivityUpdated);
   };
 }

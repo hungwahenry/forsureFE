@@ -63,7 +63,7 @@ export function MessageBubble({
           />
         ) : null}
         <ContextMenu>
-          <ContextMenuTrigger>
+          <ContextMenuTrigger asChild>
             <Pressable onPress={isFailed ? onRetry : undefined}>
               <View
                 className={cn(

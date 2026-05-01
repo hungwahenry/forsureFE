@@ -1,14 +1,20 @@
 import { Icon } from '@/components/ui/icon';
-import { Textarea } from '@/components/ui/textarea';
+import { Text } from '@/components/ui/text';
 import { pickFreeformFromLibrary } from '@/lib/permissions/imagePicker';
 import { toast } from '@/lib/toast';
 import { cn } from '@/lib/utils';
+import { MESSAGE_IMAGE_MAX_BYTES, MESSAGE_MAX_LENGTH, messageBodySchema } from '../../validation/schemas';
 import { Camera, Send } from 'iconsax-react-nativejs';
 import * as React from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable, TextInput, View } from 'react-native';
 import type { ChatMessage } from '../../types';
 import { PendingImagePreview } from './PendingImagePreview';
 import { ReplyPreview } from './ReplyPreview';
+
+const LINE_HEIGHT = 20; // leading-5
+const V_PADDING = 16;   // py-2 top + bottom
+const MIN_INPUT_HEIGHT = LINE_HEIGHT + V_PADDING;     // 1 line  = 36px
+const MAX_INPUT_HEIGHT = LINE_HEIGHT * 3 + V_PADDING; // 3 lines = 76px
 
 export interface PendingImage {
   uri: string;
@@ -31,7 +37,8 @@ export function MessageComposer({
   const [body, setBody] = React.useState('');
   const [image, setImage] = React.useState<PendingImage | null>(null);
 
-  const canSend = !disabled && (body.trim().length > 0 || image != null);
+  const bodyValid = image != null || messageBodySchema.safeParse(body).success;
+  const canSend = !disabled && bodyValid;
 
   const handlePickImage = async () => {
     const result = await pickFreeformFromLibrary();
@@ -44,6 +51,10 @@ export function MessageComposer({
       return;
     }
     if (result.status !== 'picked') return;
+    if (result.asset.fileSize != null && result.asset.fileSize > MESSAGE_IMAGE_MAX_BYTES) {
+      toast.error('image is too large. max 10 MB.');
+      return;
+    }
     setImage({
       uri: result.asset.uri,
       mimeType: result.asset.mimeType ?? 'image/jpeg',
@@ -61,8 +72,21 @@ export function MessageComposer({
     await onSend(payload);
   };
 
+  const overLimit = body.length > MESSAGE_MAX_LENGTH;
+  const nearLimit = body.length >= MESSAGE_MAX_LENGTH - 100;
+
   return (
     <View>
+      {nearLimit ? (
+        <Text
+          className={cn(
+            'px-4 pb-1 text-right text-xs',
+            overLimit ? 'text-destructive' : 'text-muted-foreground',
+          )}
+        >
+          {body.length}/{MESSAGE_MAX_LENGTH}
+        </Text>
+      ) : null}
       {replyTarget ? (
         <ReplyPreview target={replyTarget} onClear={onClearReply} />
       ) : null}
@@ -78,15 +102,17 @@ export function MessageComposer({
         >
           <Icon as={Camera} className="text-muted-foreground size-6" />
         </Pressable>
-        <Textarea
+        <TextInput
           value={body}
           onChangeText={setBody}
           placeholder="message"
-          placeholderClassName="text-muted-foreground/50"
-          numberOfLines={1}
+          placeholderTextColor="rgba(128,128,128,0.5)"
+          multiline
+          scrollEnabled={false}
           editable={!disabled}
-          textAlignVertical="center"
-          className="bg-muted/60 text-foreground min-h-10 max-h-32 min-w-0 flex-1 items-center rounded-3xl border-0 px-4 py-2 text-base leading-5 shadow-none"
+          textAlignVertical="top"
+          style={{ minHeight: MIN_INPUT_HEIGHT, maxHeight: MAX_INPUT_HEIGHT }}
+          className="bg-muted/60 text-foreground font-sans min-w-0 flex-1 rounded-3xl px-4 py-2 text-base leading-5"
         />
         <Pressable
           onPress={() => void handleSend()}

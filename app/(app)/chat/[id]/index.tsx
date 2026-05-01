@@ -30,18 +30,27 @@ export default function ChatDetailScreen() {
     }
   }, [preview, chats.isFetched, router]);
 
+  const openDetails = () =>
+    router.push(`/chat/${activityId}/details` as never);
+
   return (
     <Screen edges={['top', 'bottom']}>
       <View className="flex-row items-center justify-between px-6 py-4">
         <Pressable onPress={() => router.back()} hitSlop={8}>
           <Icon as={ArrowLeft} className="text-muted-foreground size-7" />
         </Pressable>
-        <Text
-          className="text-foreground flex-1 text-center text-base font-semibold"
-          numberOfLines={1}
+        <Pressable
+          onPress={preview ? openDetails : undefined}
+          hitSlop={6}
+          className="flex-1"
         >
-          {preview ? `${preview.emoji}  ${preview.title}` : 'chat'}
-        </Text>
+          <Text
+            className="text-foreground text-center text-base font-semibold"
+            numberOfLines={1}
+          >
+            {preview ? `${preview.emoji}  ${preview.title}` : 'chat'}
+          </Text>
+        </Pressable>
         <View className="size-7" />
       </View>
 
@@ -50,6 +59,7 @@ export default function ChatDetailScreen() {
           activityId={activityId}
           viewerUserId={viewerUserId}
           hostUserId={preview.hostUserId}
+          status={preview.status}
         />
       ) : (
         <View className="flex-1 items-center justify-center">

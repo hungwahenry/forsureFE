@@ -1,6 +1,12 @@
 import { Text } from '@/components/ui/text';
-import { formatRelativeDateTime } from '@/lib/format';
 import { GENDER_LABEL } from '../../labels';
+import {
+  SLOT_FONT_SIZE,
+  SLOT_LINE_HEIGHT,
+} from '../../create/components/fields/Pill';
+import { formatRelativeDateTime, relativeDateUsesOnConnector } from '@/lib/format';
+import { cn } from '@/lib/utils';
+import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { Pressable, View } from 'react-native';
 import type { ActivityDetails } from '../../types';
@@ -11,13 +17,15 @@ interface ActivityHeaderProps {
 
 const STATUS_BADGE: Record<
   ActivityDetails['status'],
-  { label: string; tone: 'muted' | 'warning' | 'destructive' } | null
+  { label: string; tone: 'muted' | 'destructive' } | null
 > = {
   OPEN: null,
   FULL: { label: 'full', tone: 'muted' },
   CANCELLED: { label: 'cancelled', tone: 'destructive' },
   DONE: { label: 'ended', tone: 'muted' },
 };
+
+const HOST_AVATAR_SIZE = 28;
 
 export function ActivityHeader({ details }: ActivityHeaderProps) {
   const router = useRouter();
@@ -36,73 +44,71 @@ export function ActivityHeader({ details }: ActivityHeaderProps) {
 
   return (
     <View className="px-6 py-5">
-      <View className="flex-row items-center gap-3">
-        <Text className="text-5xl">{details.emoji}</Text>
-        <View className="flex-1">
-          <Text className="text-foreground text-xl font-bold" numberOfLines={2}>
-            {details.title}
-          </Text>
-          {badge ? (
-            <View
-              className={
-                badge.tone === 'destructive'
-                  ? 'bg-destructive/10 mt-1 self-start rounded-full px-2 py-0.5'
-                  : 'bg-muted mt-1 self-start rounded-full px-2 py-0.5'
-              }
-            >
-              <Text
-                className={
-                  badge.tone === 'destructive'
-                    ? 'text-destructive text-xs font-semibold'
-                    : 'text-muted-foreground text-xs font-semibold'
-                }
-              >
-                {badge.label}
-              </Text>
-            </View>
-          ) : null}
-        </View>
+      <View className="flex-row flex-wrap items-center gap-x-2 gap-y-1.5">
+        <Image
+          source={{ uri: details.host.avatarUrl }}
+          style={{
+            width: HOST_AVATAR_SIZE,
+            height: HOST_AVATAR_SIZE,
+            borderRadius: HOST_AVATAR_SIZE / 2,
+          }}
+          className="bg-muted"
+        />
+        <Word className="text-primary">@{details.host.username}</Word>
+        <Word>wants to</Word>
+        <Word>{details.emoji}</Word>
+        <Word className="font-bold">{details.title}</Word>
+        {relativeDateUsesOnConnector(startsAt) ? <Word>on</Word> : null}
+        <Word className="text-primary">{formatRelativeDateTime(startsAt)}</Word>
+        <Word>at</Word>
+        <Pressable onPress={openPlace} hitSlop={6}>
+          <Word className="text-primary underline">{details.place.name}</Word>
+        </Pressable>
+        <Word>with</Word>
+        <Word className="text-primary">
+          {details.participantCount}/{details.capacity}
+        </Word>
+        <Word className="text-primary">{GENDER_LABEL[details.genderPreference]}</Word>
       </View>
 
-      <View className="mt-4 gap-2">
-        <Row label="when">
-          <Text className="text-foreground text-base">
-            {formatRelativeDateTime(startsAt)}
+      {badge ? (
+        <View
+          className={cn(
+            'mt-3 self-start rounded-full px-3 py-1',
+            badge.tone === 'destructive' ? 'bg-destructive/10' : 'bg-muted',
+          )}
+        >
+          <Text
+            className={cn(
+              'text-xs font-semibold',
+              badge.tone === 'destructive'
+                ? 'text-destructive'
+                : 'text-muted-foreground',
+            )}
+          >
+            {badge.label}
           </Text>
-        </Row>
-        <Row label="where">
-          <Pressable onPress={openPlace} hitSlop={6}>
-            <Text className="text-primary text-base underline" numberOfLines={1}>
-              {details.place.name}
-            </Text>
-          </Pressable>
-        </Row>
-        <Row label="going">
-          <Text className="text-foreground text-base">
-            {details.participantCount} of {details.capacity}
-          </Text>
-        </Row>
-        <Row label="who">
-          <Text className="text-foreground text-base">
-            {GENDER_LABEL[details.genderPreference]}
-          </Text>
-        </Row>
-      </View>
+        </View>
+      ) : null}
     </View>
   );
 }
 
-function Row({
-  label,
+function Word({
   children,
+  className,
 }: {
-  label: string;
   children: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <View className="flex-row items-center gap-3">
-      <Text className="text-muted-foreground w-14 text-sm">{label}</Text>
-      <View className="flex-1">{children}</View>
-    </View>
+    <Text
+      className={cn('text-foreground font-medium', className)}
+      style={{ fontSize: SLOT_FONT_SIZE, lineHeight: SLOT_LINE_HEIGHT }}
+    >
+      {children}
+    </Text>
   );
 }
+
+
