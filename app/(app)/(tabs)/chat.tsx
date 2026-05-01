@@ -1,6 +1,6 @@
 import { Screen } from '@/components/ui/screen';
 import { Text } from '@/components/ui/text';
-import { ChatList } from '@/features/chats/components/ChatList';
+import { ChatList } from '@/features/chats/components/inbox/ChatList';
 import { View } from 'react-native';
 
 export default function ChatScreen() {

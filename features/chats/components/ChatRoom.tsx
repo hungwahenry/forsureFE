@@ -3,8 +3,8 @@ import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Message } from 'iconsax-react-nativejs';
 import { View } from 'react-native';
 import { useChatRoomController } from '../hooks/useChatRoomController';
-import { MessageComposer } from './MessageComposer';
-import { MessageList } from './MessageList';
+import { MessageComposer } from './composer/MessageComposer';
+import { MessageList } from './messages/MessageList';
 
 interface ChatRoomProps {
   activityId: string;
@@ -17,7 +17,7 @@ export function ChatRoom({
   viewerUserId,
   hostUserId,
 }: ChatRoomProps) {
-  const c = useChatRoomController({ activityId });
+  const c = useChatRoomController({ activityId, viewerUserId });
 
   if (c.isPending) {
     return (
@@ -45,6 +45,8 @@ export function ChatRoom({
           onEndReached={c.fetchOlder}
           onReply={c.setReplyTarget}
           onDelete={(m) => void c.remove(m)}
+          onRetry={(m) => void c.retry(m)}
+          onCancel={c.cancelFailed}
         />
       )}
       <MessageComposer

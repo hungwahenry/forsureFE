@@ -42,13 +42,20 @@ export function formatRelativeDateTime(d: Date): string {
   return `${dayPart} at ${formatTime(d)}`;
 }
 
-//"on friday at 8am" reads naturally; "on today at 7pm" doesn't. Use this to format it correctly.
 export function relativeDateUsesOnConnector(d: Date): boolean {
   const diff = diffDaysFromToday(d);
   return diff !== 0 && diff !== 1;
 }
 
-function formatTime(d: Date): string {
+export function formatChatDate(d: Date): string {
+  const diff = diffDaysFromToday(d);
+  if (diff === 0) return 'today';
+  if (diff === -1) return 'yesterday';
+  if (diff <= -2 && diff >= -6) return WEEKDAYS[d.getDay()];
+  return `${MONTHS[d.getMonth()]} ${d.getDate()}`;
+}
+
+export function formatTime(d: Date): string {
   const hours24 = d.getHours();
   const minutes = d.getMinutes();
   const ampm = hours24 >= 12 ? 'pm' : 'am';

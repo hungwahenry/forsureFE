@@ -2,7 +2,7 @@ import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
 import { CloseCircle } from 'iconsax-react-nativejs';
 import { Pressable, View } from 'react-native';
-import type { ChatMessage } from '../types';
+import type { ChatMessage } from '../../types';
 
 interface ReplyPreviewProps {
   target: ChatMessage;

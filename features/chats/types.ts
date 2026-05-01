@@ -16,6 +16,8 @@ export interface ChatMessage {
     hasImage: boolean;
     sender: { id: string; username: string };
   } | null;
+  pending?: boolean;
+  failed?: boolean;
 }
 
 export interface ChatPreview {

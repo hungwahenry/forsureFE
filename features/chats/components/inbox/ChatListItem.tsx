@@ -1,7 +1,7 @@
 import { Text } from '@/components/ui/text';
 import { cn } from '@/lib/utils';
 import { Pressable, View } from 'react-native';
-import type { ChatPreview } from '../types';
+import type { ChatPreview } from '../../types';
 
 interface ChatListItemProps {
   preview: ChatPreview;

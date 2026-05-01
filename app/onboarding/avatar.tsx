@@ -40,6 +40,10 @@ export default function AvatarStep() {
       );
       return;
     }
+    if (result.status === 'unsupported') {
+      toast.error('unsupported image format. use jpeg, png, or webp.');
+      return;
+    }
     if (result.status === 'cancelled') return;
     void uploadSelectedAsset(result.asset);
   };

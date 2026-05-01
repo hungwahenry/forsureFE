@@ -5,7 +5,7 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { Message } from 'iconsax-react-nativejs';
 import * as React from 'react';
 import { FlatList, RefreshControl, View } from 'react-native';
-import { useListChats } from '../api/listChats';
+import { useListChats } from '../../api/listChats';
 import { ChatListItem } from './ChatListItem';
 
 export function ChatList() {

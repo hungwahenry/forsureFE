@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { Camera, Send } from 'iconsax-react-nativejs';
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
-import type { ChatMessage } from '../types';
+import type { ChatMessage } from '../../types';
 import { PendingImagePreview } from './PendingImagePreview';
 import { ReplyPreview } from './ReplyPreview';
 
@@ -39,6 +39,10 @@ export function MessageComposer({
       toast.error('photo library access denied');
       return;
     }
+    if (result.status === 'unsupported') {
+      toast.error('unsupported image format. use jpeg, png, or webp.');
+      return;
+    }
     if (result.status !== 'picked') return;
     setImage({
       uri: result.asset.uri,
@@ -48,12 +52,13 @@ export function MessageComposer({
 
   const handleSend = async () => {
     if (!canSend) return;
-    await onSend({
+    const payload = {
       body: body.trim() || undefined,
       image: image ?? undefined,
-    });
+    };
     setBody('');
     setImage(null);
+    await onSend(payload);
   };
 
   return (
