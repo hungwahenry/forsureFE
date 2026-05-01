@@ -16,7 +16,8 @@ import { toast } from '@/lib/toast';
 import { router } from 'expo-router';
 import { Camera, Gallery } from 'iconsax-react-nativejs';
 import * as React from 'react';
-import { Image, View } from 'react-native';
+import { Image } from 'expo-image';
+import { View } from 'react-native';
 
 const TOTAL_STEPS = 6;
 
@@ -91,7 +92,7 @@ export default function AvatarStep() {
             <Image
               source={{ uri: previewSrc }}
               className="size-36"
-              resizeMode="cover"
+              contentFit="cover"
             />
           ) : (
             <Icon as={Camera} className="text-muted-foreground size-12" />

@@ -1,13 +1,16 @@
+import { useAuthStore } from '@/features/auth/stores/authStore';
 import { THEME } from '@/lib/theme';
 import { Tabs } from 'expo-router';
-import { Home2, Message, Profile } from 'iconsax-react-nativejs';
+import { Home2, Message } from 'iconsax-react-nativejs';
 import { useColorScheme } from 'nativewind';
+import { Image } from 'expo-image';
 
 const TAB_ICON_SIZE = 30;
 
 export default function TabsLayout() {
   const { colorScheme } = useColorScheme();
   const colors = THEME[colorScheme === 'dark' ? 'dark' : 'light'];
+  const avatarUrl = useAuthStore((s) => s.user?.avatarUrl);
 
   return (
     <Tabs
@@ -19,6 +22,10 @@ export default function TabsLayout() {
         tabBarStyle: {
           backgroundColor: colors.background,
           borderTopColor: colors.border,
+        },
+        tabBarItemStyle: {
+          justifyContent: 'center',
+          alignItems: 'center',
         },
       }}
     >
@@ -49,13 +56,19 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          tabBarIcon: ({ color, focused }) => (
-            <Profile
-              color={color}
-              size={TAB_ICON_SIZE}
-              variant={focused ? 'Bold' : 'Linear'}
-            />
-          ),
+          tabBarIcon: ({ focused }) =>
+            avatarUrl ? (
+              <Image
+                source={{ uri: avatarUrl }}
+                style={{
+                  width: TAB_ICON_SIZE,
+                  height: TAB_ICON_SIZE,
+                  borderRadius: TAB_ICON_SIZE / 2,
+                  borderWidth: focused ? 2 : 0,
+                  borderColor: colors.primary,
+                }}
+              />
+            ) : null,
         }}
       />
     </Tabs>

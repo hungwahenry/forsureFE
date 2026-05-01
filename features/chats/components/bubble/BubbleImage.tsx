@@ -1,5 +1,6 @@
 import { LoadingIndicator } from '@/components/ui/loading-indicator';
-import { Image, View } from 'react-native';
+import { Image } from 'expo-image';
+import { View } from 'react-native';
 
 interface BubbleImageProps {
   uri: string;
@@ -14,7 +15,7 @@ export function BubbleImage({ uri, width, pending }: BubbleImageProps) {
         source={{ uri }}
         style={{ width, aspectRatio: 1 }}
         className="bg-muted rounded-xl"
-        resizeMode="cover"
+        contentFit="cover"
       />
       {pending ? (
         <View className="absolute inset-0 items-center justify-center rounded-xl bg-black/30">

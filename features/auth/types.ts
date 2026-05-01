@@ -10,6 +10,7 @@ export interface AuthUser {
   lastLoginAt: string | null;
   createdAt: string;
   updatedAt: string;
+  avatarUrl: string;
 }
 
 export interface MeResponse {

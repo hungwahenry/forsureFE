@@ -10,7 +10,8 @@ import { cn } from '@/lib/utils';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
-import { Image, Pressable, View } from 'react-native';
+import { Image } from 'expo-image';
+import { Pressable, View } from 'react-native';
 import type { FeedItem } from '../types';
 
 const SENTENCE_FONT_SIZE = 26;

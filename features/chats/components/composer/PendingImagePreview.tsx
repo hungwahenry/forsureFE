@@ -1,6 +1,7 @@
 import { Icon } from '@/components/ui/icon';
 import { CloseCircle } from 'iconsax-react-nativejs';
-import { Image, Pressable, View } from 'react-native';
+import { Image } from 'expo-image';
+import { Pressable, View } from 'react-native';
 
 interface PendingImagePreviewProps {
   uri: string;
@@ -13,7 +14,7 @@ export function PendingImagePreview({ uri, onClear }: PendingImagePreviewProps) 
       <Image
         source={{ uri }}
         className="bg-muted size-16 rounded-md"
-        resizeMode="cover"
+        contentFit="cover"
       />
       <Pressable onPress={onClear} hitSlop={8}>
         <Icon as={CloseCircle} className="text-muted-foreground size-5" />

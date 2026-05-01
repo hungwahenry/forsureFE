@@ -17,13 +17,33 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "fyi.forsure"
+      "bundleIdentifier": "fyi.forsure",
+      "splash": {
+        "image": "./assets/images/splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#ffffff",
+        "dark": {
+          "image": "./assets/images/splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#0d1615"
+        }
+      }
     },
     "android": {
       "package": "fyi.forsure",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "splash": {
+        "image": "./assets/images/splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#ffffff",
+        "dark": {
+          "image": "./assets/images/splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#0d1615"
+        }
       },
       "config": {
         "googleMaps": {
@@ -52,7 +72,9 @@
         {
           "locationWhenInUsePermission": "forsure uses your location to find activities near you."
         }
-      ]
+      ],
+      "expo-font",
+      "expo-image"
     ],
     "experiments": {
       "typedRoutes": true
