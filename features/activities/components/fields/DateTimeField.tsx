@@ -1,9 +1,7 @@
+import { Text } from '@/components/ui/text';
 import { formatRelativeDateTime } from '@/lib/format';
-import { THEME } from '@/lib/theme';
-import { useColorScheme } from 'nativewind';
 import * as React from 'react';
-import { Text } from 'react-native';
-import { Pill, pillTextStyle } from './Pill';
+import { Pill, usePillTextStyle } from './Pill';
 
 interface DateTimeFieldProps {
   value: Date | null;
@@ -11,13 +9,12 @@ interface DateTimeFieldProps {
 }
 
 export function DateTimeField({ value, onPress }: DateTimeFieldProps) {
-  const { colorScheme } = useColorScheme();
-  const colors = THEME[colorScheme === 'dark' ? 'dark' : 'light'];
   const filled = !!value;
+  const textStyle = usePillTextStyle(filled);
 
   return (
     <Pill filled={filled} onPress={onPress}>
-      <Text style={pillTextStyle(filled, colors)}>
+      <Text style={textStyle}>
         {filled ? formatRelativeDateTime(value!) : 'when'}
       </Text>
     </Pill>

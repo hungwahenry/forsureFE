@@ -12,8 +12,7 @@ import {
 import {
   PILL_VERTICAL_PADDING,
   pillClassName,
-  SLOT_FONT_SIZE,
-  SLOT_LINE_HEIGHT,
+  usePillSizing,
 } from './Pill';
 
 interface CapacityFieldProps {
@@ -24,6 +23,7 @@ interface CapacityFieldProps {
 export function CapacityField({ value, onChange }: CapacityFieldProps) {
   const { colorScheme } = useColorScheme();
   const colors = THEME[colorScheme === 'dark' ? 'dark' : 'light'];
+  const { fontSize, lineHeight } = usePillSizing();
 
   const [draft, setDraft] = React.useState(String(value));
 
@@ -62,8 +62,8 @@ export function CapacityField({ value, onChange }: CapacityFieldProps) {
         selectTextOnFocus
         style={{
           color: colors.primary,
-          fontSize: SLOT_FONT_SIZE,
-          lineHeight: SLOT_LINE_HEIGHT,
+          fontSize,
+          lineHeight,
           fontFamily: FONTS.semibold,
           padding: 0,
           minWidth: 32,

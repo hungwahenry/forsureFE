@@ -7,8 +7,7 @@ import { ACTIVITY_TITLE_MAX } from '../../validation/schemas';
 import {
   PILL_VERTICAL_PADDING,
   pillClassName,
-  SLOT_FONT_SIZE,
-  SLOT_LINE_HEIGHT,
+  usePillSizing,
 } from './Pill';
 
 interface TitleFieldProps {
@@ -16,10 +15,14 @@ interface TitleFieldProps {
   onChange: (value: string) => void;
 }
 
+// Base width at 390pt design width. Scales proportionally on smaller screens.
+const BASE_WIDTH = 130;
+
 export function TitleField({ value, onChange }: TitleFieldProps) {
   const { colorScheme } = useColorScheme();
   const colors = THEME[colorScheme === 'dark' ? 'dark' : 'light'];
   const filled = value.trim().length > 0;
+  const { fontSize, lineHeight, scale } = usePillSizing();
 
   return (
     <View
@@ -37,12 +40,11 @@ export function TitleField({ value, onChange }: TitleFieldProps) {
         returnKeyType="done"
         style={{
           color: filled ? colors.primary : colors.mutedForeground,
-          fontSize: SLOT_FONT_SIZE,
-          lineHeight: SLOT_LINE_HEIGHT,
+          fontSize,
+          lineHeight,
           fontFamily: FONTS.semibold,
           padding: 0,
-          minWidth: 80,
-          maxWidth: 220,
+          width: Math.round(BASE_WIDTH * scale),
         }}
       />
     </View>

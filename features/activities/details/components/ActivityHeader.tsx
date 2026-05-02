@@ -1,9 +1,6 @@
 import { Text } from '@/components/ui/text';
 import { GENDER_LABEL } from '../../labels';
-import {
-  SLOT_FONT_SIZE,
-  SLOT_LINE_HEIGHT,
-} from '../../components/fields/Pill';
+import { usePillSizing } from '../../components/fields/Pill';
 import { formatRelativeDateTime, relativeDateUsesOnConnector } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import { Image } from 'expo-image';
@@ -101,10 +98,11 @@ function Word({
   children: React.ReactNode;
   className?: string;
 }) {
+  const { fontSize, lineHeight } = usePillSizing();
   return (
     <Text
       className={cn('text-foreground font-medium', className)}
-      style={{ fontSize: SLOT_FONT_SIZE, lineHeight: SLOT_LINE_HEIGHT }}
+      style={{ fontSize, lineHeight }}
     >
       {children}
     </Text>

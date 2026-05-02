@@ -1,10 +1,10 @@
+import { Text } from '@/components/ui/text';
 import * as React from 'react';
-import { Pressable, Text } from 'react-native';
+import { Pressable } from 'react-native';
 import {
   PILL_VERTICAL_PADDING,
   pillClassName,
-  SLOT_FONT_SIZE,
-  SLOT_LINE_HEIGHT,
+  usePillSizing,
 } from './Pill';
 
 interface EmojiFieldProps {
@@ -14,6 +14,7 @@ interface EmojiFieldProps {
 
 export function EmojiField({ value, onPress }: EmojiFieldProps) {
   const filled = !!value;
+  const { fontSize, lineHeight } = usePillSizing();
 
   return (
     <Pressable
@@ -24,8 +25,8 @@ export function EmojiField({ value, onPress }: EmojiFieldProps) {
     >
       <Text
         style={{
-          fontSize: SLOT_FONT_SIZE,
-          lineHeight: SLOT_LINE_HEIGHT,
+          fontSize,
+          lineHeight,
           opacity: filled ? 1 : 0.55,
         }}
       >

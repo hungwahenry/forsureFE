@@ -1,8 +1,9 @@
 import { FONTS } from '@/lib/fonts';
 import { THEME } from '@/lib/theme';
 import { cn } from '@/lib/utils';
+import { useColorScheme } from 'nativewind';
 import * as React from 'react';
-import { Pressable } from 'react-native';
+import { Pressable, useWindowDimensions } from 'react-native';
 
 interface PillProps {
   filled: boolean;
@@ -44,6 +45,31 @@ export function pillTextStyle(filled: boolean, colors: typeof THEME.light) {
     color: filled ? colors.primary : colors.mutedForeground,
     fontSize: SLOT_FONT_SIZE,
     lineHeight: SLOT_LINE_HEIGHT,
+    fontFamily: FONTS.semibold,
+  };
+}
+
+/** Returns fontSize/lineHeight scaled to the current screen width. */
+export function usePillSizing() {
+  const { width } = useWindowDimensions();
+  // Scale down on narrow screens (320pt SE), cap at design width (390pt).
+  const scale = Math.max(0.8, Math.min(1.0, width / 390));
+  return {
+    fontSize: Math.round(SLOT_FONT_SIZE * scale),
+    lineHeight: Math.round(SLOT_LINE_HEIGHT * scale),
+    scale,
+  };
+}
+
+/** Returns a text style object for pill labels, responsive to screen width. */
+export function usePillTextStyle(filled: boolean) {
+  const { colorScheme } = useColorScheme();
+  const colors = THEME[colorScheme === 'dark' ? 'dark' : 'light'];
+  const { fontSize, lineHeight } = usePillSizing();
+  return {
+    color: filled ? colors.primary : colors.mutedForeground,
+    fontSize,
+    lineHeight,
     fontFamily: FONTS.semibold,
   };
 }
