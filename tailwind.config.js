@@ -11,13 +11,6 @@ module.exports = {
   presets: [require('nativewind/preset')],
   theme: {
     extend: {
-      fontFamily: {
-        sans: ['Fredoka_400Regular'],
-        light: ['Fredoka_300Light'],
-        medium: ['Fredoka_500Medium'],
-        semibold: ['Fredoka_600SemiBold'],
-        bold: ['Fredoka_700Bold'],
-      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',

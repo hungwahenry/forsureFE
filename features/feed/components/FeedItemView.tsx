@@ -21,6 +21,7 @@ import * as React from 'react';
 import { Image } from 'expo-image';
 import { Pressable, View } from 'react-native';
 import { MotiView } from 'moti';
+import { useOpenUserProfile } from '@/features/users/hooks/useOpenUserProfile';
 import type { FeedItem } from '../types';
 
 const SENTENCE_FONT_SIZE = 26;
@@ -43,6 +44,7 @@ export function FeedItemView({
   onPress,
 }: FeedItemViewProps) {
   const router = useRouter();
+  const openUserProfile = useOpenUserProfile();
   const date = React.useMemo(() => new Date(item.startsAt), [item.startsAt]);
 
   const openPlaceView = () => {
@@ -82,10 +84,20 @@ export function FeedItemView({
       <View
         className="flex-row flex-wrap items-center gap-x-2 gap-y-1"
       >
-        <Avatar uri={item.host.avatarUrl} size={HOST_AVATAR_SIZE} />
-        <SentenceText className="text-primary">
-          @{item.host.username}
-        </SentenceText>
+        <Pressable
+          onPress={() => openUserProfile(item.host.username)}
+          hitSlop={6}
+        >
+          <Avatar uri={item.host.avatarUrl} size={HOST_AVATAR_SIZE} />
+        </Pressable>
+        <Pressable
+          onPress={() => openUserProfile(item.host.username)}
+          hitSlop={6}
+        >
+          <SentenceText className="text-primary underline">
+            @{item.host.username}
+          </SentenceText>
+        </Pressable>
         <SentenceText>wants to</SentenceText>
         <SentenceText>{item.emoji}</SentenceText>
         <SentenceText className="font-bold">{item.title}</SentenceText>

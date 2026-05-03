@@ -1,0 +1,60 @@
+import { Text } from '@/components/ui/text';
+import { lightbox } from '@/lib/lightbox';
+import * as React from 'react';
+import { Pressable, View } from 'react-native';
+import { isMyProfile, type UserProfile } from '../types';
+import { WavyAvatar } from './WavyAvatar';
+
+const GENDER_LABEL: Record<UserProfile['gender'], string> = {
+  MALE: 'man',
+  FEMALE: 'woman',
+  NON_BINARY: 'non-binary',
+  PREFER_NOT_TO_SAY: '',
+};
+
+interface ProfileHeaderProps {
+  profile: UserProfile;
+  actionsSlot?: React.ReactNode;
+}
+
+export function ProfileHeader({ profile, actionsSlot }: ProfileHeaderProps) {
+  const placeName = isMyProfile(profile)
+    ? profile.place.name
+    : profile.placeName;
+  const meta: string[] = [
+    String(profile.age),
+    GENDER_LABEL[profile.gender],
+    placeName,
+  ].filter((s) => s.length > 0);
+
+  return (
+    <View className="items-center px-6 pb-4 pt-2">
+      <View className="absolute right-4 top-2 z-10">{actionsSlot}</View>
+
+      <Pressable
+        onPress={() => lightbox.open([profile.avatarUrl])}
+        hitSlop={6}
+      >
+        <WavyAvatar uri={profile.avatarUrl} size={120} />
+      </Pressable>
+
+      <Text
+        className="text-foreground mt-3 text-xl font-bold"
+        numberOfLines={1}
+      >
+        {profile.displayName}
+      </Text>
+      <Text className="text-primary text-base font-medium">
+        @{profile.username}
+      </Text>
+      <Text className="text-muted-foreground mt-1 text-xs">
+        {meta.join(' · ')}
+      </Text>
+      {profile.bio ? (
+        <Text className="text-foreground mt-2 text-center text-sm">
+          {profile.bio}
+        </Text>
+      ) : null}
+    </View>
+  );
+}

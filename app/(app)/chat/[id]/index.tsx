@@ -6,6 +6,7 @@ import { useAuthStore } from '@/features/auth/stores/authStore';
 import { useListChats } from '@/features/chats/api/listChats';
 import { ChatRoom } from '@/features/chats/components/ChatRoom';
 import { useAutoRedirectIfChatRemoved } from '@/features/chats/hooks/useAutoRedirectIfChatRemoved';
+import { formatRelativeDateTime } from '@/lib/format';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ArrowLeft } from 'iconsax-react-nativejs';
 import * as React from 'react';
@@ -39,12 +40,30 @@ export default function ChatDetailScreen() {
           hitSlop={6}
           className="flex-1"
         >
-          <Text
-            className="text-foreground text-center text-base font-semibold"
-            numberOfLines={1}
-          >
-            {preview ? `${preview.emoji}  ${preview.title}` : 'chat'}
-          </Text>
+          {preview ? (
+            <>
+              <Text
+                className="text-foreground text-center text-base font-semibold"
+                numberOfLines={1}
+              >
+                {preview.emoji} {preview.title}
+              </Text>
+              <Text
+                className="text-muted-foreground text-center text-xs"
+                numberOfLines={1}
+              >
+                {formatRelativeDateTime(new Date(preview.startsAt))} ·{' '}
+                {preview.placeName}
+              </Text>
+            </>
+          ) : (
+            <Text
+              className="text-foreground text-center text-base font-semibold"
+              numberOfLines={1}
+            >
+              chat
+            </Text>
+          )}
         </Pressable>
         <View className="size-7" />
       </View>

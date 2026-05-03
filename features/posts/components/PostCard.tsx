@@ -6,6 +6,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
+import { useOpenUserProfile } from '@/features/users/hooks/useOpenUserProfile';
 import { formatChatDate } from '@/lib/format';
 import { Image } from 'expo-image';
 import {
@@ -45,6 +46,7 @@ export function PostCard({
   onDelete,
   onReport,
 }: PostCardProps) {
+  const openUserProfile = useOpenUserProfile();
   const canDelete = viewerIsAuthor || viewerIsHost;
   const authorIsHost =
     post.author.username === activityContext.hostUsername;
@@ -52,14 +54,22 @@ export function PostCard({
     <View className="border-border/40 border-b py-4">
       <View className="mb-3 flex-row items-start justify-between gap-3 px-6">
         <View className="flex-1 flex-row items-start gap-2">
-          <Image
-            source={{ uri: post.author.avatarUrl }}
-            style={{ width: 36, height: 36, borderRadius: 18 }}
-            className="bg-muted"
-          />
+          <Pressable
+            onPress={() => openUserProfile(post.author.username)}
+            hitSlop={6}
+          >
+            <Image
+              source={{ uri: post.author.avatarUrl }}
+              style={{ width: 36, height: 36, borderRadius: 18 }}
+              className="bg-muted"
+            />
+          </Pressable>
           <View className="flex-1">
             <Text className="text-foreground text-base leading-6">
-              <Text className="text-primary font-medium">
+              <Text
+                className="text-primary font-medium"
+                onPress={() => openUserProfile(activityContext.hostUsername)}
+              >
                 @{activityContext.hostUsername}
               </Text>
               {' wanted to '}
@@ -69,7 +79,10 @@ export function PostCard({
               {!authorIsHost ? (
                 <Text className="text-muted-foreground text-xs">
                   shared by{' '}
-                  <Text className="text-foreground font-medium">
+                  <Text
+                    className="text-foreground font-medium"
+                    onPress={() => openUserProfile(post.author.username)}
+                  >
                     @{post.author.username}
                   </Text>
                   {' · '}

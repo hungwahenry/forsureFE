@@ -1,8 +1,10 @@
+import { lightbox } from '@/lib/lightbox';
 import * as React from 'react';
 import { Image } from 'expo-image';
 import {
   Dimensions,
   FlatList,
+  Pressable,
   View,
   type NativeScrollEvent,
   type NativeSyntheticEvent,
@@ -23,6 +25,8 @@ export function PostPhotoCarousel({ photos }: PostPhotoCarouselProps) {
 
   if (photos.length === 0) return null;
 
+  const uris = photos.map((p) => p.imageUrl);
+
   const onMomentumScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const next = Math.round(e.nativeEvent.contentOffset.x / CAROUSEL_WIDTH);
     if (next !== index) setIndex(next);
@@ -37,17 +41,19 @@ export function PostPhotoCarousel({ photos }: PostPhotoCarouselProps) {
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         onMomentumScrollEnd={onMomentumScrollEnd}
-        renderItem={({ item }) => (
-          <Image
-            source={{ uri: item.imageUrl }}
-            style={{
-              width: CAROUSEL_WIDTH,
-              height: CAROUSEL_HEIGHT,
-              borderRadius: 12,
-            }}
-            className="bg-muted"
-            contentFit="cover"
-          />
+        renderItem={({ item, index: i }) => (
+          <Pressable onPress={() => lightbox.open(uris, i)}>
+            <Image
+              source={{ uri: item.imageUrl }}
+              style={{
+                width: CAROUSEL_WIDTH,
+                height: CAROUSEL_HEIGHT,
+                borderRadius: 12,
+              }}
+              className="bg-muted"
+              contentFit="cover"
+            />
+          </Pressable>
         )}
       />
       {photos.length > 1 ? (

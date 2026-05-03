@@ -1,4 +1,5 @@
 import { Text } from '@/components/ui/text';
+import { useOpenUserProfile } from '@/features/users/hooks/useOpenUserProfile';
 import { GENDER_LABEL } from '../../labels';
 import { usePillSizing } from '../../components/fields/Pill';
 import { formatRelativeDateTime, relativeDateUsesOnConnector } from '@/lib/format';
@@ -26,6 +27,7 @@ const HOST_AVATAR_SIZE = 28;
 
 export function ActivityHeader({ details }: ActivityHeaderProps) {
   const router = useRouter();
+  const openUserProfile = useOpenUserProfile();
   const startsAt = new Date(details.startsAt);
   const badge = STATUS_BADGE[details.status];
 
@@ -42,16 +44,26 @@ export function ActivityHeader({ details }: ActivityHeaderProps) {
   return (
     <View className="px-6 py-5">
       <View className="flex-row flex-wrap items-center gap-x-2 gap-y-1.5">
-        <Image
-          source={{ uri: details.host.avatarUrl }}
-          style={{
-            width: HOST_AVATAR_SIZE,
-            height: HOST_AVATAR_SIZE,
-            borderRadius: HOST_AVATAR_SIZE / 2,
-          }}
-          className="bg-muted"
-        />
-        <Word className="text-primary">@{details.host.username}</Word>
+        <Pressable
+          onPress={() => openUserProfile(details.host.username)}
+          hitSlop={6}
+        >
+          <Image
+            source={{ uri: details.host.avatarUrl }}
+            style={{
+              width: HOST_AVATAR_SIZE,
+              height: HOST_AVATAR_SIZE,
+              borderRadius: HOST_AVATAR_SIZE / 2,
+            }}
+            className="bg-muted"
+          />
+        </Pressable>
+        <Pressable
+          onPress={() => openUserProfile(details.host.username)}
+          hitSlop={6}
+        >
+          <Word className="text-primary underline">@{details.host.username}</Word>
+        </Pressable>
         <Word>wants to</Word>
         <Word>{details.emoji}</Word>
         <Word className="font-bold">{details.title}</Word>

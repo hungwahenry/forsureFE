@@ -6,6 +6,7 @@ import {
 } from '@/components/ui/context-menu';
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
+import { useOpenUserProfile } from '@/features/users/hooks/useOpenUserProfile';
 import { THEME } from '@/lib/theme';
 import { cn } from '@/lib/utils';
 import { useColorScheme } from 'nativewind';
@@ -56,6 +57,7 @@ export function MessageBubble({
   onPin,
 }: MessageBubbleProps) {
   const router = useRouter();
+  const openUserProfile = useOpenUserProfile();
   const { colorScheme } = useColorScheme();
   const colors = THEME[colorScheme === 'dark' ? 'dark' : 'light'];
   const bubbleColor = isOwn ? colors.primary : colors.muted;
@@ -77,11 +79,16 @@ export function MessageBubble({
         className="flex-row items-end"
       >
         {!isOwn ? (
-          <Image
-            source={{ uri: message.sender.avatarUrl }}
-            style={{ width: AVATAR_SIZE, height: AVATAR_SIZE, borderRadius: AVATAR_SIZE / 2 }}
-            className="bg-muted"
-          />
+          <Pressable
+            onPress={() => openUserProfile(message.sender.username)}
+            hitSlop={6}
+          >
+            <Image
+              source={{ uri: message.sender.avatarUrl }}
+              style={{ width: AVATAR_SIZE, height: AVATAR_SIZE, borderRadius: AVATAR_SIZE / 2 }}
+              className="bg-muted"
+            />
+          </Pressable>
         ) : null}
         <ContextMenu>
           <ContextMenuTrigger asChild>
@@ -101,7 +108,10 @@ export function MessageBubble({
                   )}
                 >
                   {!isOwn && !hasImage ? (
-                    <Text className="text-muted-foreground mb-0.5 text-xs font-semibold">
+                    <Text
+                      className="text-muted-foreground mb-0.5 text-xs font-semibold"
+                      onPress={() => openUserProfile(message.sender.username)}
+                    >
                       @{message.sender.username}
                     </Text>
                   ) : null}

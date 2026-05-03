@@ -11,14 +11,21 @@ interface PendingImagePreviewProps {
 export function PendingImagePreview({ uri, onClear }: PendingImagePreviewProps) {
   return (
     <View className="border-border/40 bg-muted/40 flex-row items-center gap-3 border-t px-4 py-3">
-      <Image
-        source={{ uri }}
-        className="bg-muted size-16 rounded-md"
-        contentFit="cover"
-      />
-      <Pressable onPress={onClear} hitSlop={8}>
-        <Icon as={CloseCircle} className="text-muted-foreground size-5" />
-      </Pressable>
+      <View style={{ width: 64, height: 64 }}>
+        <Image
+          source={{ uri }}
+          style={{ width: 64, height: 64, borderRadius: 6 }}
+          className="bg-muted"
+          contentFit="cover"
+        />
+        <Pressable
+          onPress={onClear}
+          hitSlop={6}
+          className="absolute -right-1 -top-1"
+        >
+          <Icon as={CloseCircle} className="text-foreground size-5" variant="Bold" />
+        </Pressable>
+      </View>
     </View>
   );
 }

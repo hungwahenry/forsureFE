@@ -1,4 +1,5 @@
 import { Text } from '@/components/ui/text';
+import { useOpenUserProfile } from '@/features/users/hooks/useOpenUserProfile';
 import { cn } from '@/lib/utils';
 import { View } from 'react-native';
 import type { ChatMessage } from '../../types';
@@ -9,6 +10,7 @@ interface BubbleReplyChipProps {
 }
 
 export function BubbleReplyChip({ parent, isOwn }: BubbleReplyChipProps) {
+  const openUserProfile = useOpenUserProfile();
   return (
     <View
       className={cn(
@@ -21,6 +23,7 @@ export function BubbleReplyChip({ parent, isOwn }: BubbleReplyChipProps) {
           'text-[11px] font-semibold',
           isOwn ? 'text-primary-foreground/90' : 'text-foreground/70',
         )}
+        onPress={() => openUserProfile(parent.sender.username)}
         numberOfLines={1}
       >
         @{parent.sender.username}

@@ -5,18 +5,11 @@ import 'react-native-gesture-handler';
 // Side-effect import: registers API client auth handlers before any request.
 import { useAuthStore } from '@/features/auth/stores/authStore';
 import { queryClient } from '@/lib/api/queryClient';
+import { useBrandFonts } from '@/lib/fonts';
 import { NAV_THEME } from '@/lib/theme';
 import { ThemeProvider } from '@react-navigation/native';
 import { PortalHost } from '@rn-primitives/portal';
 import { QueryClientProvider } from '@tanstack/react-query';
-import {
-  Fredoka_300Light,
-  Fredoka_400Regular,
-  Fredoka_500Medium,
-  Fredoka_600SemiBold,
-  Fredoka_700Bold,
-} from '@expo-google-fonts/fredoka';
-import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
@@ -34,13 +27,7 @@ export default function RootLayout() {
   const { colorScheme } = useColorScheme();
   const status = useAuthStore((s) => s.status);
   const bootstrap = useAuthStore((s) => s.bootstrap);
-  const [fontsLoaded] = useFonts({
-    Fredoka_300Light,
-    Fredoka_400Regular,
-    Fredoka_500Medium,
-    Fredoka_600SemiBold,
-    Fredoka_700Bold,
-  });
+  const fontsLoaded = useBrandFonts();
 
   useEffect(() => {
     void bootstrap();
