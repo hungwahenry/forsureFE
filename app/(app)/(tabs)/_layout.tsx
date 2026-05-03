@@ -2,12 +2,12 @@ import { useAuthStore } from '@/features/auth/stores/authStore';
 import { useListChats } from '@/features/chats/api/listChats';
 import { THEME } from '@/lib/theme';
 import { Tabs } from 'expo-router';
+import { Image } from 'expo-image';
 import { Discover, Home2, Message, Profile } from 'iconsax-react-nativejs';
 import { useColorScheme } from 'nativewind';
-import { Image } from 'expo-image';
 import { View } from 'react-native';
 
-const TAB_ICON_SIZE = 30;
+const TAB_ICON_SIZE = 28;
 
 export default function TabsLayout() {
   const { colorScheme } = useColorScheme();
@@ -20,21 +20,21 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
+        tabBarShowLabel: false,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.mutedForeground,
         tabBarStyle: {
           backgroundColor: colors.background,
           borderTopColor: colors.border,
         },
-        tabBarLabelStyle: {
-          fontSize: 11,
+        tabBarItemStyle: {
+          justifyContent: 'center',
         },
       }}
     >
       <Tabs.Screen
         name="feed"
         options={{
-          title: 'feed',
           tabBarIcon: ({ color, focused }) => (
             <Home2
               color={color}
@@ -47,7 +47,6 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'explore',
           tabBarIcon: ({ color, focused }) => (
             <Discover
               color={color}
@@ -60,7 +59,6 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="chat"
         options={{
-          title: 'chats',
           tabBarIcon: ({ color, focused }) => (
             <View>
               <Message
@@ -68,19 +66,7 @@ export default function TabsLayout() {
                 size={TAB_ICON_SIZE}
                 variant={focused ? 'Bold' : 'Linear'}
               />
-              {hasUnread ? (
-                <View
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    right: 0,
-                    width: 12,
-                    height: 12,
-                    borderRadius: 6,
-                    backgroundColor: colors.primary,
-                  }}
-                />
-              ) : null}
+              {hasUnread ? <UnreadDot color={colors.primary} /> : null}
             </View>
           ),
         }}
@@ -88,7 +74,6 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'you',
           tabBarIcon: ({ color, focused }) =>
             avatarUrl ? (
               <Image
@@ -97,8 +82,6 @@ export default function TabsLayout() {
                   width: TAB_ICON_SIZE,
                   height: TAB_ICON_SIZE,
                   borderRadius: TAB_ICON_SIZE / 2,
-                  borderWidth: focused ? 2 : 0,
-                  borderColor: colors.primary,
                 }}
               />
             ) : (
@@ -111,5 +94,21 @@ export default function TabsLayout() {
         }}
       />
     </Tabs>
+  );
+}
+
+function UnreadDot({ color }: { color: string }) {
+  return (
+    <View
+      style={{
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        width: 10,
+        height: 10,
+        borderRadius: 5,
+        backgroundColor: color,
+      }}
+    />
   );
 }
