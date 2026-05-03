@@ -1,6 +1,7 @@
 import type { ChatMessage } from '../chats/types';
 
 export type ActivityStatus = 'OPEN' | 'FULL' | 'CANCELLED' | 'DONE';
+export type ActivityRole = 'HOST' | 'MEMBER';
 export type ActivityGenderPreference = 'ALL' | 'MALE' | 'FEMALE';
 
 export interface Activity {

@@ -64,3 +64,17 @@ export function formatTime(d: Date): string {
     ? `${hours}${ampm}`
     : `${hours}:${String(minutes).padStart(2, '0')}${ampm}`;
 }
+
+export function formatDistance(km: number): string {
+  if (km < 1) return `${Math.round(km * 1000)}m`;
+  if (km < 10) return `${km.toFixed(1)}km`;
+  return `${Math.round(km)}km`;
+}
+
+export function isSameDay(a: Date, b: Date): boolean {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
+}

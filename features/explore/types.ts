@@ -10,6 +10,8 @@ export interface ExplorePostActivity {
   startsAt: string;
   placeName: string;
   hostUsername: string;
+  participantCount: number;
+  participantAvatarUrls: string[];
 }
 
 export interface ExplorePost {

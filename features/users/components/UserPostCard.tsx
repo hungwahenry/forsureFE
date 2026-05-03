@@ -1,5 +1,6 @@
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
+import { ActivityLine } from '@/features/activities/components/ActivityLine';
 import { PostPhotoCarousel } from '@/features/posts/components/PostPhotoCarousel';
 import { formatChatDate } from '@/lib/format';
 import { Global, People } from 'iconsax-react-nativejs';
@@ -16,12 +17,14 @@ export function UserPostCard({ post }: UserPostCardProps) {
   return (
     <View className="border-border/40 border-b py-4">
       <View className="mb-2 px-6">
-        <Text className="text-foreground text-base leading-6">
-          from{' '}
-          <Text className="font-medium">
-            {post.activity.emoji} {post.activity.title}
-          </Text>
-        </Text>
+        <ActivityLine
+          activity={{
+            emoji: post.activity.emoji,
+            title: post.activity.title,
+          }}
+          lead="from"
+          participantCount={post.activity.participantCount}
+        />
         <View className="mt-0.5 flex-row items-center gap-1">
           <Icon
             as={post.visibility === 'PUBLIC' ? Global : People}

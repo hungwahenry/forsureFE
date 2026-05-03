@@ -123,6 +123,8 @@ export function ExploreList({ lat, lng }: ExploreListProps) {
               emoji: item.activity.emoji,
               title: item.activity.title,
               hostUsername: item.activity.hostUsername,
+              participantCount: item.activity.participantCount,
+              participantAvatarUrls: item.activity.participantAvatarUrls,
             }}
             onEdit={() => goToCompose(item.activity.id)}
             onDelete={() => setPendingDelete(item)}

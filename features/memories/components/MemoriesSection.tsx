@@ -118,6 +118,7 @@ export function MemoriesSection({
                 emoji: activity.emoji,
                 title: activity.title,
                 hostUsername: activity.host.username,
+                participantCount: activity.participantCount,
               }}
               onEdit={goCompose}
               onDelete={() => setPendingDelete(p)}

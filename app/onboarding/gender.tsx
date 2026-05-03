@@ -1,7 +1,7 @@
 import { Text } from '@/components/ui/text';
 import { StepShell } from '@/features/onboarding/components/StepShell';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboardingStore';
-import type { Gender } from '@/features/onboarding/types';
+import type { Gender } from '@/features/users/types';
 import { haptics } from '@/lib/haptics';
 import { cn } from '@/lib/utils';
 import { router } from 'expo-router';

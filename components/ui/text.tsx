@@ -1,44 +1,9 @@
-import { FONTS, FONTS_BY_WEIGHT } from '@/lib/fonts';
+import { resolveFontFamily } from '@/lib/fonts';
 import { cn } from '@/lib/utils';
 import * as Slot from '@rn-primitives/slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
-import {
-  Platform,
-  StyleSheet,
-  Text as RNText,
-  type StyleProp,
-  type Role,
-  type TextStyle,
-} from 'react-native';
-
-const WEIGHT_CLASS_TO_KEY: Record<string, string> = {
-  'font-light': '300',
-  'font-medium': '500',
-  'font-semibold': '600',
-  'font-bold': '700',
-};
-
-function detectWeightFromClassName(className?: string): string | null {
-  if (!className) return null;
-  for (const cls of className.split(/\s+/)) {
-    const w = WEIGHT_CLASS_TO_KEY[cls];
-    if (w) return w;
-  }
-  return null;
-}
-
-function resolveFontFamily(
-  className: string | undefined,
-  style: StyleProp<TextStyle>,
-): string {
-  const flat = StyleSheet.flatten(style);
-  if (flat?.fontFamily) return flat.fontFamily as string;
-  const weightFromStyle = flat?.fontWeight;
-  const weightFromClass = detectWeightFromClassName(className);
-  const key = String(weightFromStyle ?? weightFromClass ?? '400');
-  return FONTS_BY_WEIGHT[key] ?? FONTS.regular;
-}
+import { Platform, Text as RNText, type Role } from 'react-native';
 
 const textVariants = cva(
   cn(

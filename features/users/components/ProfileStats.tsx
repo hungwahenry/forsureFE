@@ -1,5 +1,6 @@
 import { Text } from '@/components/ui/text';
 import { View } from 'react-native';
+import { isMyProfile, type UserProfile } from '../types';
 
 export interface StatEntry {
   value: number;
@@ -26,4 +27,20 @@ export function ProfileStats({ stats }: ProfileStatsProps) {
       ))}
     </View>
   );
+}
+
+export function getProfileStats(profile: UserProfile): StatEntry[] {
+  if (isMyProfile(profile)) {
+    return [
+      { value: profile.stats.activitiesHosted, label: 'hosted' },
+      { value: profile.stats.activitiesJoined, label: 'joined' },
+      { value: profile.stats.activitiesCompleted, label: 'attended' },
+      { value: profile.stats.memoriesShared, label: 'memories' },
+    ];
+  }
+  return [
+    { value: profile.stats.activitiesHosted, label: 'hosted' },
+    { value: profile.stats.activitiesCompleted, label: 'attended' },
+    { value: profile.stats.memoriesShared, label: 'memories' },
+  ];
 }

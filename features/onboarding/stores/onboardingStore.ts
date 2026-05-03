@@ -1,5 +1,6 @@
+import type { Gender } from '@/features/users/types';
 import { create } from 'zustand';
-import type { Gender, LocationCoords } from '../types';
+import type { LocationCoords } from '../types';
 
 export interface OnboardingDraft {
   username: string;

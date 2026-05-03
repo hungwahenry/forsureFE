@@ -14,23 +14,19 @@ const GENDER_LABEL: Record<UserProfile['gender'], string> = {
 
 interface ProfileHeaderProps {
   profile: UserProfile;
-  actionsSlot?: React.ReactNode;
 }
 
-export function ProfileHeader({ profile, actionsSlot }: ProfileHeaderProps) {
+export function ProfileHeader({ profile }: ProfileHeaderProps) {
   const placeName = isMyProfile(profile)
     ? profile.place.name
     : profile.placeName;
   const meta: string[] = [
-    String(profile.age),
     GENDER_LABEL[profile.gender],
     placeName,
   ].filter((s) => s.length > 0);
 
   return (
     <View className="items-center px-6 pb-4 pt-2">
-      <View className="absolute right-4 top-2 z-10">{actionsSlot}</View>
-
       <Pressable
         onPress={() => lightbox.open([profile.avatarUrl])}
         hitSlop={6}

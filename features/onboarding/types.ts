@@ -1,6 +1,5 @@
 import type { AuthUser } from '@/features/auth/types';
-
-export type Gender = 'MALE' | 'FEMALE' | 'NON_BINARY' | 'PREFER_NOT_TO_SAY';
+import type { Gender } from '@/features/users/types';
 
 export interface LocationCoords {
   lat: number;

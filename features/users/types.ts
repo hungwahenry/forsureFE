@@ -1,8 +1,7 @@
-export type Gender = 'MALE' | 'FEMALE' | 'NON_BINARY' | 'PREFER_NOT_TO_SAY';
+import type { ActivityRole, ActivityStatus } from '@/features/activities/types';
+import type { PostVisibility } from '@/features/posts/types';
 
-export type ActivityRole = 'HOST' | 'MEMBER';
-export type ActivityStatus = 'OPEN' | 'FULL' | 'CANCELLED' | 'DONE';
-export type PostVisibility = 'PARTICIPANTS' | 'PUBLIC';
+export type Gender = 'MALE' | 'FEMALE' | 'NON_BINARY' | 'PREFER_NOT_TO_SAY';
 
 export interface MyProfile {
   id: string;
@@ -59,6 +58,7 @@ export interface UserPostActivity {
   title: string;
   startsAt: string;
   placeName: string;
+  participantCount: number;
 }
 
 export interface UserPost {

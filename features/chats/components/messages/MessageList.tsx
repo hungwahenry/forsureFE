@@ -1,4 +1,5 @@
 import { LoadingIndicator } from '@/components/ui/loading-indicator';
+import { isSameDay } from '@/lib/format';
 import * as React from 'react';
 import { FlatList, View } from 'react-native';
 import type { ChatMessage } from '../../types';
@@ -18,14 +19,6 @@ interface MessageListProps {
   onRetry: (m: ChatMessage) => void;
   onCancel: (m: ChatMessage) => void;
   onPin: (m: ChatMessage) => void;
-}
-
-function isSameDay(a: Date, b: Date): boolean {
-  return (
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate()
-  );
 }
 
 export function MessageList({

@@ -1,3 +1,4 @@
+import { AvatarStack } from '@/components/ui/avatar-stack';
 import { Button } from '@/components/ui/button';
 import {
   ContextMenu,
@@ -9,14 +10,13 @@ import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
 import { GENDER_LABEL } from '@/features/activities/labels';
 import {
+  formatDistance,
   formatRelativeDateTime,
   relativeDateUsesOnConnector,
 } from '@/lib/format';
-import { THEME } from '@/lib/theme';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'expo-router';
 import { Flag } from 'iconsax-react-nativejs';
-import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { Image } from 'expo-image';
 import { Pressable, View } from 'react-native';
@@ -177,58 +177,3 @@ function Avatar({ uri, size }: { uri: string; size: number }) {
   );
 }
 
-interface AvatarStackProps {
-  uris: string[];
-  size: number;
-  overlap: number;
-  overflow: number;
-}
-
-function AvatarStack({ uris, size, overlap, overflow }: AvatarStackProps) {
-  const { colorScheme } = useColorScheme();
-  const colors = THEME[colorScheme === 'dark' ? 'dark' : 'light'];
-  const ringColor = colors.background;
-
-  return (
-    <View className="flex-row items-center">
-      {uris.map((uri, i) => (
-        <Image
-          key={`${uri}-${i}`}
-          source={{ uri }}
-          className="bg-muted"
-          style={{
-            width: size,
-            height: size,
-            borderRadius: size / 2,
-            marginLeft: i === 0 ? 0 : -overlap,
-            borderWidth: 2,
-            borderColor: ringColor,
-          }}
-        />
-      ))}
-      {overflow > 0 ? (
-        <View
-          className="bg-muted items-center justify-center"
-          style={{
-            width: size,
-            height: size,
-            borderRadius: size / 2,
-            marginLeft: -overlap,
-            borderWidth: 2,
-            borderColor: ringColor,
-          }}
-        >
-          <Text className="text-muted-foreground text-xs font-semibold">
-            +{overflow}
-          </Text>
-        </View>
-      ) : null}
-    </View>
-  );
-}
-
-function formatDistance(km: number): string {
-  if (km < 1) return `${Math.round(km * 1000)}m`;
-  if (km < 10) return `${km.toFixed(1)}km`;
-  return `${Math.round(km)}km`;
-}
