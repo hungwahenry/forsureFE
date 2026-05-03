@@ -11,19 +11,3 @@ export type NotificationEventCode =
   | 'PINNED'
   | 'NEW_MEMORY'
   | 'ACTIVITY_START_1H';
-
-export interface PreferenceEntry {
-  eventCode: NotificationEventCode;
-  channel: NotificationChannel;
-  enabled: boolean;
-}
-
-export interface PreferencesResponse {
-  entries: PreferenceEntry[];
-}
-
-export interface PreferenceUpdate {
-  eventCode: NotificationEventCode;
-  channel: NotificationChannel;
-  enabled: boolean;
-}

@@ -3,6 +3,7 @@ import { Screen } from '@/components/ui/screen';
 import { Text } from '@/components/ui/text';
 import { FeedList } from '@/features/feed/components/FeedList';
 import { FeedLocationGate } from '@/features/feed/components/FeedLocationGate';
+import { InboxBell } from '@/features/inbox/components/InboxBell';
 import { haptics } from '@/lib/haptics';
 import { useRouter } from 'expo-router';
 import { Add } from 'iconsax-react-nativejs';
@@ -18,8 +19,9 @@ export default function FeedScreen() {
 
   return (
     <Screen edges={['top']} noKeyboardAvoidance>
-      <View className="px-6 pb-3 pt-2">
+      <View className="flex-row items-center justify-between px-6 pb-3 pt-2">
         <Text className="text-foreground text-3xl font-bold">forsure</Text>
+        <InboxBell />
       </View>
 
       <FeedLocationGate>
