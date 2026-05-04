@@ -43,7 +43,11 @@ export default function SettingsScreen() {
 
       <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 32 }}>
         <Section title="profile">
-          <Row icon={Edit2} label="edit profile" onPress={stub} />
+          <Row
+            icon={Edit2}
+            label="edit profile"
+            onPress={() => router.push('/edit-profile' as never)}
+          />
         </Section>
 
         <Section title="notifications">

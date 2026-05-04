@@ -1,4 +1,3 @@
-import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import * as React from 'react';
 import { Platform } from 'react-native';
@@ -22,11 +21,6 @@ export function useRegisterPushToken(authenticated: boolean): void {
 }
 
 async function register(): Promise<void> {
-  if (!Device.isDevice) {
-    log('skipping: not a physical device');
-    return;
-  }
-
   try {
     let granted = (await Notifications.getPermissionsAsync()).granted;
     if (!granted) {
@@ -37,14 +31,7 @@ async function register(): Promise<void> {
       return;
     }
 
-    const projectId =
-      // EAS-built apps expose projectId via Constants; fall back to env when absent.
-      // expo-notifications reads it automatically if omitted, but being explicit
-      // avoids cryptic warnings in dev clients.
-      undefined;
-    const tokenRes = await Notifications.getExpoPushTokenAsync(
-      projectId ? { projectId } : undefined,
-    );
+    const tokenRes = await Notifications.getExpoPushTokenAsync();
     const token = tokenRes.data;
     if (!token) {
       log('no token returned');
@@ -53,7 +40,7 @@ async function register(): Promise<void> {
 
     await registerDevice({ token, platform: platform() });
     await setStoredPushToken(token);
-    log('registered');
+    log('registered', token);
   } catch (err) {
     log('failed', err);
   }

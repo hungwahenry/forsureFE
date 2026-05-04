@@ -56,6 +56,10 @@ export default function AppLayout() {
           name="delete-account"
           options={{ presentation: 'fullScreenModal' }}
         />
+        <Stack.Screen
+          name="edit-profile"
+          options={{ presentation: 'fullScreenModal' }}
+        />
       </Stack>
       <Lightbox />
     </>
