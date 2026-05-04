@@ -44,6 +44,18 @@ export default function AppLayout() {
           name="notification-preferences"
           options={{ presentation: 'fullScreenModal' }}
         />
+        <Stack.Screen
+          name="settings"
+          options={{ presentation: 'fullScreenModal' }}
+        />
+        <Stack.Screen
+          name="blocked-users"
+          options={{ presentation: 'fullScreenModal' }}
+        />
+        <Stack.Screen
+          name="delete-account"
+          options={{ presentation: 'fullScreenModal' }}
+        />
       </Stack>
       <Lightbox />
     </>
