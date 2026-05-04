@@ -4,6 +4,8 @@ import 'react-native-gesture-handler';
 
 // Side-effect import: registers API client auth handlers before any request.
 import { useAuthStore } from '@/features/auth/stores/authStore';
+import { useHapticsStore } from '@/features/settings/stores/hapticsStore';
+import { useThemeStore } from '@/features/settings/stores/themeStore';
 import { queryClient } from '@/lib/api/queryClient';
 import { useBrandFonts } from '@/lib/fonts';
 import { NAV_THEME } from '@/lib/theme';
@@ -27,20 +29,36 @@ export default function RootLayout() {
   const { colorScheme } = useColorScheme();
   const status = useAuthStore((s) => s.status);
   const bootstrap = useAuthStore((s) => s.bootstrap);
+  const themeHydrated = useThemeStore((s) => s.hydrated);
+  const bootstrapTheme = useThemeStore((s) => s.bootstrap);
+  const hapticsHydrated = useHapticsStore((s) => s.hydrated);
+  const bootstrapHaptics = useHapticsStore((s) => s.bootstrap);
   const fontsLoaded = useBrandFonts();
 
   useEffect(() => {
     void bootstrap();
-  }, [bootstrap]);
+    void bootstrapTheme();
+    void bootstrapHaptics();
+  }, [bootstrap, bootstrapTheme, bootstrapHaptics]);
 
   useEffect(() => {
-    if (status !== 'bootstrapping' && fontsLoaded) {
+    if (
+      status !== 'bootstrapping' &&
+      fontsLoaded &&
+      themeHydrated &&
+      hapticsHydrated
+    ) {
       void SplashScreen.hideAsync();
     }
-  }, [status, fontsLoaded]);
+  }, [status, fontsLoaded, themeHydrated, hapticsHydrated]);
 
-  // Block first paint until bootstrap settles and fonts are loaded.
-  if (status === 'bootstrapping' || !fontsLoaded) return null;
+  if (
+    status === 'bootstrapping' ||
+    !fontsLoaded ||
+    !themeHydrated ||
+    !hapticsHydrated
+  )
+    return null;
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

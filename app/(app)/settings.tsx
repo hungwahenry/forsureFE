@@ -1,10 +1,12 @@
+import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { Screen } from '@/components/ui/screen';
 import { Text } from '@/components/ui/text';
 import { useSignOut } from '@/features/auth/hooks/useSignOut';
+import { VersionRow } from '@/features/settings/components/VersionRow';
+import { haptics } from '@/lib/haptics';
 import { toast } from '@/lib/toast';
 import { cn } from '@/lib/utils';
-import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
 import {
   ArrowLeft,
@@ -13,7 +15,6 @@ import {
   Document,
   Edit2,
   ExportSquare,
-  InfoCircle,
   MessageQuestion,
   Notification,
   Sms,
@@ -22,14 +23,15 @@ import {
   UserMinus,
   Vibe,
 } from 'iconsax-react-nativejs';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Linking, Pressable, ScrollView, View } from 'react-native';
 
-const stub = () => toast('coming soon');
+const openExternal = (url: string) => {
+  void Linking.openURL(url).catch(() => toast.error("couldn't open link."));
+};
 
 export default function SettingsScreen() {
   const router = useRouter();
   const { signOut, isPending: signingOut } = useSignOut();
-  const version = Constants.expoConfig?.version ?? '—';
 
   return (
     <Screen edges={['top']}>
@@ -67,8 +69,16 @@ export default function SettingsScreen() {
         </Section>
 
         <Section title="appearance">
-          <Row icon={Brush} label="theme" onPress={stub} />
-          <Row icon={Vibe} label="haptics" onPress={stub} />
+          <Row
+            icon={Brush}
+            label="theme"
+            onPress={() => router.push('/theme' as never)}
+          />
+          <Row
+            icon={Vibe}
+            label="haptics"
+            onPress={() => router.push('/haptics' as never)}
+          />
         </Section>
 
         <Section title="account">
@@ -91,24 +101,33 @@ export default function SettingsScreen() {
         </Section>
 
         <Section title="about">
-          <Row icon={Document} label="privacy policy" onPress={stub} />
-          <Row icon={Document} label="terms of service" onPress={stub} />
-          <Row icon={MessageQuestion} label="help & contact" onPress={stub} />
-          <View className="border-border/40 flex-row items-center gap-3 border-b px-6 py-4">
-            <Icon as={InfoCircle} className="text-muted-foreground size-5" />
-            <Text className="text-foreground flex-1 text-base">version</Text>
-            <Text className="text-muted-foreground text-sm">{version}</Text>
-          </View>
+          <Row
+            icon={Document}
+            label="privacy policy"
+            onPress={() => openExternal('https://forsure.fyi/privacy')}
+          />
+          <Row
+            icon={Document}
+            label="terms of service"
+            onPress={() => openExternal('https://forsure.fyi/terms')}
+          />
+          <Row
+            icon={MessageQuestion}
+            label="help & contact"
+            onPress={() => openExternal('https://forsure.fyi/help')}
+          />
+          <VersionRow onUnlock={() => router.push('/credits' as never)} />
         </Section>
 
         <View className="mt-10 px-6">
-          <Pressable
+          <Button
             onPress={() => void signOut()}
             disabled={signingOut}
-            className="bg-destructive/10 items-center rounded-2xl py-4 active:opacity-80"
+            variant="destructive"
+            size="lg"
           >
-            <Text className="text-destructive font-semibold">sign out</Text>
-          </Pressable>
+            <Text>sign out</Text>
+          </Button>
         </View>
       </ScrollView>
     </Screen>
@@ -145,7 +164,10 @@ function Row({
 }) {
   return (
     <Pressable
-      onPress={onPress}
+      onPress={() => {
+        haptics.tap();
+        onPress();
+      }}
       className="border-border/40 flex-row items-center gap-3 border-b px-6 py-4 active:bg-muted/30"
     >
       <Icon

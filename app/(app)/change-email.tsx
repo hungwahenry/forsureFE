@@ -6,6 +6,7 @@ import { Screen } from '@/components/ui/screen';
 import { Text } from '@/components/ui/text';
 import { useChangeEmailFlow } from '@/features/account/hooks/useChangeEmailFlow';
 import { useMyProfile } from '@/features/users/api/getMyProfile';
+import { haptics } from '@/lib/haptics';
 import { useRouter } from 'expo-router';
 import { ArrowLeft, Sms } from 'iconsax-react-nativejs';
 import { Pressable, View } from 'react-native';
@@ -96,7 +97,13 @@ export default function ChangeEmailScreen() {
           </View>
 
           <View className="mt-3 flex-row">
-            <Pressable onPress={() => void flow.onResend()} hitSlop={8}>
+            <Pressable
+              onPress={() => {
+                haptics.tap();
+                void flow.onResend();
+              }}
+              hitSlop={8}
+            >
               <Text className="text-primary text-sm font-medium">
                 resend code
               </Text>

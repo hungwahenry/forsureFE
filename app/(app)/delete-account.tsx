@@ -5,6 +5,7 @@ import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Screen } from '@/components/ui/screen';
 import { Text } from '@/components/ui/text';
 import { useDeleteAccountFlow } from '@/features/account/hooks/useDeleteAccountFlow';
+import { haptics } from '@/lib/haptics';
 import { useRouter } from 'expo-router';
 import { ArrowLeft, Trash } from 'iconsax-react-nativejs';
 import { Pressable, View } from 'react-native';
@@ -79,7 +80,13 @@ export default function DeleteAccountScreen() {
           </View>
 
           <View className="mt-3 flex-row">
-            <Pressable onPress={() => void flow.onResend()} hitSlop={8}>
+            <Pressable
+              onPress={() => {
+                haptics.tap();
+                void flow.onResend();
+              }}
+              hitSlop={8}
+            >
               <Text className="text-primary text-sm font-medium">
                 resend code
               </Text>

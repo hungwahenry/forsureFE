@@ -1,6 +1,7 @@
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
 import { FONTS } from '@/lib/fonts';
+import { haptics } from '@/lib/haptics';
 import { cn } from '@/lib/utils';
 import { MESSAGE_MAX_LENGTH, messageBodySchema } from '../../validation/schemas';
 import { Camera, Send } from 'iconsax-react-nativejs';
@@ -95,7 +96,10 @@ export function MessageComposer({
           className="bg-muted/60 text-foreground font-sans min-w-0 flex-1 rounded-3xl px-4 py-2 text-base leading-5"
         />
         <Pressable
-          onPress={() => void handleSend()}
+          onPress={() => {
+            haptics.press();
+            void handleSend();
+          }}
           disabled={!canSend}
           hitSlop={8}
           className="size-10 items-center justify-center"

@@ -1,12 +1,24 @@
+import { haptics } from '@/lib/haptics';
 import { cn } from '@/lib/utils';
 import * as RadioGroupPrimitive from '@rn-primitives/radio-group';
 import { Platform } from 'react-native';
 
 function RadioGroup({
   className,
+  onValueChange,
   ...props
 }: React.ComponentProps<typeof RadioGroupPrimitive.Root>) {
-  return <RadioGroupPrimitive.Root className={cn('gap-3', className)} {...props} />;
+  const handleChange = (next: string) => {
+    if (next !== props.value) haptics.selection();
+    onValueChange?.(next);
+  };
+  return (
+    <RadioGroupPrimitive.Root
+      className={cn('gap-3', className)}
+      {...props}
+      onValueChange={handleChange}
+    />
+  );
 }
 
 function RadioGroupItem({

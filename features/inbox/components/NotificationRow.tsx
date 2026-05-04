@@ -1,7 +1,8 @@
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
-import { THEME } from '@/lib/theme';
 import { formatChatDate } from '@/lib/format';
+import { haptics } from '@/lib/haptics';
+import { THEME } from '@/lib/theme';
 import { cn } from '@/lib/utils';
 import {
   Bookmark,
@@ -43,7 +44,10 @@ export function NotificationRow({ item, onPress }: NotificationRowProps) {
 
   return (
     <Pressable
-      onPress={onPress}
+      onPress={() => {
+        haptics.tap();
+        onPress();
+      }}
       className={cn(
         'border-border/40 flex-row gap-3 border-b px-6 py-4 active:bg-muted/30',
         isUnread && 'bg-primary/5',

@@ -1,10 +1,17 @@
 import { buttonTextVariants, buttonVariants } from '@/components/ui/button';
 import { NativeOnlyAnimatedView } from '@/components/ui/native-only-animated-view';
 import { TextClassContext } from '@/components/ui/text';
+import { FONTS } from '@/lib/fonts';
+import { haptics } from '@/lib/haptics';
 import { cn } from '@/lib/utils';
 import * as AlertDialogPrimitive from '@rn-primitives/alert-dialog';
 import * as React from 'react';
-import { Platform, View, type ViewProps } from 'react-native';
+import {
+  Platform,
+  View,
+  type GestureResponderEvent,
+  type ViewProps,
+} from 'react-native';
 import { FadeIn, FadeOut } from 'react-native-reanimated';
 import { FullWindowOverlay as RNFullWindowOverlay } from 'react-native-screens';
 
@@ -89,11 +96,13 @@ function AlertDialogFooter({ className, ...props }: ViewProps) {
 
 function AlertDialogTitle({
   className,
+  style,
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Title>) {
   return (
     <AlertDialogPrimitive.Title
-      className={cn('text-foreground text-lg font-semibold font-sans', className)}
+      className={cn('text-foreground text-lg', className)}
+      style={[{ fontFamily: FONTS.semibold }, style]}
       {...props}
     />
   );
@@ -101,11 +110,13 @@ function AlertDialogTitle({
 
 function AlertDialogDescription({
   className,
+  style,
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Description>) {
   return (
     <AlertDialogPrimitive.Description
-      className={cn('text-muted-foreground text-sm font-sans', className)}
+      className={cn('text-muted-foreground text-sm', className)}
+      style={[{ fontFamily: FONTS.regular }, style]}
       {...props}
     />
   );
@@ -113,24 +124,43 @@ function AlertDialogDescription({
 
 function AlertDialogAction({
   className,
+  onPress,
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Action>) {
+  const handlePress = onPress
+    ? (e: GestureResponderEvent) => {
+        haptics.press();
+        onPress(e);
+      }
+    : undefined;
   return (
     <TextClassContext.Provider value={buttonTextVariants({ className })}>
-      <AlertDialogPrimitive.Action className={cn(buttonVariants(), className)} {...props} />
+      <AlertDialogPrimitive.Action
+        className={cn(buttonVariants(), className)}
+        {...props}
+        onPress={handlePress}
+      />
     </TextClassContext.Provider>
   );
 }
 
 function AlertDialogCancel({
   className,
+  onPress,
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Cancel>) {
+  const handlePress = onPress
+    ? (e: GestureResponderEvent) => {
+        haptics.tap();
+        onPress(e);
+      }
+    : undefined;
   return (
     <TextClassContext.Provider value={buttonTextVariants({ className, variant: 'outline' })}>
       <AlertDialogPrimitive.Cancel
         className={cn(buttonVariants({ variant: 'outline' }), className)}
         {...props}
+        onPress={handlePress}
       />
     </TextClassContext.Provider>
   );

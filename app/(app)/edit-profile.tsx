@@ -9,6 +9,7 @@ import {
   NAME_MAX,
   useEditProfileForm,
 } from '@/features/account/hooks/useEditProfileForm';
+import { haptics } from '@/lib/haptics';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { ArrowLeft, Location, Refresh } from 'iconsax-react-nativejs';
@@ -33,7 +34,10 @@ export default function EditProfileScreen() {
           edit profile
         </Text>
         <Pressable
-          onPress={() => void onSave()}
+          onPress={() => {
+            haptics.press();
+            void onSave();
+          }}
           hitSlop={8}
           disabled={!form.dirty || form.isSaving}
         >

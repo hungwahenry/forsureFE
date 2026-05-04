@@ -68,6 +68,18 @@ export default function AppLayout() {
           name="data-export"
           options={{ presentation: 'fullScreenModal' }}
         />
+        <Stack.Screen
+          name="theme"
+          options={{ presentation: 'fullScreenModal' }}
+        />
+        <Stack.Screen
+          name="haptics"
+          options={{ presentation: 'fullScreenModal' }}
+        />
+        <Stack.Screen
+          name="credits"
+          options={{ presentation: 'fullScreenModal' }}
+        />
       </Stack>
       <Lightbox />
     </>

@@ -9,6 +9,7 @@ import {
 import { useResendCooldown } from '@/features/auth/hooks/useResendCooldown';
 import { useSignInFromCode } from '@/features/auth/hooks/useSignInFromCode';
 import { ApiError } from '@/lib/api/types';
+import { haptics } from '@/lib/haptics';
 import { toast } from '@/lib/toast';
 import { cn } from '@/lib/utils';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -91,7 +92,10 @@ export default function CodeScreen() {
           <View className="flex-1" />
 
           <Pressable
-            onPress={onResend}
+            onPress={() => {
+              haptics.tap();
+              void onResend();
+            }}
             disabled={!cooldown.canResend || requestCode.isPending}
             className="mb-4 self-center"
           >

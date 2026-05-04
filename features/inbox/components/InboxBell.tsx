@@ -1,5 +1,6 @@
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
+import { haptics } from '@/lib/haptics';
 import { THEME } from '@/lib/theme';
 import { useRouter } from 'expo-router';
 import { Notification } from 'iconsax-react-nativejs';
@@ -16,7 +17,10 @@ export function InboxBell() {
 
   return (
     <Pressable
-      onPress={() => router.push('/notifications' as never)}
+      onPress={() => {
+        haptics.tap();
+        router.push('/notifications' as never);
+      }}
       hitSlop={8}
       className="items-center justify-center"
     >

@@ -1,11 +1,18 @@
+import { haptics } from '@/lib/haptics';
 import { cn } from '@/lib/utils';
 import * as SwitchPrimitives from '@rn-primitives/switch';
 import { Platform } from 'react-native';
 
 function Switch({
   className,
+  onCheckedChange,
   ...props
 }: React.ComponentProps<typeof SwitchPrimitives.Root>) {
+  const handleChange = (next: boolean) => {
+    if (!props.disabled) haptics.selection();
+    onCheckedChange?.(next);
+  };
+
   return (
     <SwitchPrimitives.Root
       className={cn(
@@ -17,7 +24,8 @@ function Switch({
         props.disabled && 'opacity-50',
         className
       )}
-      {...props}>
+      {...props}
+      onCheckedChange={handleChange}>
       <SwitchPrimitives.Thumb
         className={cn(
           'bg-background size-4 rounded-full transition-transform',

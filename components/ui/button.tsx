@@ -1,7 +1,12 @@
 import { TextClassContext } from '@/components/ui/text';
+import { haptics } from '@/lib/haptics';
 import { cn } from '@/lib/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { Platform, Pressable } from 'react-native';
+import {
+  Platform,
+  Pressable,
+  type GestureResponderEvent,
+} from 'react-native';
 
 const buttonVariants = cva(
   cn(
@@ -103,6 +108,7 @@ function Button({
   leftIcon,
   rightIcon,
   children,
+  onPress,
   ...props
 }: ButtonProps) {
   // Pressable's children may be a render-prop. In that case we pass through
@@ -118,12 +124,24 @@ function Button({
       </>
     );
 
+  const handlePress = onPress
+    ? (e: GestureResponderEvent) => {
+        if (!props.disabled) {
+          if (variant === 'destructive') haptics.thump();
+          else if (variant !== 'link' && variant !== 'ghost') haptics.press();
+          else haptics.tap();
+        }
+        onPress(e);
+      }
+    : undefined;
+
   return (
     <TextClassContext.Provider value={buttonTextVariants({ variant, size })}>
       <Pressable
         className={cn(props.disabled && 'opacity-50', buttonVariants({ variant, size }), className)}
         role="button"
         {...props}
+        onPress={handlePress}
       >
         {wrapped}
       </Pressable>
