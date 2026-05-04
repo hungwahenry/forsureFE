@@ -60,6 +60,14 @@ export default function AppLayout() {
           name="edit-profile"
           options={{ presentation: 'fullScreenModal' }}
         />
+        <Stack.Screen
+          name="change-email"
+          options={{ presentation: 'fullScreenModal' }}
+        />
+        <Stack.Screen
+          name="data-export"
+          options={{ presentation: 'fullScreenModal' }}
+        />
       </Stack>
       <Lightbox />
     </>

@@ -72,8 +72,16 @@ export default function SettingsScreen() {
         </Section>
 
         <Section title="account">
-          <Row icon={Sms} label="email" onPress={stub} />
-          <Row icon={ExportSquare} label="export my data" onPress={stub} />
+          <Row
+            icon={Sms}
+            label="email"
+            onPress={() => router.push('/change-email' as never)}
+          />
+          <Row
+            icon={ExportSquare}
+            label="export my data"
+            onPress={() => router.push('/data-export' as never)}
+          />
           <Row
             icon={Trash}
             label="delete account"
