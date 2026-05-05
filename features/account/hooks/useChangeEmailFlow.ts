@@ -2,57 +2,103 @@ import {
   useConfirmEmailChange,
   useStartEmailChange,
 } from '@/features/account/api/changeEmail';
-import { ApiError } from '@/lib/api/types';
+import { useStartStepUp } from '@/features/step-up/api/startStepUp';
+import { ApiError, ErrorCode } from '@/lib/api/types';
 import { toast } from '@/lib/toast';
 import * as React from 'react';
 
-export type ChangeEmailStep = 'enter-email' | 'enter-code';
+export type ChangeEmailStep = 'verify-current' | 'enter-email' | 'enter-code';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function useChangeEmailFlow() {
-  const [step, setStep] = React.useState<ChangeEmailStep>('enter-email');
+  const [step, setStep] = React.useState<ChangeEmailStep>('verify-current');
+  const [stepUpChallengeId, setStepUpChallengeId] = React.useState<string | null>(null);
+  const [stepUpCode, setStepUpCodeRaw] = React.useState('');
   const [newEmail, setNewEmailRaw] = React.useState('');
-  const [challengeId, setChallengeId] = React.useState<string | null>(null);
+  const [emailChallengeId, setEmailChallengeId] = React.useState<string | null>(null);
   const [code, setCodeRaw] = React.useState('');
 
+  const startStepUp = useStartStepUp();
   const start = useStartEmailChange();
   const confirm = useConfirmEmailChange();
 
+  const setStepUpCode = (v: string) =>
+    setStepUpCodeRaw(v.replace(/[^0-9]/g, '').slice(0, 6));
   const setNewEmail = (v: string) => setNewEmailRaw(v.trim().toLowerCase());
   const setCode = (v: string) =>
     setCodeRaw(v.replace(/[^0-9]/g, '').slice(0, 6));
 
   const isValidEmail = EMAIL_PATTERN.test(newEmail);
 
-  const requestCode = async (toastOnSuccess: string | null): Promise<boolean> => {
-    if (!isValidEmail) return false;
+  const requestStepUp = React.useCallback(
+    async (toastOnSuccess: string | null): Promise<boolean> => {
+      try {
+        const res = await startStepUp.mutateAsync('CHANGE_EMAIL');
+        setStepUpChallengeId(res.challengeId);
+        setStepUpCodeRaw('');
+        if (toastOnSuccess) toast(toastOnSuccess);
+        return true;
+      } catch (err) {
+        const message =
+          err instanceof ApiError ? err.message : "couldn't send code. try again.";
+        toast.error(message);
+        return false;
+      }
+    },
+    [startStepUp],
+  );
+
+  const bootstrapped = React.useRef(false);
+  React.useEffect(() => {
+    if (bootstrapped.current) return;
+    bootstrapped.current = true;
+    void requestStepUp(null);
+  }, [requestStepUp]);
+
+  const onVerifyCurrent = (): void => {
+    if (stepUpCode.length !== 6 || !stepUpChallengeId) return;
+    setStep('enter-email');
+  };
+
+  const onResendStepUp = async (): Promise<void> => {
+    await requestStepUp('code resent.');
+  };
+
+  const onContinue = async (): Promise<void> => {
+    if (!isValidEmail || !stepUpChallengeId || stepUpCode.length !== 6) return;
     try {
-      const res = await start.mutateAsync(newEmail);
-      setChallengeId(res.challengeId);
-      if (toastOnSuccess) toast(toastOnSuccess);
-      return true;
+      const res = await start.mutateAsync({
+        newEmail,
+        stepUpChallengeId,
+        stepUpCode,
+      });
+      setEmailChallengeId(res.challengeId);
+      setStep('enter-code');
     } catch (err) {
       const message =
         err instanceof ApiError ? err.message : "couldn't send code. try again.";
       toast.error(message);
-      return false;
+      // Step-up code is single-use; on auth error force re-verify rather than
+      // letting the user retry with a server-consumed code.
+      if (err instanceof ApiError && err.is(ErrorCode.AUTH_INVALID_CREDENTIALS)) {
+        setStep('verify-current');
+        await requestStepUp(null);
+      }
     }
   };
 
-  const onContinue = async (): Promise<void> => {
-    const ok = await requestCode(null);
-    if (ok) setStep('enter-code');
-  };
-
-  const onResend = async (): Promise<void> => {
-    await requestCode('code resent.');
+  const onResendNewEmailCode = async (): Promise<void> => {
+    setStep('verify-current');
+    setEmailChallengeId(null);
+    setCodeRaw('');
+    await requestStepUp('verify your current email again to resend.');
   };
 
   const onConfirm = async (): Promise<boolean> => {
-    if (!challengeId || code.length !== 6) return false;
+    if (!emailChallengeId || code.length !== 6) return false;
     try {
-      await confirm.mutateAsync({ challengeId, code });
+      await confirm.mutateAsync({ challengeId: emailChallengeId, code });
       toast.success(`email updated to ${newEmail}.`);
       return true;
     } catch (err) {
@@ -65,16 +111,22 @@ export function useChangeEmailFlow() {
 
   return {
     step,
+    stepUpCode,
+    setStepUpCode,
+    canVerifyCurrent: stepUpCode.length === 6 && stepUpChallengeId != null,
+    onVerifyCurrent,
+    onResendStepUp,
+    isRequestingStepUp: startStepUp.isPending,
     newEmail,
     setNewEmail,
     isValidEmail,
+    onContinue,
+    isRequestingEmailCode: start.isPending,
     code,
     setCode,
-    onContinue,
-    onResend,
+    canConfirm: code.length === 6 && emailChallengeId != null,
     onConfirm,
-    canConfirm: code.length === 6 && challengeId != null,
-    isRequestingCode: start.isPending,
+    onResendNewEmailCode,
     isConfirming: confirm.isPending,
   };
 }

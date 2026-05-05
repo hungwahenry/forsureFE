@@ -8,12 +8,19 @@ interface StartResponse {
   ttlMinutes: number;
 }
 
+interface StartArgs {
+  newEmail: string;
+  stepUpChallengeId: string;
+  stepUpCode: string;
+}
+
 export function useStartEmailChange() {
   return useMutation({
-    mutationFn: async (newEmail: string) => {
-      const res = await api.post<StartResponse>('/v1/account/email/start', {
-        newEmail,
-      });
+    mutationFn: async (args: StartArgs) => {
+      const res = await api.post<StartResponse>(
+        '/v1/account/email/start',
+        args,
+      );
       return res.data;
     },
   });

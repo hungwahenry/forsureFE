@@ -33,12 +33,61 @@ export default function ChangeEmailScreen() {
         <View className="size-7" />
       </View>
 
-      {flow.step === 'enter-email' ? (
+      {flow.step === 'verify-current' ? (
         <View className="flex-1 px-6 pt-8">
           <View className="bg-primary/10 size-16 items-center justify-center rounded-full">
             <Icon as={Sms} className="text-primary size-8" />
           </View>
           <Text className="text-foreground mt-6 text-2xl font-bold">
+            confirm it's you
+          </Text>
+          <Text className="text-muted-foreground mt-2 text-base leading-6">
+            we sent a 6-digit code to{' '}
+            {profile.data ? profile.data.email : 'your current email'}.
+          </Text>
+
+          <View className="mt-8">
+            <Input
+              value={flow.stepUpCode}
+              onChangeText={flow.setStepUpCode}
+              placeholder="123456"
+              keyboardType="number-pad"
+              maxLength={6}
+              autoFocus
+            />
+          </View>
+
+          <View className="mt-3 flex-row">
+            <Pressable
+              onPress={() => {
+                haptics.tap();
+                void flow.onResendStepUp();
+              }}
+              hitSlop={8}
+            >
+              <Text className="text-primary text-sm font-medium">
+                resend code
+              </Text>
+            </Pressable>
+          </View>
+
+          <View className="mt-auto pb-6">
+            <Button
+              onPress={flow.onVerifyCurrent}
+              disabled={!flow.canVerifyCurrent || flow.isRequestingStepUp}
+              size="lg"
+            >
+              {flow.isRequestingStepUp ? (
+                <LoadingIndicator color="white" />
+              ) : (
+                <Text>continue</Text>
+              )}
+            </Button>
+          </View>
+        </View>
+      ) : flow.step === 'enter-email' ? (
+        <View className="flex-1 px-6 pt-8">
+          <Text className="text-foreground text-2xl font-bold">
             new email address
           </Text>
           <Text className="text-muted-foreground mt-2 text-base leading-6">
@@ -65,10 +114,10 @@ export default function ChangeEmailScreen() {
           <View className="mt-auto pb-6">
             <Button
               onPress={() => void flow.onContinue()}
-              disabled={!flow.isValidEmail || flow.isRequestingCode}
+              disabled={!flow.isValidEmail || flow.isRequestingEmailCode}
               size="lg"
             >
-              {flow.isRequestingCode ? (
+              {flow.isRequestingEmailCode ? (
                 <LoadingIndicator color="white" />
               ) : (
                 <Text>send code</Text>
@@ -100,7 +149,7 @@ export default function ChangeEmailScreen() {
             <Pressable
               onPress={() => {
                 haptics.tap();
-                void flow.onResend();
+                void flow.onResendNewEmailCode();
               }}
               hitSlop={8}
             >

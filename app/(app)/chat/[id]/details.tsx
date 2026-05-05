@@ -13,13 +13,14 @@ import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Screen } from '@/components/ui/screen';
 import { Text } from '@/components/ui/text';
 import { useActivityDetails } from '@/features/activities/details/api/getDetails';
-import { ActivityHeader } from '@/features/activities/details/components/ActivityHeader';
+import { ActivityHeader } from '@/features/activities/components/ActivityHeader';
 import { HostActions } from '@/features/activities/details/components/HostActions';
 import { LeaveButton } from '@/features/activities/details/components/LeaveButton';
 import { ParticipantsList } from '@/features/activities/details/components/ParticipantsList';
 import { ReportActivityButton } from '@/features/activities/details/components/ReportActivityButton';
 import { MemoriesSection } from '@/features/memories/components/MemoriesSection';
 import { useActivityAction } from '@/features/activities/manage/hooks/useActivityAction';
+import { ShareButton } from '@/features/activities/share/components/ShareButton';
 import { useAuthStore } from '@/features/auth/stores/authStore';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ArrowLeft } from 'iconsax-react-nativejs';
@@ -48,7 +49,7 @@ export default function ChatDetailsScreen() {
         <Text className="text-foreground flex-1 text-center text-base font-semibold">
           details
         </Text>
-        <View className="size-7" />
+        <ShareButton source={data} />
       </View>
 
       {details.isPending ? (

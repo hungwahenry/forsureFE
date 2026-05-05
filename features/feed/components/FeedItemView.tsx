@@ -9,6 +9,7 @@ import {
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
 import { GENDER_LABEL } from '@/features/activities/labels';
+import { ShareButton } from '@/features/activities/share/components/ShareButton';
 import {
   formatDistance,
   formatRelativeDateTime,
@@ -133,6 +134,7 @@ export function FeedItemView({
         >
           {item.goingCount} going · {formatDistance(item.distanceKm)}
         </Text>
+        <ShareButton source={item} />
         <Button onPress={onJoinPress} size="sm">
           <Text>join</Text>
         </Button>

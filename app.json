@@ -74,7 +74,15 @@
         }
       ],
       "expo-font",
-      "expo-image"
+      "expo-image",
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow forsure to save activity share cards to your photos.",
+          "savePhotosPermission": "Allow forsure to save activity share cards to your photos.",
+          "isAccessMediaLocationEnabled": false
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

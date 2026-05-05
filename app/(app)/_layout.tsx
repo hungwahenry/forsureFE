@@ -80,6 +80,10 @@ export default function AppLayout() {
           name="credits"
           options={{ presentation: 'fullScreenModal' }}
         />
+        <Stack.Screen
+          name="share-activity"
+          options={{ presentation: 'fullScreenModal' }}
+        />
       </Stack>
       <Lightbox />
     </>

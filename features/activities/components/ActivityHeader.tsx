@@ -1,20 +1,33 @@
 import { Text } from '@/components/ui/text';
 import { useOpenUserProfile } from '@/features/users/hooks/useOpenUserProfile';
-import { GENDER_LABEL } from '../../labels';
-import { usePillSizing } from '../../components/fields/Pill';
 import { formatRelativeDateTime, relativeDateUsesOnConnector } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { Pressable, View } from 'react-native';
-import type { ActivityDetails } from '../../types';
+import { ACTIVITY_VERB, GENDER_LABEL } from '../labels';
+import type { ActivityGenderPreference, ActivityStatus } from '../types';
+import { usePillSizing } from './fields/Pill';
+
+/** Structural shape ActivityHeader needs — ActivityDetails and ActivityPreview both satisfy it. */
+export interface ActivityHeaderData {
+  emoji: string;
+  title: string;
+  startsAt: string;
+  place: { name: string; lat: number; lng: number };
+  capacity: number;
+  participantCount: number;
+  genderPreference: ActivityGenderPreference;
+  status: ActivityStatus;
+  host: { username: string; avatarUrl: string };
+}
 
 interface ActivityHeaderProps {
-  details: ActivityDetails;
+  details: ActivityHeaderData;
 }
 
 const STATUS_BADGE: Record<
-  ActivityDetails['status'],
+  ActivityStatus,
   { label: string; tone: 'muted' | 'destructive' } | null
 > = {
   OPEN: null,
@@ -64,7 +77,7 @@ export function ActivityHeader({ details }: ActivityHeaderProps) {
         >
           <Word className="text-primary underline">@{details.host.username}</Word>
         </Pressable>
-        <Word>wants to</Word>
+        <Word>{ACTIVITY_VERB[details.status]}</Word>
         <Word>{details.emoji}</Word>
         <Word className="font-bold">{details.title}</Word>
         {relativeDateUsesOnConnector(startsAt) ? <Word>on</Word> : null}
