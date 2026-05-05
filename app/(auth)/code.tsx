@@ -29,6 +29,7 @@ export default function CodeScreen() {
   // Start the cooldown on mount — the previous screen just sent a code.
   React.useEffect(() => {
     cooldown.start();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onVerify = async (codeValue: string) => {

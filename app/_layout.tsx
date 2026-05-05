@@ -1,8 +1,6 @@
 import '@/global.css';
-// Must be first — patches global state.
-import 'react-native-gesture-handler';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-// Side-effect import: registers API client auth handlers before any request.
 import { useAuthStore } from '@/features/auth/stores/authStore';
 import { useHapticsStore } from '@/features/settings/stores/hapticsStore';
 import { useThemeStore } from '@/features/settings/stores/themeStore';
@@ -17,7 +15,6 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useColorScheme } from 'nativewind';
 import { useEffect } from 'react';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Toaster } from 'sonner-native';
 
