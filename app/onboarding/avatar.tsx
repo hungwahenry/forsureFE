@@ -91,7 +91,7 @@ export default function AvatarStep() {
           {previewSrc ? (
             <Image
               source={{ uri: previewSrc }}
-              className="size-36"
+              style={{ width: 144, height: 144 }}
               contentFit="cover"
             />
           ) : (
