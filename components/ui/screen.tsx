@@ -32,28 +32,22 @@ export function Screen({
   const containerStyle: ViewStyle = {
     flex: 1,
     paddingTop: edges.includes('top') ? insets.top : 0,
+    paddingBottom: edges.includes('bottom') ? insets.bottom : 0,
     ...style,
   };
 
-  const content = noKeyboardAvoidance ? (
-    <View style={{ flex: 1, paddingBottom: edges.includes('bottom') ? insets.bottom : 0 }}>
-      {children}
-    </View>
-  ) : (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior="padding"
-      keyboardVerticalOffset={edges.includes('top') ? insets.top : 0}
-    >
-      <View style={{ flex: 1, paddingBottom: edges.includes('bottom') ? insets.bottom : 0 }}>
-        {children}
-      </View>
-    </KeyboardAvoidingView>
-  );
-
   return (
     <View style={containerStyle} className={cn('bg-background', className)}>
-      {content}
+      {noKeyboardAvoidance ? (
+        children
+      ) : (
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior="padding"
+        >
+          {children}
+        </KeyboardAvoidingView>
+      )}
     </View>
   );
 }

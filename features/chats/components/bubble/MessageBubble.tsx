@@ -96,7 +96,6 @@ export function MessageBubble({
               <View
                 className={cn(
                   'relative',
-                  isPending && 'opacity-70',
                   isFailed && 'opacity-60',
                 )}
               >
@@ -124,7 +123,6 @@ export function MessageBubble({
                     <BubbleImage
                       uri={message.imageUrl}
                       width={PHOTO_WIDTH}
-                      pending={isPending}
                     />
                   ) : null}
 
