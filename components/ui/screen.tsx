@@ -2,7 +2,6 @@ import { cn } from '@/lib/utils';
 import * as React from 'react';
 import {
   KeyboardAvoidingView,
-  Platform,
   View,
   type ViewStyle,
 } from 'react-native';
@@ -33,18 +32,22 @@ export function Screen({
   const containerStyle: ViewStyle = {
     flex: 1,
     paddingTop: edges.includes('top') ? insets.top : 0,
-    paddingBottom: edges.includes('bottom') ? insets.bottom : 0,
     ...style,
   };
 
   const content = noKeyboardAvoidance ? (
-    children
+    <View style={{ flex: 1, paddingBottom: edges.includes('bottom') ? insets.bottom : 0 }}>
+      {children}
+    </View>
   ) : (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior="padding"
+      keyboardVerticalOffset={edges.includes('top') ? insets.top : 0}
     >
-      {children}
+      <View style={{ flex: 1, paddingBottom: edges.includes('bottom') ? insets.bottom : 0 }}>
+        {children}
+      </View>
     </KeyboardAvoidingView>
   );
 

@@ -13,6 +13,7 @@ if (!googleMapsAndroidKey) {
 const config: ExpoConfig = {
   name: 'forsure',
   slug: 'forsure',
+  owner: 'henryhh',
   version: '1.0.0',
   orientation: 'portrait',
   icon: './assets/images/icon.png',
@@ -100,6 +101,11 @@ const config: ExpoConfig = {
   ],
   experiments: {
     typedRoutes: true,
+  },
+  extra: {
+    eas: {
+      projectId: '16ec8452-29ef-4fcd-9693-4f4753172bd0',
+    },
   },
 };
 

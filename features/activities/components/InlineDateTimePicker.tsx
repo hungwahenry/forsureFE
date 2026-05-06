@@ -31,40 +31,65 @@ export function InlineDateTimePicker({
     return d;
   }, []);
 
+  const [androidStep, setAndroidStep] = React.useState<'date' | 'time'>('date');
+  const pendingDateRef = React.useRef<Date | null>(null);
+
+  // Reset step whenever the picker is opened.
+  React.useEffect(() => {
+    if (open) setAndroidStep('date');
+  }, [open]);
+
   if (!open) return null;
 
-  const handleChange = (event: DateTimePickerEvent, picked?: Date) => {
-    if (Platform.OS === 'android') {
-      onClose();
-      if (event.type === 'dismissed') return;
-    }
-    if (picked) onChange(picked);
-  };
+  if (Platform.OS === 'android') {
+    const handleAndroidChange = (event: DateTimePickerEvent, picked?: Date) => {
+      if (event.type === 'dismissed') {
+        onClose();
+        return;
+      }
+      if (!picked) return;
 
-  if (Platform.OS === 'ios') {
+      if (androidStep === 'date') {
+        // Store the chosen date and move to time step without closing.
+        pendingDateRef.current = picked;
+        setAndroidStep('time');
+      } else {
+        // Merge the previously chosen date with the chosen time.
+        const base = pendingDateRef.current ?? picked;
+        const combined = new Date(base);
+        combined.setHours(picked.getHours(), picked.getMinutes(), 0, 0);
+        onChange(combined);
+        onClose();
+      }
+    };
+
     return (
-      <View className="bg-muted/30 mb-4 items-center rounded-2xl py-2">
-        <DateTimePicker
-          value={value ?? defaultValue}
-          mode="datetime"
-          display="spinner"
-          minimumDate={minDate}
-          onChange={handleChange}
-        />
-        <Pressable onPress={onClose} hitSlop={8} className="px-4 py-1">
-          <Text className="text-primary font-semibold">done</Text>
-        </Pressable>
-      </View>
+      <DateTimePicker
+        value={value ?? defaultValue}
+        mode={androidStep}
+        display="default"
+        minimumDate={androidStep === 'date' ? minDate : undefined}
+        onChange={handleAndroidChange}
+      />
     );
   }
 
+  const handleChange = (_event: DateTimePickerEvent, picked?: Date) => {
+    if (picked) onChange(picked);
+  };
+
   return (
-    <DateTimePicker
-      value={value ?? defaultValue}
-      mode="datetime"
-      display="default"
-      minimumDate={minDate}
-      onChange={handleChange}
-    />
+    <View className="bg-muted/30 mb-4 items-center rounded-2xl py-2">
+      <DateTimePicker
+        value={value ?? defaultValue}
+        mode="datetime"
+        display="spinner"
+        minimumDate={minDate}
+        onChange={handleChange}
+      />
+      <Pressable onPress={onClose} hitSlop={8} className="px-4 py-1">
+        <Text className="text-primary font-semibold">done</Text>
+      </Pressable>
+    </View>
   );
 }

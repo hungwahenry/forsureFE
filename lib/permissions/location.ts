@@ -20,6 +20,7 @@ export async function requestLocationPermission(): Promise<PermissionStatus> {
 }
 
 export async function getCurrentLocation(): Promise<ResolvedLocation> {
+  await Location.enableNetworkProviderAsync();
   const pos = await Location.getCurrentPositionAsync({
     accuracy: Location.Accuracy.Balanced,
   });
