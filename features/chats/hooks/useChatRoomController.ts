@@ -253,7 +253,6 @@ export function useChatRoomController({
     viewerIsHost: viewerUserId === hostUserId,
     isPending: messagesQuery.isPending,
     isFetchingOlder: messagesQuery.isFetchingNextPage,
-    isSending: sendMutation.isPending,
     replyTarget,
     setReplyTarget,
     clearReply: () => setReplyTarget(null),

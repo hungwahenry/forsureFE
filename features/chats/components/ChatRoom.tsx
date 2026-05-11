@@ -111,7 +111,6 @@ export function ChatRoom({
           replyTarget={c.replyTarget}
           onClearReply={c.clearReply}
           onSend={c.send}
-          disabled={c.isSending}
         />
       )}
     </View>
