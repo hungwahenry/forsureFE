@@ -84,6 +84,10 @@ export function useEditProfileForm() {
       toast.error("couldn't get your location. try again.");
       return;
     }
+    if (!loc.placeName) {
+      toast.error("couldn't determine your area. try again or pick manually.");
+      return;
+    }
     setLocation({ placeName: loc.placeName, lat: loc.lat, lng: loc.lng });
   };
 

@@ -2,35 +2,33 @@ import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Text } from '@/components/ui/text';
+import type { LocationCoords } from '@/features/onboarding/types';
 import { useDeviceLocation } from '@/lib/hooks/useDeviceLocation';
-import {
-  openSystemSettings,
-  type ResolvedLocation,
-} from '@/lib/permissions/location';
+import { openSystemSettings } from '@/lib/permissions/location';
 import { toast } from '@/lib/toast';
 import { Location as LocationIcon, Setting2 } from 'iconsax-react-nativejs';
 import * as React from 'react';
 import { View } from 'react-native';
 
 interface LocationPromptProps {
-  value: ResolvedLocation | null;
-  onChange: (location: ResolvedLocation) => void;
+  value: LocationCoords | null;
+  onChange: (location: LocationCoords) => void;
 }
 
-/**
- * Onboarding-style location capture: large icon, button-driven flow, recovery
- * UI for denied permission, success state showing the resolved place name.
- */
 export function LocationPrompt({ value, onChange }: LocationPromptProps) {
   const { permission, isFetching, fetch } = useDeviceLocation();
 
   const enableLocation = async () => {
     const loc = await fetch();
-    if (loc) {
-      onChange(loc);
-    } else if (permission === 'granted') {
-      toast.error("couldn't get your location. try again.");
+    if (!loc) {
+      if (permission === 'granted') toast.error("couldn't get your location. try again.");
+      return;
     }
+    if (!loc.placeName) {
+      toast.error("couldn't determine your area. try again in a moment.");
+      return;
+    }
+    onChange({ lat: loc.lat, lng: loc.lng, placeName: loc.placeName });
   };
 
   return (

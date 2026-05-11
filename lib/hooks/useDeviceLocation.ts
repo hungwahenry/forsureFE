@@ -15,6 +15,7 @@ interface UseDeviceLocationResult {
   permission: PermissionStatus | null;
   location: ResolvedLocation | null;
   isFetching: boolean;
+  error: Error | null;
   fetch: () => Promise<ResolvedLocation | null>;
 }
 
@@ -27,10 +28,12 @@ export function useDeviceLocation(
   );
   const [location, setLocation] = React.useState<ResolvedLocation | null>(null);
   const [isFetching, setIsFetching] = React.useState(false);
+  const [error, setError] = React.useState<Error | null>(null);
 
   const fetch = React.useCallback(
     async (): Promise<ResolvedLocation | null> => {
       setIsFetching(true);
+      setError(null);
       try {
         let status = await checkLocationPermission();
         if (status === 'undetermined') {
@@ -41,7 +44,8 @@ export function useDeviceLocation(
         const loc = await getCurrentLocation();
         setLocation(loc);
         return loc;
-      } catch {
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error('Location fetch failed'));
         return null;
       } finally {
         setIsFetching(false);
@@ -57,11 +61,16 @@ export function useDeviceLocation(
       if (cancelled) return;
       setPermission(status);
       if (status === 'granted' && autoFetchIfGranted) {
+        setIsFetching(true);
         try {
           const loc = await getCurrentLocation();
           if (!cancelled) setLocation(loc);
-        } catch {
-          // Best-effort — caller can retry via `fetch()`.
+        } catch (err) {
+          if (!cancelled) {
+            setError(err instanceof Error ? err : new Error('Location fetch failed'));
+          }
+        } finally {
+          if (!cancelled) setIsFetching(false);
         }
       }
     })();
@@ -70,5 +79,5 @@ export function useDeviceLocation(
     };
   }, [autoFetchIfGranted]);
 
-  return { permission, location, isFetching, fetch };
+  return { permission, location, isFetching, error, fetch };
 }

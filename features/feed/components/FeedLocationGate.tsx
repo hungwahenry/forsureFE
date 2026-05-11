@@ -15,12 +15,8 @@ interface FeedLocationGateProps {
   children: (location: ResolvedLocation) => React.ReactNode;
 }
 
-/**
- * Gates the feed on device location. Renders the appropriate empty state for
- * each permission state and only invokes `children` once coords are resolved.
- */
 export function FeedLocationGate({ children }: FeedLocationGateProps) {
-  const { permission, location, isFetching, fetch } = useDeviceLocation({
+  const { permission, location, isFetching, error, fetch } = useDeviceLocation({
     autoFetchIfGranted: true,
   });
 
@@ -54,6 +50,21 @@ export function FeedLocationGate({ children }: FeedLocationGateProps) {
             disabled={isFetching}
           >
             <Text>turn on location</Text>
+          </Button>
+        }
+      />
+    );
+  }
+
+  if (error && !location) {
+    return (
+      <EmptyState
+        icon={Location}
+        title="couldn't get your location"
+        subtitle="check that location services are on, then try again."
+        actions={
+          <Button onPress={() => void fetch()} size="lg" disabled={isFetching}>
+            <Text>{isFetching ? 'trying...' : 'try again'}</Text>
           </Button>
         }
       />
