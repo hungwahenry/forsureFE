@@ -64,6 +64,7 @@ export default function EditActivityScreen() {
       host: { userId: '', username: '', displayName: '', avatarUrl: '', joinedAt: '' },
       members: [],
       pinnedMessage: null,
+      hmsRoomId: null,
     },
   );
 

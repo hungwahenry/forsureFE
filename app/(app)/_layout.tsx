@@ -84,6 +84,10 @@ export default function AppLayout() {
           name="share-activity"
           options={{ presentation: 'fullScreenModal' }}
         />
+        <Stack.Screen
+          name="call/[id]"
+          options={{ presentation: 'fullScreenModal', animation: 'fade' }}
+        />
       </Stack>
       <Lightbox />
     </>

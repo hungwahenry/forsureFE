@@ -11,6 +11,7 @@
     "lint": "expo lint"
   },
   "dependencies": {
+    "@100mslive/react-native-hms": "^1.12.1",
     "@expo-google-fonts/albert-sans": "^0.4.2",
     "@expo-google-fonts/fredoka": "^0.4.1",
     "@gorhom/bottom-sheet": "^5.2.12",

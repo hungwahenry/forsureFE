@@ -28,6 +28,11 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: true,
     bundleIdentifier: 'fyi.forsure',
+    deploymentTarget: '16.0',
+    infoPlist: {
+      NSLocalNetworkUsageDescription:
+        'Allow forsure to access the local network for video calling.',
+    },
     splash: {
       image: './assets/images/splash.png',
       resizeMode: 'contain',
@@ -41,6 +46,7 @@ const config: ExpoConfig = {
   },
   android: {
     package: 'fyi.forsure',
+    permissions: ['CAMERA', 'android.permission.BLUETOOTH_CONNECT'],
     adaptiveIcon: {
       foregroundImage: './assets/images/adaptive-icon.png',
       backgroundColor: '#ffffff',

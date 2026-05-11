@@ -41,6 +41,7 @@ export interface ActivityDetails {
   host: ActivityParticipant;
   members: ActivityParticipant[];
   pinnedMessage: ChatMessage | null;
+  hmsRoomId: string | null;
 }
 
 export interface EditActivityPayload {

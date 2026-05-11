@@ -8,7 +8,7 @@ import { ChatRoom } from '@/features/chats/components/ChatRoom';
 import { useAutoRedirectIfChatRemoved } from '@/features/chats/hooks/useAutoRedirectIfChatRemoved';
 import { formatRelativeDateTime } from '@/lib/format';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { ArrowLeft } from 'iconsax-react-nativejs';
+import { ArrowLeft, Video } from 'iconsax-react-nativejs';
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
 
@@ -65,7 +65,13 @@ export default function ChatDetailScreen() {
             </Text>
           )}
         </Pressable>
-        <View className="size-7" />
+        <Pressable
+          onPress={() => router.push(`/call/${activityId}` as never)}
+          hitSlop={8}
+          className="size-7 items-center justify-center"
+        >
+          <Icon as={Video} className="text-muted-foreground size-7" />
+        </Pressable>
       </View>
 
       {preview && viewerUserId ? (
