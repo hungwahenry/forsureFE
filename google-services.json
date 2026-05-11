@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "676614729920",
+    "project_id": "forsure-7ed5c",
+    "storage_bucket": "forsure-7ed5c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:676614729920:android:3f5664a6968123ea777d25",
+        "android_client_info": {
+          "package_name": "fyi.forsure"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB080_EHjW2KL3-ewKwErqRVoc-RB-R9u4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
