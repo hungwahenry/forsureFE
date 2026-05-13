@@ -4,6 +4,7 @@ import { Text } from '@/components/ui/text';
 import { formatDistance } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
 import { Shop } from 'iconsax-react-nativejs';
 import { Pressable, View } from 'react-native';
 import type { BusinessVenueSuggestion } from '../types';
@@ -19,6 +20,7 @@ export function BusinessVenueSuggestions({
   onSelect,
   disabled,
 }: Props) {
+  const router = useRouter();
   return (
     <View className="pb-2 pt-4">
       <View className="flex-row items-center justify-between px-2 pb-2">
@@ -31,6 +33,15 @@ export function BusinessVenueSuggestions({
           key={venue.venueId}
           venue={venue}
           onPress={() => onSelect(venue)}
+          onLongPress={() =>
+            router.push({
+              pathname: '/report',
+              params: {
+                targetType: 'BUSINESS_VENUE',
+                targetId: venue.venueId,
+              },
+            })
+          }
           disabled={disabled}
         />
       ))}
@@ -41,14 +52,17 @@ export function BusinessVenueSuggestions({
 interface RowProps {
   venue: BusinessVenueSuggestion;
   onPress: () => void;
+  onLongPress: () => void;
   disabled: boolean;
 }
 
-function SponsoredRow({ venue, onPress, disabled }: RowProps) {
+function SponsoredRow({ venue, onPress, onLongPress, disabled }: RowProps) {
   return (
     <Pressable
       onPress={onPress}
+      onLongPress={onLongPress}
       disabled={disabled}
+      delayLongPress={400}
       className={cn(
         'flex-row items-center gap-3 px-2 py-3',
         'active:bg-muted/40',

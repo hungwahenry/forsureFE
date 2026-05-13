@@ -20,6 +20,7 @@ const TARGET_LABEL: Record<ReportTargetType, string> = {
   ACTIVITY: 'this activity',
   MESSAGE: 'this message',
   POST: 'this post',
+  BUSINESS_VENUE: 'this venue',
 };
 
 const DETAILS_MAX = 1000;
