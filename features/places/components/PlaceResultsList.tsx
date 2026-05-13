@@ -5,7 +5,8 @@ import { Text } from '@/components/ui/text';
 import { cn } from '@/lib/utils';
 import { Location, SearchNormal1 } from 'iconsax-react-nativejs';
 import { FlatList, Pressable, View } from 'react-native';
-import type { PlaceSuggestion } from '../types';
+import type { BusinessVenueSuggestion, PlaceSuggestion } from '../types';
+import { BusinessVenueSuggestions } from './BusinessVenueSuggestions';
 
 interface PlaceResultsListProps {
   query: string;
@@ -13,6 +14,8 @@ interface PlaceResultsListProps {
   isLoading: boolean;
   isPicking: boolean;
   onSelect: (suggestion: PlaceSuggestion) => void;
+  businessVenues: BusinessVenueSuggestion[] | undefined;
+  onSelectVenue: (venue: BusinessVenueSuggestion) => void;
 }
 
 export function PlaceResultsList({
@@ -21,8 +24,13 @@ export function PlaceResultsList({
   isLoading,
   isPicking,
   onSelect,
+  businessVenues,
+  onSelectVenue,
 }: PlaceResultsListProps) {
-  if (query.length === 0) {
+  const hasVenues = (businessVenues?.length ?? 0) > 0;
+  const hasGoogle = (data?.length ?? 0) > 0;
+
+  if (query.length === 0 && !hasVenues) {
     return (
       <EmptyState
         icon={SearchNormal1}
@@ -32,7 +40,7 @@ export function PlaceResultsList({
     );
   }
 
-  if (isLoading && (!data || data.length === 0)) {
+  if (isLoading && !hasGoogle && !hasVenues) {
     return (
       <View className="items-center pt-12">
         <LoadingIndicator size={8} />
@@ -40,25 +48,39 @@ export function PlaceResultsList({
     );
   }
 
-  if (!data || data.length === 0) {
-    return (
-      <EmptyState
-        icon={SearchNormal1}
-        title={`no results for "${query}"`}
-        subtitle="try a different search term."
-      />
-    );
-  }
+  const sponsoredHeader = hasVenues ? (
+    <BusinessVenueSuggestions
+      venues={businessVenues!}
+      onSelect={onSelectVenue}
+      disabled={isPicking}
+    />
+  ) : null;
 
   return (
     <FlatList
-      data={data}
+      data={data ?? []}
       keyExtractor={(item) => item.id}
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={{ paddingBottom: 32 }}
+      ListHeaderComponent={sponsoredHeader}
       ItemSeparatorComponent={() => (
         <View className="bg-border/60 ml-16 h-px" />
       )}
+      ListEmptyComponent={
+        query.length === 0 ? (
+          <View className="px-2 pt-4">
+            <Text className="text-muted-foreground text-xs">
+              search to see more places nearby.
+            </Text>
+          </View>
+        ) : (
+          <EmptyState
+            icon={SearchNormal1}
+            title={`no results for "${query}"`}
+            subtitle="try a different search term."
+          />
+        )
+      }
       renderItem={({ item }) => (
         <PlaceRow
           suggestion={item}
@@ -104,4 +126,3 @@ function PlaceRow({ suggestion, onPress, disabled }: PlaceRowProps) {
     </Pressable>
   );
 }
-

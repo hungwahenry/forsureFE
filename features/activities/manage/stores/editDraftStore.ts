@@ -8,6 +8,7 @@ export interface EditDraft {
   title: string;
   startsAt: Date;
   place: PickedPlace;
+  businessVenueId: string | null;
   capacity: number;
   genderPreference: ActivityGenderPreference;
 }
@@ -37,6 +38,7 @@ export const useEditDraftStore = create<EditDraftState>((set) => ({
           lat: details.place.lat,
           lng: details.place.lng,
         },
+        businessVenueId: null,
         capacity: details.capacity,
         genderPreference: details.genderPreference,
       },

@@ -8,11 +8,13 @@ export function usePlaceSelection(mode: string | undefined) {
   const setCreateField = useDraftActivityStore((s) => s.setField);
   const setEditField = useEditDraftStore((s) => s.setField);
 
-  const selectPlace = (p: PickedPlace) => {
+  const selectPlace = (p: PickedPlace, businessVenueId?: string) => {
     if (mode === 'edit') {
       setEditField('place', p);
+      setEditField('businessVenueId', businessVenueId ?? null);
     } else {
       setCreateField('place', p);
+      setCreateField('businessVenueId', businessVenueId ?? null);
     }
     router.back();
   };

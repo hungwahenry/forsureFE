@@ -21,6 +21,7 @@ function computeDelta(
     patch.placeName = draft.place.name;
     patch.placeLat = draft.place.lat;
     patch.placeLng = draft.place.lng;
+    patch.businessVenueId = draft.businessVenueId;
   }
 
   if (draft.capacity !== original.capacity) patch.capacity = draft.capacity;

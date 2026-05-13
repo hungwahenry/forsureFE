@@ -26,6 +26,9 @@ export function useCreateActivityFlow() {
       placeLng: draft.place!.lng,
       capacity: draft.capacity,
       genderPreference: draft.genderPreference,
+      ...(draft.businessVenueId
+        ? { businessVenueId: draft.businessVenueId }
+        : {}),
     };
 
     const activity = await createActivity.mutateAsync(payload);

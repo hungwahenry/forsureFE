@@ -4,16 +4,21 @@ import { useDeviceLocation } from '@/lib/hooks/useDeviceLocation';
 import { toast } from '@/lib/toast';
 import * as React from 'react';
 import { View } from 'react-native';
+import { useBusinessSuggestions } from '../api/businessSuggestions';
+import { useRecordVenuePick } from '../api/recordVenuePick';
 import { useSuggestPlaces } from '../api/suggest';
 import { usePickPlace } from '../hooks/usePickPlace';
 import { usePlaceSearchSession } from '../hooks/usePlaceSearchSession';
-import type { PickedPlace, PlaceSuggestion } from '../types';
+import type {
+  BusinessVenueSuggestion,
+  PickedPlace,
+  PlaceSuggestion,
+} from '../types';
 import { PlaceResultsList } from './PlaceResultsList';
 import { PlaceSearchBar } from './PlaceSearchBar';
 
 interface PlacePickerProps {
-  /** Fired after a successful suggest → retrieve cycle. */
-  onSelect: (place: PickedPlace) => void;
+  onSelect: (place: PickedPlace, businessVenueId?: string) => void;
 }
 
 export function PlacePicker({ onSelect }: PlacePickerProps) {
@@ -22,19 +27,27 @@ export function PlacePicker({ onSelect }: PlacePickerProps) {
     sessionToken,
     onSessionUsed: renewSession,
   });
+  const recordVenuePick = useRecordVenuePick();
 
   const [query, setQuery] = React.useState('');
   const debounced = useDebouncedValue(query.trim(), 300);
   const { location } = useDeviceLocation({ autoFetchIfGranted: true });
+  const proximity = location ? { lat: location.lat, lng: location.lng } : null;
 
   const suggestions = useSuggestPlaces({
     q: debounced,
-    proximity: location ? { lat: location.lat, lng: location.lng } : undefined,
+    proximity: proximity ?? undefined,
     sessionToken,
     enabled: debounced.length > 0,
   });
 
-  const onPick = async (suggestion: PlaceSuggestion) => {
+  const businessSuggestions = useBusinessSuggestions({
+    q: debounced,
+    proximity,
+    enabled: true,
+  });
+
+  const onPickPlace = async (suggestion: PlaceSuggestion) => {
     try {
       const place = await pickPlace(suggestion);
       onSelect(place);
@@ -48,7 +61,18 @@ export function PlacePicker({ onSelect }: PlacePickerProps) {
     }
   };
 
-  // Loading covers both the in-flight fetch and the debounce gap.
+  const onPickVenue = (venue: BusinessVenueSuggestion) => {
+    recordVenuePick.mutate({ venueId: venue.venueId });
+    const place: PickedPlace = {
+      name: venue.placeName,
+      address: '',
+      lat: venue.placeLat,
+      lng: venue.placeLng,
+    };
+    onSelect(place, venue.venueId);
+    setQuery('');
+  };
+
   const isLoading =
     suggestions.isFetching || (query.trim().length > 0 && debounced.length === 0);
 
@@ -65,7 +89,9 @@ export function PlacePicker({ onSelect }: PlacePickerProps) {
         data={suggestions.data}
         isLoading={isLoading}
         isPicking={isPicking}
-        onSelect={onPick}
+        onSelect={onPickPlace}
+        businessVenues={businessSuggestions.data}
+        onSelectVenue={onPickVenue}
       />
     </View>
   );

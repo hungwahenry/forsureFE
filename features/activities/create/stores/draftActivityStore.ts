@@ -7,6 +7,8 @@ export interface ActivityDraft {
   title: string;
   startsAt: Date | null;
   place: PickedPlace | null;
+  /** Set when `place` came from a sponsored BusinessVenue. Cleared with the place. */
+  businessVenueId: string | null;
   capacity: number;
   genderPreference: ActivityGenderPreference;
 }
@@ -16,6 +18,7 @@ const initialDraft: ActivityDraft = {
   title: '',
   startsAt: null,
   place: null,
+  businessVenueId: null,
   capacity: 3,
   genderPreference: 'ALL',
 };

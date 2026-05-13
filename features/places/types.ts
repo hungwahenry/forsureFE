@@ -22,3 +22,14 @@ export interface PickedPlace {
   lat: number;
   lng: number;
 }
+
+export interface BusinessVenueSuggestion {
+  venueId: string;
+  placeName: string;
+  placeLat: number;
+  placeLng: number;
+  distanceM: number;
+  businessId: string;
+  businessName: string;
+  businessLogoUrl: string | null;
+}

@@ -53,6 +53,7 @@ export interface EditActivityPayload {
   capacity?: number;
   genderPreference?: ActivityGenderPreference;
   memoriesShareablePublicly?: boolean;
+  businessVenueId?: string | null;
 }
 
 export interface CreateActivityPayload {
@@ -64,4 +65,5 @@ export interface CreateActivityPayload {
   placeLng: number;
   capacity: number;
   genderPreference: ActivityGenderPreference;
+  businessVenueId?: string;
 }
