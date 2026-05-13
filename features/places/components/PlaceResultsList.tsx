@@ -67,19 +67,11 @@ export function PlaceResultsList({
         <View className="bg-border/60 ml-16 h-px" />
       )}
       ListEmptyComponent={
-        query.length === 0 ? (
-          <View className="px-2 pt-4">
-            <Text className="text-muted-foreground text-xs">
-              search to see more places nearby.
-            </Text>
-          </View>
-        ) : (
-          <EmptyState
-            icon={SearchNormal1}
-            title={`no results for "${query}"`}
-            subtitle="try a different search term."
-          />
-        )
+        <EmptyState
+          icon={SearchNormal1}
+          title={`no results for "${query}"`}
+          subtitle="try a different search term."
+        />
       }
       renderItem={({ item }) => (
         <PlaceRow

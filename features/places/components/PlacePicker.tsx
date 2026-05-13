@@ -44,7 +44,7 @@ export function PlacePicker({ onSelect }: PlacePickerProps) {
   const businessSuggestions = useBusinessSuggestions({
     q: debounced,
     proximity,
-    enabled: true,
+    enabled: debounced.length > 0,
   });
 
   const onPickPlace = async (suggestion: PlaceSuggestion) => {

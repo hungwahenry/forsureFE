@@ -20,8 +20,8 @@ export function BusinessVenueSuggestions({
   disabled,
 }: Props) {
   return (
-    <View className="pb-2">
-      <View className="flex-row items-center justify-between px-2 py-2">
+    <View className="pb-2 pt-4">
+      <View className="flex-row items-center justify-between px-2 pb-2">
         <Text className="text-muted-foreground text-xs font-medium uppercase tracking-wider">
           suggested for you
         </Text>
