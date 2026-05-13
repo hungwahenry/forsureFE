@@ -11,12 +11,16 @@ export interface FeedItemPlace {
   lng: number;
 }
 
-/** Mirrors backend FeedService FeedItem. */
+export interface FeedItemBoost {
+  businessId: string;
+  businessName: string;
+  businessLogoUrl: string | null;
+}
+
 export interface FeedItem {
   id: string;
   emoji: string;
   title: string;
-  /** ISO datetime string. */
   startsAt: string;
   place: FeedItemPlace;
   capacity: number;
@@ -24,10 +28,9 @@ export interface FeedItem {
   spotsLeft: number;
   distanceKm: number;
   host: FeedHost;
-  /** Up to 3 most-recent participant avatars (excludes host). */
   participantAvatarUrls: string[];
-  /** Total people going (host + members). */
   goingCount: number;
+  boost: FeedItemBoost | null;
 }
 
 export interface FeedPageInfo {
@@ -43,6 +46,5 @@ export interface FeedPage {
 export interface FeedQueryParams {
   lat: number;
   lng: number;
-  /** Defaults to 25km server-side; max 100. */
   radiusKm?: number;
 }

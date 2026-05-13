@@ -22,6 +22,7 @@ import * as React from 'react';
 import { Image } from 'expo-image';
 import { Pressable, View } from 'react-native';
 import { MotiView } from 'moti';
+import { SponsoredBadge } from '@/components/ui/sponsored-badge';
 import { useOpenUserProfile } from '@/features/users/hooks/useOpenUserProfile';
 import type { FeedItem } from '../types';
 
@@ -82,6 +83,15 @@ export function FeedItemView({
             onPress={onPress}
             className="border-border/40 border-b px-6 py-5 active:bg-muted/30"
           >
+      {item.boost ? (
+        <SponsoredBadge
+          business={{
+            name: item.boost.businessName,
+            logoUrl: item.boost.businessLogoUrl,
+          }}
+          className="mb-3"
+        />
+      ) : null}
       <View
         className="flex-row flex-wrap items-center gap-x-2 gap-y-1"
       >

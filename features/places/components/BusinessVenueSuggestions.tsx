@@ -1,5 +1,5 @@
-import { Badge } from '@/components/ui/badge';
 import { Icon } from '@/components/ui/icon';
+import { SponsoredBadge } from '@/components/ui/sponsored-badge';
 import { Text } from '@/components/ui/text';
 import { formatDistance } from '@/lib/format';
 import { cn } from '@/lib/utils';
@@ -74,9 +74,7 @@ function SponsoredRow({ venue, onPress, disabled }: RowProps) {
           >
             {venue.placeName}
           </Text>
-          <Badge variant="secondary">
-            <Text>sponsored</Text>
-          </Badge>
+          <SponsoredBadge />
         </View>
         <Text numberOfLines={1} className="text-muted-foreground text-sm">
           {venue.businessName} · {formatDistance(venue.distanceM / 1000)} away
