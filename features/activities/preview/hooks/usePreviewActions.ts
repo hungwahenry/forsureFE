@@ -1,4 +1,5 @@
 import { useJoinActivity } from '@/features/activities/join/api/joinActivity';
+import { useFeatureFlag } from '@/features/feature-flags/hooks/useFeatureFlag';
 import { ApiError } from '@/lib/api/types';
 import { toast } from '@/lib/toast';
 import { useRouter } from 'expo-router';
@@ -18,6 +19,7 @@ export function usePreviewActions(
 ) {
   const router = useRouter();
   const join = useJoinActivity();
+  const joiningEnabled = useFeatureFlag('activity_joining_enabled');
 
   const onJoin = React.useCallback(async (): Promise<void> => {
     try {
@@ -55,13 +57,21 @@ export function usePreviewActions(
         variant: 'default',
       };
     }
+    if (!joiningEnabled) {
+      return {
+        label: 'joining paused',
+        onPress: () => {},
+        disabled: true,
+        variant: 'default',
+      };
+    }
     return {
       label: 'join',
       onPress: () => void onJoin(),
       disabled: false,
       variant: 'default',
     };
-  }, [preview, onJoin, onOpenChat]);
+  }, [preview, onJoin, onOpenChat, joiningEnabled]);
 
   return {
     cta,

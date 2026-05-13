@@ -4,6 +4,7 @@ import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Text } from '@/components/ui/text';
 import { useActivityDetails } from '@/features/activities/details/api/getDetails';
 import type { ActivityStatus } from '@/features/activities/types';
+import { useFeatureFlag } from '@/features/feature-flags/hooks/useFeatureFlag';
 import { useRouter } from 'expo-router';
 import { Camera, Message } from 'iconsax-react-nativejs';
 import { AnimatePresence, MotiView } from 'moti';
@@ -34,6 +35,7 @@ export function ChatRoom({
   const pinnedMessage = details.data?.pinnedMessage ?? null;
   const isLocked = LOCKED_STATUSES.includes(status);
   const isEnded = status === 'DONE';
+  const chatEnabled = useFeatureFlag('activity_chat_enabled');
 
   if (c.isPending) {
     return (
@@ -106,6 +108,12 @@ export function ChatRoom({
             </Text>
           </View>
         )
+      ) : !chatEnabled ? (
+        <View className="border-border/40 bg-background border-t px-6 py-4">
+          <Text className="text-muted-foreground text-center text-sm">
+            chat is temporarily unavailable
+          </Text>
+        </View>
       ) : (
         <MessageComposer
           replyTarget={c.replyTarget}

@@ -1,5 +1,6 @@
 import { useActivityDetails } from '@/features/activities/details/api/getDetails';
 import type { ActivityDetails } from '@/features/activities/types';
+import { useFeatureFlag } from '@/features/feature-flags/hooks/useFeatureFlag';
 import * as React from 'react';
 import { useMyActivityPost } from '@/features/posts/api/getMyPost';
 import {
@@ -62,7 +63,11 @@ export function useComposePost(activityId: string): ComposePostFlow {
   const activity = details.data ?? null;
   const existingPost = myPost.data ?? null;
   const isLoading = details.isPending || myPost.isPending;
-  const shareable = activity?.memoriesShareablePublicly === true;
+  const publicMemoriesEnabled = useFeatureFlag(
+    'public_memories_sharing_enabled',
+  );
+  const shareable =
+    activity?.memoriesShareablePublicly === true && publicMemoriesEnabled;
   const isEditing = existingPost != null;
   const isPending = createMutation.isPending || updateMutation.isPending;
   const remainingSlots = Math.max(0, POST_MAX_PHOTOS - photos.length);
