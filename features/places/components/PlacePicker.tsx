@@ -1,3 +1,4 @@
+import { useFeatureFlag } from '@/features/feature-flags/hooks/useFeatureFlag';
 import { ApiError } from '@/lib/api/types';
 import { useDebouncedValue } from '@/lib/hooks/useDebouncedValue';
 import { useDeviceLocation } from '@/lib/hooks/useDeviceLocation';
@@ -41,10 +42,13 @@ export function PlacePicker({ onSelect }: PlacePickerProps) {
     enabled: debounced.length > 0,
   });
 
+  const venueSuggestionsEnabled = useFeatureFlag(
+    'business_venue_suggestions_enabled',
+  );
   const businessSuggestions = useBusinessSuggestions({
     q: debounced,
     proximity,
-    enabled: debounced.length > 0,
+    enabled: debounced.length > 0 && venueSuggestionsEnabled,
   });
 
   const onPickPlace = async (suggestion: PlaceSuggestion) => {
