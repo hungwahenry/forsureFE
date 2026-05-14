@@ -91,7 +91,9 @@ function SponsoredRow({ venue, onPress, onLongPress, disabled }: RowProps) {
           <SponsoredBadge />
         </View>
         <Text numberOfLines={1} className="text-muted-foreground text-sm">
-          {venue.businessName} · {formatDistance(venue.distanceM / 1000)} away
+          {venue.businessShortDescription
+            ? `${venue.businessShortDescription} · ${formatDistance(venue.distanceM / 1000)} away`
+            : `${venue.businessName} · ${formatDistance(venue.distanceM / 1000)} away`}
         </Text>
       </View>
     </Pressable>

@@ -32,4 +32,5 @@ export interface BusinessVenueSuggestion {
   businessId: string;
   businessName: string;
   businessLogoUrl: string | null;
+  businessShortDescription: string | null;
 }
