@@ -2,27 +2,26 @@ import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { Screen } from '@/components/ui/screen';
 import { Text } from '@/components/ui/text';
+import { WelcomeCollage } from '@/features/auth/components/WelcomeCollage';
+import { WelcomeTagline } from '@/features/auth/components/WelcomeTagline';
 import { Link } from 'expo-router';
 import { ArrowRight } from 'iconsax-react-nativejs';
 import { View } from 'react-native';
 
 export default function WelcomeScreen() {
   return (
-    <Screen noKeyboardAvoidance>
-      <View className="flex-1 justify-between p-6">
-        {/* Spacer / hero space — when we add an illustration it sits here */}
-        <View className="flex-1" />
+    <Screen noKeyboardAvoidance edges={['bottom']}>
+      <View className="flex-1">
+        <WelcomeCollage />
 
-        <View className="gap-3 pb-12">
-          <Text className="text-foreground text-7xl font-bold tracking-tight">
-            forsure
-          </Text>
-          <Text className="text-muted-foreground text-2xl leading-snug">
-            find someone to do anything.
-          </Text>
-        </View>
+        <View className="gap-6 px-6 pb-12">
+          <View className="gap-1.5">
+            <Text className="text-foreground text-7xl font-bold tracking-tight">
+              forsure
+            </Text>
+            <WelcomeTagline />
+          </View>
 
-        <View className="gap-3">
           <Link href="/email" asChild>
             <Button
               size="lg"
@@ -33,7 +32,7 @@ export default function WelcomeScreen() {
                 />
               }
             >
-              <Text>get started</Text>
+              <Text>jump in</Text>
             </Button>
           </Link>
         </View>
