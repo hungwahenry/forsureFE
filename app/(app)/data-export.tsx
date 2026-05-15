@@ -4,6 +4,7 @@ import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Screen } from '@/components/ui/screen';
 import { Text } from '@/components/ui/text';
 import { useDataExport } from '@/features/account/hooks/useDataExport';
+import { useConfigNumber } from '@/features/config/hooks/useConfigNumber';
 import { useMyProfile } from '@/features/users/api/getMyProfile';
 import { useRouter } from 'expo-router';
 import {
@@ -17,6 +18,7 @@ export default function DataExportScreen() {
   const router = useRouter();
   const profile = useMyProfile();
   const flow = useDataExport();
+  const ttlHours = useConfigNumber('account.export_download_ttl_hours', 24);
 
   return (
     <Screen edges={['top']}>
@@ -49,7 +51,7 @@ export default function DataExportScreen() {
             ) : (
               'you'
             )}{' '}
-            a single-use link that expires in 24 hours.
+            a single-use link that expires in {ttlHours} hours.
           </Text>
 
           <View className="mt-auto pb-6">
@@ -79,7 +81,7 @@ export default function DataExportScreen() {
             link in a few minutes.
           </Text>
           <Text className="text-muted-foreground mt-4 text-base leading-6">
-            the link works once and expires after 24 hours.
+            the link works once and expires after {ttlHours} hours.
           </Text>
 
           <View className="mt-auto pb-6">

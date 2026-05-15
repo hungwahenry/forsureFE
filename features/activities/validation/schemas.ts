@@ -4,7 +4,8 @@ import { z } from 'zod';
 export const ACTIVITY_TITLE_MAX = 100;
 export const ACTIVITY_CAPACITY_MIN = 1;
 export const ACTIVITY_CAPACITY_MAX = 25;
-export const MIN_LEAD_TIME_MS = 30 * 60_000;
+
+export const DEFAULT_MIN_LEAD_TIME_MINUTES = 30;
 
 export const emojiSchema = z
   .string()
@@ -17,11 +18,14 @@ export const titleSchema = z
   .min(1, 'what do you want to do?')
   .max(ACTIVITY_TITLE_MAX, 'too long');
 
-export const startsAtSchema = z
-  .date({ message: 'pick a date and time' })
-  .refine((d) => d.getTime() >= Date.now() + MIN_LEAD_TIME_MS, {
-    message: 'must be at least 30 minutes from now',
-  });
+export function makeStartsAtSchema(minLeadTimeMinutes: number) {
+  const leadMs = minLeadTimeMinutes * 60_000;
+  return z
+    .date({ message: 'pick a date and time' })
+    .refine((d) => d.getTime() >= Date.now() + leadMs, {
+      message: `must be at least ${minLeadTimeMinutes} minutes from now`,
+    });
+}
 
 export const placeSchema = z.object({
   name: z.string().min(1).max(200),

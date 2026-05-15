@@ -2,6 +2,7 @@ import '@/global.css';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { useAuthStore } from '@/features/auth/stores/authStore';
+import { ConfigBootstrapper } from '@/features/config/components/ConfigBootstrapper';
 import { FeatureFlagsBootstrapper } from '@/features/feature-flags/components/FeatureFlagsBootstrapper';
 import { useHapticsStore } from '@/features/settings/stores/hapticsStore';
 import { useThemeStore } from '@/features/settings/stores/themeStore';
@@ -63,6 +64,7 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
           <FeatureFlagsBootstrapper />
+          <ConfigBootstrapper />
           <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
             <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
             <Stack screenOptions={{ headerShown: false }} />

@@ -2,9 +2,10 @@ import { Text } from '@/components/ui/text';
 import DateTimePicker, {
   type DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
+import { useConfigNumber } from '@/features/config/hooks/useConfigNumber';
 import * as React from 'react';
 import { Platform, Pressable, View } from 'react-native';
-import { MIN_LEAD_TIME_MS } from '../validation/schemas';
+import { DEFAULT_MIN_LEAD_TIME_MINUTES } from '../validation/schemas';
 
 interface InlineDateTimePickerProps {
   value: Date | null;
@@ -21,9 +22,13 @@ export function InlineDateTimePicker({
   open,
   onClose,
 }: InlineDateTimePickerProps) {
+  const minLeadMinutes = useConfigNumber(
+    'activity.min_lead_time_minutes',
+    DEFAULT_MIN_LEAD_TIME_MINUTES,
+  );
   const minDate = React.useMemo(
-    () => new Date(Date.now() + MIN_LEAD_TIME_MS),
-    [],
+    () => new Date(Date.now() + minLeadMinutes * 60_000),
+    [minLeadMinutes],
   );
   const defaultValue = React.useMemo(() => {
     const d = new Date();

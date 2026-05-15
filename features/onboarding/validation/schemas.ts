@@ -19,13 +19,15 @@ export const displayNameSchema = z
   .min(1, 'required')
   .max(50, 'must be 50 characters or fewer');
 
-export const MIN_AGE_YEARS = 18;
+export const DEFAULT_MIN_AGE_YEARS = 18;
 
-export const dateOfBirthSchema = z
-  .date({ message: 'pick your date of birth' })
-  .refine((d) => calculateAge(d) >= MIN_AGE_YEARS, {
-    message: `you must be ${MIN_AGE_YEARS} or older to use forsure`,
-  });
+export function makeDateOfBirthSchema(minAgeYears: number) {
+  return z
+    .date({ message: 'pick your date of birth' })
+    .refine((d) => calculateAge(d) >= minAgeYears, {
+      message: `you must be ${minAgeYears} or older to use forsure`,
+    });
+}
 
 export const genderSchema = z.enum([
   'MALE',
