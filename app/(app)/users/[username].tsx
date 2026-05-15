@@ -99,7 +99,10 @@ export default function UserProfileScreen() {
           </Text>
         </View>
       ) : (
-        <UserProfileFeed profile={profile.data} />
+        <UserProfileFeed
+          profile={profile.data}
+          refetchProfile={profile.refetch}
+        />
       )}
 
       <AlertDialog

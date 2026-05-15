@@ -34,7 +34,10 @@ export default function ProfileScreen() {
           </Text>
         </View>
       ) : (
-        <UserProfileFeed profile={profile.data} />
+        <UserProfileFeed
+          profile={profile.data}
+          refetchProfile={profile.refetch}
+        />
       )}
     </Screen>
   );

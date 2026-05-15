@@ -6,16 +6,18 @@ import { Text } from '@/components/ui/text';
 import { useBlockedUsers, useUnblockUser } from '@/features/blocks/api/blocks';
 import type { BlockedUser } from '@/features/blocks/types';
 import { ApiError } from '@/lib/api/types';
+import { usePullRefresh } from '@/lib/hooks/usePullRefresh';
 import { toast } from '@/lib/toast';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { ArrowLeft, UserMinus } from 'iconsax-react-nativejs';
-import { FlatList, Pressable, View } from 'react-native';
+import { FlatList, Pressable, RefreshControl, View } from 'react-native';
 
 export default function BlockedUsersScreen() {
   const router = useRouter();
   const blocked = useBlockedUsers();
   const unblock = useUnblockUser();
+  const refresh = usePullRefresh(blocked.refetch);
 
   const onUnblock = async (user: BlockedUser) => {
     try {
@@ -54,6 +56,7 @@ export default function BlockedUsersScreen() {
         <FlatList
           data={blocked.data}
           keyExtractor={(u) => u.id}
+          refreshControl={<RefreshControl {...refresh} />}
           renderItem={({ item }) => (
             <View className="border-border/40 flex-row items-center gap-3 border-b px-6 py-3">
               <Image

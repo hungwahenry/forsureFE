@@ -1,8 +1,9 @@
 import { EmptyState } from '@/components/ui/empty-state';
 import { LoadingIndicator } from '@/components/ui/loading-indicator';
+import { usePullRefresh } from '@/lib/hooks/usePullRefresh';
 import { Calendar, Camera } from 'iconsax-react-nativejs';
 import * as React from 'react';
-import { FlatList, View } from 'react-native';
+import { FlatList, RefreshControl, View } from 'react-native';
 import { useUserActivities } from '../api/listUserActivities';
 import { useUserPosts } from '../api/listUserPosts';
 import {
@@ -21,14 +22,30 @@ type Tab = 'memories' | 'activities';
 
 interface UserProfileFeedProps {
   profile: UserProfile;
+  refetchProfile: () => Promise<unknown>;
 }
 
-export function UserProfileFeed({ profile }: UserProfileFeedProps) {
+export function UserProfileFeed({
+  profile,
+  refetchProfile,
+}: UserProfileFeedProps) {
   const isSelf = isMyProfile(profile);
   const username = profile.username;
   const posts = useUserPosts(username);
   const activities = useUserActivities(username);
   const [tab, setTab] = React.useState<Tab>('memories');
+
+  const refresh = usePullRefresh(
+    React.useCallback(
+      () =>
+        Promise.all([
+          refetchProfile(),
+          posts.refetch(),
+          activities.refetch(),
+        ]),
+      [refetchProfile, posts.refetch, activities.refetch],
+    ),
+  );
 
   const postItems: UserPost[] =
     posts.data?.pages.flatMap((p) => p.items) ?? [];
@@ -118,6 +135,7 @@ export function UserProfileFeed({ profile }: UserProfileFeedProps) {
       }
       onEndReached={onEndReached}
       onEndReachedThreshold={0.5}
+      refreshControl={<RefreshControl {...refresh} />}
     />
   );
 }

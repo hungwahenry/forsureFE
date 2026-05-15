@@ -22,10 +22,11 @@ import { MemoriesSection } from '@/features/memories/components/MemoriesSection'
 import { useActivityAction } from '@/features/activities/manage/hooks/useActivityAction';
 import { ShareButton } from '@/features/activities/share/components/ShareButton';
 import { useAuthStore } from '@/features/auth/stores/authStore';
+import { usePullRefresh } from '@/lib/hooks/usePullRefresh';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ArrowLeft } from 'iconsax-react-nativejs';
 import * as React from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Pressable, RefreshControl, ScrollView, View } from 'react-native';
 
 export default function ChatDetailsScreen() {
   const router = useRouter();
@@ -38,6 +39,7 @@ export default function ChatDetailsScreen() {
 
   const data = details.data ?? null;
   const viewerIsHost = !!data && data.host.userId === viewerUserId;
+  const refresh = usePullRefresh(details.refetch);
 
 
   return (
@@ -63,7 +65,10 @@ export default function ChatDetailsScreen() {
           </Text>
         </View>
       ) : (
-        <ScrollView className="flex-1">
+        <ScrollView
+          className="flex-1"
+          refreshControl={<RefreshControl {...refresh} />}
+        >
           <ActivityHeader details={data} />
           <ParticipantsList
             details={data}
