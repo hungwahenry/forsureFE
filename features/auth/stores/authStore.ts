@@ -1,4 +1,5 @@
 import { setAuthHandlers } from '@/lib/api/client';
+import { ApiError, ErrorCode } from '@/lib/api/types';
 import { disconnectAppSocket, refreshAppSocketAuth } from '@/lib/api/socket';
 import {
   clearTokens,
@@ -42,20 +43,28 @@ export const useAuthStore = create<AuthState>((set) => ({
       return;
     }
 
-    try {
-      const { user, onboardingRequired } = await fetchMe();
-      set({
-        status: 'authenticated',
-        user,
-        onboardingRequired,
-      });
-    } catch {
-      // Auth failure clears tokens via interceptor; network/server errors leave tokens for retry on next launch.
-      set({
-        status: 'unauthenticated',
-        user: null,
-        onboardingRequired: true,
-      });
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        const { user, onboardingRequired } = await fetchMe();
+        set({ status: 'authenticated', user, onboardingRequired });
+        return;
+      } catch (err) {
+        const transient =
+          err instanceof ApiError &&
+          (err.code === ErrorCode.NETWORK_ERROR ||
+            err.code === ErrorCode.TIMEOUT);
+        if (!transient || attempt === 2) {
+          set({
+            status: 'unauthenticated',
+            user: null,
+            onboardingRequired: true,
+          });
+          return;
+        }
+        await new Promise((resolve) =>
+          setTimeout(resolve, 600 * (attempt + 1)),
+        );
+      }
     }
   },
 

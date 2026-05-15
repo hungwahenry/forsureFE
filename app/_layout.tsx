@@ -6,6 +6,7 @@ import { useAuthStore } from '@/features/auth/stores/authStore';
 import { ConfigBootstrapper } from '@/features/config/components/ConfigBootstrapper';
 import { FeatureFlagsBootstrapper } from '@/features/feature-flags/components/FeatureFlagsBootstrapper';
 import { useHapticsStore } from '@/features/settings/stores/hapticsStore';
+import { OfflineBanner } from '@/components/ui/offline-banner';
 import { useThemeStore } from '@/features/settings/stores/themeStore';
 import { queryClient } from '@/lib/api/queryClient';
 import { useBrandFonts } from '@/lib/fonts';
@@ -69,6 +70,7 @@ function RootLayout() {
           <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
             <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
             <Stack screenOptions={{ headerShown: false }} />
+            <OfflineBanner />
             <Toaster
               theme={colorScheme ?? 'light'}
               richColors
