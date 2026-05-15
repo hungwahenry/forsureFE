@@ -25,18 +25,17 @@ export default function CodeScreen() {
   const { signInFromCode, isPending: isVerifying } = useSignInFromCode();
   const requestCode = useRequestCode();
   const cooldown = useResendCooldown(60);
+  const startCooldown = cooldown.start;
 
-  // Start the cooldown on mount — the previous screen just sent a code.
   React.useEffect(() => {
-    cooldown.start();
-  }, []);
+    startCooldown();
+  }, [startCooldown]);
 
   const onVerify = async (codeValue: string) => {
     if (!email) return;
     setHasError(false);
     try {
       await signInFromCode({ email, code: codeValue });
-      // Route guards handle redirect on next render.
     } catch (err) {
       setHasError(true);
       otpRef.current?.clear();

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 // Pure UX timer; server enforces its own 60s cooldown server-side.
 export function useResendCooldown(initialSeconds = 60) {
@@ -25,10 +25,16 @@ export function useResendCooldown(initialSeconds = 60) {
     };
   }, [secondsLeft]);
 
+  const start = useCallback(
+    (seconds = initialSeconds) => setSecondsLeft(seconds),
+    [initialSeconds],
+  );
+  const reset = useCallback(() => setSecondsLeft(0), []);
+
   return {
     secondsLeft,
     canResend: secondsLeft <= 0,
-    start: (seconds = initialSeconds) => setSecondsLeft(seconds),
-    reset: () => setSecondsLeft(0),
+    start,
+    reset,
   };
 }
