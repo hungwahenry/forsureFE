@@ -2,6 +2,7 @@ import { Icon } from '@/components/ui/icon';
 import { Input } from '@/components/ui/input';
 import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Text } from '@/components/ui/text';
+import { useSignOut } from '@/features/auth/hooks/useSignOut';
 import { useCheckUsername } from '@/features/onboarding/api/checkUsername';
 import { StepShell } from '@/features/onboarding/components/StepShell';
 import { useDebouncedValue } from '@/lib/hooks/useDebouncedValue';
@@ -10,9 +11,8 @@ import {
   USERNAME_PATTERN,
   usernameSchema,
 } from '@/features/onboarding/validation/schemas';
-import { cn } from '@/lib/utils';
 import { router } from 'expo-router';
-import { CloseCircle, TickCircle, User } from 'iconsax-react-nativejs';
+import { CloseCircle, Logout, TickCircle, User } from 'iconsax-react-nativejs';
 import * as React from 'react';
 import { View } from 'react-native';
 
@@ -21,6 +21,7 @@ const TOTAL_STEPS = 6;
 export default function UsernameStep() {
   const draftUsername = useOnboardingStore((s) => s.draft.username);
   const setField = useOnboardingStore((s) => s.setField);
+  const { signOut } = useSignOut();
 
   const [value, setValue] = React.useState(draftUsername);
   const debounced = useDebouncedValue(value.trim().toLowerCase(), 400);
@@ -50,6 +51,9 @@ export default function UsernameStep() {
       subtitle="this is how others will find you. lowercase, 3–20 chars."
       onContinue={onContinue}
       continueDisabled={!canContinue}
+      onBack={() => void signOut()}
+      backIcon={Logout}
+      backLabel="Log out"
     >
       <View className="gap-2">
         <Input
@@ -76,11 +80,7 @@ export default function UsernameStep() {
             />
           }
         />
-        <UsernameHint
-          value={debounced}
-          formatValid={formatValid}
-          taken={isTaken}
-        />
+        <UsernameHint value={debounced} formatValid={formatValid} />
       </View>
     </StepShell>
   );
@@ -114,24 +114,14 @@ function UsernameStatus({
 function UsernameHint({
   value,
   formatValid,
-  taken,
 }: {
   value: string;
   formatValid: boolean;
-  taken: boolean;
 }) {
-  if (value.length === 0) return null;
-  if (!formatValid) {
-    return (
-      <Text className="text-muted-foreground text-sm">
-        lowercase letters, digits, or underscores. start with a letter.
-      </Text>
-    );
-  }
-  if (taken) {
-    return (
-      <Text className="text-destructive text-sm">that one's taken.</Text>
-    );
-  }
-  return <Text className={cn('text-primary text-sm')}>nice, it's yours.</Text>;
+  if (value.length === 0 || formatValid) return null;
+  return (
+    <Text className="text-muted-foreground text-sm">
+      lowercase letters, digits, or underscores. start with a letter.
+    </Text>
+  );
 }

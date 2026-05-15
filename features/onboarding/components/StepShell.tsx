@@ -9,7 +9,6 @@ import * as React from 'react';
 import { Pressable, View } from 'react-native';
 
 interface StepShellProps {
-  /** 1-based current step index. */
   step: number;
   totalSteps: number;
   title: string;
@@ -17,11 +16,10 @@ interface StepShellProps {
   onContinue?: () => void;
   continueDisabled?: boolean;
   continueLoading?: boolean;
-  /** Defaults to "continue" — override on the last step ("finish"). */
   continueLabel?: string;
-  /** Override back behaviour (default is router.back()). */
   onBack?: () => void;
-  /** Hide the back button on the first step if needed. */
+  backIcon?: React.ComponentProps<typeof Icon>['as'];
+  backLabel?: string;
   hideBack?: boolean;
   children: React.ReactNode;
 }
@@ -36,6 +34,8 @@ export function StepShell({
   continueLoading,
   continueLabel = 'continue',
   onBack,
+  backIcon = ArrowLeft,
+  backLabel = 'Go back',
   hideBack,
   children,
 }: StepShellProps) {
@@ -53,9 +53,9 @@ export function StepShell({
                 onPress={handleBack}
                 hitSlop={12}
                 accessibilityRole="button"
-                accessibilityLabel="Go back"
+                accessibilityLabel={backLabel}
               >
-                <Icon as={ArrowLeft} className="text-foreground size-6" />
+                <Icon as={backIcon} className="text-foreground size-6" />
               </Pressable>
             )}
             <View className="flex-1 flex-row gap-1.5">
