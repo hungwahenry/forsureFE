@@ -1,4 +1,5 @@
 import { env } from '@/lib/config/env';
+import { Sentry } from '@/lib/sentry';
 import { io, type Socket } from 'socket.io-client';
 
 let appSocket: Socket | null = null;
@@ -7,12 +8,22 @@ interface ConnectArgs {
   accessToken: string;
 }
 
-/**
- * Singleton Socket.IO client for the whole app. Connects on sign-in (or app
- * boot if already signed in), survives screen navigation, disconnects on
- * sign-out. Features tap in by registering listeners; they don't manage the
- * connection itself.
- */
+const log = (...args: unknown[]) => console.log('[socket]', ...args);
+
+/** Lifecycle listeners so connection failures are observable, not silent. */
+function attachLifecycleListeners(socket: Socket): void {
+  socket.on('connect', () => log('connected'));
+  socket.on('disconnect', (reason) => log('disconnected:', reason));
+  socket.on('connect_error', (err: Error) => {
+    log('connect error:', err.message);
+    Sentry.addBreadcrumb({
+      category: 'socket',
+      level: 'warning',
+      message: `socket connect_error: ${err.message}`,
+    });
+  });
+}
+
 export function getAppSocket({ accessToken }: ConnectArgs): Socket {
   if (appSocket && appSocket.connected) return appSocket;
   if (appSocket) {
@@ -28,6 +39,7 @@ export function getAppSocket({ accessToken }: ConnectArgs): Socket {
     reconnectionDelay: 1_000,
     reconnectionDelayMax: 5_000,
   });
+  attachLifecycleListeners(appSocket);
   return appSocket;
 }
 
@@ -40,8 +52,11 @@ export function disconnectAppSocket(): void {
 }
 
 export function refreshAppSocketAuth(accessToken: string): void {
-  if (appSocket) {
-    appSocket.auth = { token: accessToken };
-    if (!appSocket.connected) appSocket.connect();
+  if (!appSocket) return;
+  appSocket.auth = { token: accessToken };
+  if (appSocket.connected) {
+    appSocket.disconnect().connect();
+  } else {
+    appSocket.connect();
   }
 }
