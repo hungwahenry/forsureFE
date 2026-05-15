@@ -11,8 +11,7 @@
     "lint": "expo lint"
   },
   "dependencies": {
-    "@expo-google-fonts/albert-sans": "^0.4.2",
-    "@expo-google-fonts/fredoka": "^0.4.1",
+    "@expo-google-fonts/figtree": "^0.4.1",
     "@gorhom/bottom-sheet": "^5.2.12",
     "@hookform/resolvers": "^5.2.2",
     "@react-native-community/datetimepicker": "8.6.0",

@@ -1,10 +1,10 @@
 import {
-  Fredoka_300Light,
-  Fredoka_400Regular,
-  Fredoka_500Medium,
-  Fredoka_600SemiBold,
-  Fredoka_700Bold,
-} from '@expo-google-fonts/fredoka';
+  Figtree_300Light,
+  Figtree_400Regular,
+  Figtree_500Medium,
+  Figtree_600SemiBold,
+  Figtree_700Bold,
+} from '@expo-google-fonts/figtree';
 import { useFonts } from 'expo-font';
 import { StyleSheet, type StyleProp, type TextStyle } from 'react-native';
 
@@ -28,11 +28,11 @@ export const FONTS_BY_WEIGHT: Record<string, string> = {
 
 export function useBrandFonts(): boolean {
   const [loaded] = useFonts({
-    [FONTS.light]: Fredoka_300Light,
-    [FONTS.regular]: Fredoka_400Regular,
-    [FONTS.medium]: Fredoka_500Medium,
-    [FONTS.semibold]: Fredoka_600SemiBold,
-    [FONTS.bold]: Fredoka_700Bold,
+    [FONTS.light]: Figtree_300Light,
+    [FONTS.regular]: Figtree_400Regular,
+    [FONTS.medium]: Figtree_500Medium,
+    [FONTS.semibold]: Figtree_600SemiBold,
+    [FONTS.bold]: Figtree_700Bold,
   });
   return loaded;
 }

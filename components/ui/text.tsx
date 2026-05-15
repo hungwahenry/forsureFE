@@ -82,7 +82,7 @@ function Text({
   return (
     <Component
       className={merged}
-      style={[style, { fontFamily }]}
+      style={[style, { fontFamily, fontWeight: 'normal' }]}
       role={variant ? ROLE[variant] : undefined}
       aria-level={variant ? ARIA_LEVEL[variant] : undefined}
       {...props}
