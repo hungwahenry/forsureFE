@@ -9,6 +9,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { EmptyState } from '@/components/ui/empty-state';
+import { ErrorState } from '@/components/ui/error-state';
 import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Text } from '@/components/ui/text';
 import { useAuthStore } from '@/features/auth/stores/authStore';
@@ -87,6 +88,15 @@ export function ExploreList({ lat, lng }: ExploreListProps) {
       <View className="flex-1 items-center justify-center">
         <LoadingIndicator size={10} />
       </View>
+    );
+  }
+
+  if (explore.isError && items.length === 0) {
+    return (
+      <ErrorState
+        title="couldn't load explore"
+        onRetry={() => void explore.refetch()}
+      />
     );
   }
 

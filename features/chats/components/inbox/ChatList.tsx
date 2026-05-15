@@ -1,4 +1,5 @@
 import { EmptyState } from '@/components/ui/empty-state';
+import { ErrorState } from '@/components/ui/error-state';
 import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Text } from '@/components/ui/text';
 import { usePullRefresh } from '@/lib/hooks/usePullRefresh';
@@ -42,6 +43,15 @@ export function ChatList() {
       <View className="flex-1 items-center justify-center">
         <LoadingIndicator size={10} />
       </View>
+    );
+  }
+
+  if (chats.isError && !chats.data) {
+    return (
+      <ErrorState
+        title="couldn't load chats"
+        onRetry={() => void chats.refetch()}
+      />
     );
   }
 

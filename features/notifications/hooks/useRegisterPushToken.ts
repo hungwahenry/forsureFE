@@ -2,6 +2,7 @@ import * as Notifications from 'expo-notifications';
 import * as React from 'react';
 import { Platform } from 'react-native';
 import { registerDevice } from '../api/devices';
+import { ensureAndroidNotificationChannel } from '../setup';
 import { setStoredPushToken } from '../storage';
 import type { DevicePlatform } from '../types';
 
@@ -22,6 +23,8 @@ export function useRegisterPushToken(authenticated: boolean): void {
 
 async function register(): Promise<void> {
   try {
+    await ensureAndroidNotificationChannel();
+
     let granted = (await Notifications.getPermissionsAsync()).granted;
     if (!granted) {
       granted = (await Notifications.requestPermissionsAsync()).granted;

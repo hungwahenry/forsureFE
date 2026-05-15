@@ -89,6 +89,7 @@ const config: ExpoConfig = {
     ],
     'expo-font',
     'expo-image',
+    'expo-notifications',
     [
       'expo-media-library',
       {
