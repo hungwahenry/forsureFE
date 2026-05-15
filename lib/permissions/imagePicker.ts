@@ -39,13 +39,20 @@ function classify(asset: PickedAsset): PickerResult {
   return { status: 'picked', asset };
 }
 
+async function ensureLibraryAccess(): Promise<boolean> {
+  const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  return status === 'granted';
+}
+
 export async function pickFromLibrary(): Promise<PickerResult> {
+  if (!(await ensureLibraryAccess())) return { status: 'denied' };
   const result = await ImagePicker.launchImageLibraryAsync(COMMON_OPTIONS);
   if (result.canceled) return { status: 'cancelled' };
   return classify(result.assets[0]);
 }
 
 export async function pickFreeformFromLibrary(): Promise<PickerResult> {
+  if (!(await ensureLibraryAccess())) return { status: 'denied' };
   const result = await ImagePicker.launchImageLibraryAsync(FREEFORM_OPTIONS);
   if (result.canceled) return { status: 'cancelled' };
   return classify(result.assets[0]);
@@ -54,6 +61,7 @@ export async function pickFreeformFromLibrary(): Promise<PickerResult> {
 export async function pickMultipleFromLibrary(
   selectionLimit: number,
 ): Promise<MultiPickerResult> {
+  if (!(await ensureLibraryAccess())) return { status: 'denied' };
   const result = await ImagePicker.launchImageLibraryAsync({
     ...FREEFORM_OPTIONS,
     allowsMultipleSelection: true,
