@@ -1,5 +1,6 @@
 import { useAuthStore } from '@/features/auth/stores/authStore';
 import { useListChats } from '@/features/chats/api/listChats';
+import { FONTS } from '@/lib/fonts';
 import { THEME } from '@/lib/theme';
 import { Tabs } from 'expo-router';
 import { Image } from 'expo-image';
@@ -7,7 +8,7 @@ import { Discover, Home2, Message, Profile } from 'iconsax-react-nativejs';
 import { useColorScheme } from 'nativewind';
 import { View } from 'react-native';
 
-const TAB_ICON_SIZE = 28;
+const TAB_ICON_SIZE = 32;
 
 export default function TabsLayout() {
   const { colorScheme } = useColorScheme();
@@ -20,21 +21,22 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarShowLabel: false,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.mutedForeground,
         tabBarStyle: {
           backgroundColor: colors.background,
           borderTopColor: colors.border,
         },
-        tabBarItemStyle: {
-          justifyContent: 'center',
+        tabBarLabelStyle: {
+          fontFamily: FONTS.medium,
+          fontSize: 11,
         },
       }}
     >
       <Tabs.Screen
         name="feed"
         options={{
+          title: 'feed',
           tabBarIcon: ({ color, focused }) => (
             <Home2
               color={color}
@@ -47,6 +49,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="explore"
         options={{
+          title: 'explore',
           tabBarIcon: ({ color, focused }) => (
             <Discover
               color={color}
@@ -59,6 +62,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="chat"
         options={{
+          title: 'chat',
           tabBarIcon: ({ color, focused }) => (
             <View>
               <Message
@@ -74,6 +78,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="profile"
         options={{
+          title: 'profile',
           tabBarIcon: ({ color, focused }) =>
             avatarUrl ? (
               <Image
