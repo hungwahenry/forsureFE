@@ -1,4 +1,5 @@
 import '@/global.css';
+import { Sentry } from '@/lib/sentry';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { useAuthStore } from '@/features/auth/stores/authStore';
@@ -24,7 +25,7 @@ export { ErrorBoundary } from 'expo-router';
 
 void SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
+function RootLayout() {
   const { colorScheme } = useColorScheme();
   const status = useAuthStore((s) => s.status);
   const bootstrap = useAuthStore((s) => s.bootstrap);
@@ -81,3 +82,5 @@ export default function RootLayout() {
     </GestureHandlerRootView>
   );
 }
+
+export default Sentry.wrap(RootLayout);
