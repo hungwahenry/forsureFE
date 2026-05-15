@@ -29,8 +29,6 @@ function diffDaysFromToday(d: Date): number {
   const target = new Date(d.getFullYear(), d.getMonth(), d.getDate());
   return Math.round((target.getTime() - today.getTime()) / 86_400_000);
 }
-
-// today / tomorrow / weekday (within 6 days) / "month day" + " at <time>".
 export function formatRelativeDateTime(d: Date): string {
   const diffDays = diffDaysFromToday(d);
   let dayPart: string;
@@ -53,6 +51,13 @@ export function formatChatDate(d: Date): string {
   if (diff === -1) return 'yesterday';
   if (diff <= -2 && diff >= -6) return WEEKDAYS[d.getDay()];
   return `${MONTHS[d.getMonth()]} ${d.getDate()}`;
+}
+export function formatLongDate(d: Date): string {
+  return d.toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
 }
 
 export function formatTime(d: Date): string {

@@ -2,6 +2,7 @@ import { FieldButton } from '@/components/ui/field-button';
 import { Icon } from '@/components/ui/icon';
 import { Text } from '@/components/ui/text';
 import { StepShell } from '@/features/onboarding/components/StepShell';
+import { formatLongDate } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import { useConfigNumber } from '@/features/config/hooks/useConfigNumber';
 import { useOnboardingStore } from '@/features/onboarding/stores/onboardingStore';
@@ -90,7 +91,7 @@ export default function DobStep() {
               date ? 'text-foreground' : 'text-muted-foreground'
             )}
           >
-            {date ? formatDate(date) : 'tap to choose'}
+            {date ? formatLongDate(date) : 'tap to choose'}
           </Text>
         </FieldButton>
 
@@ -115,12 +116,4 @@ export default function DobStep() {
       </View>
     </StepShell>
   );
-}
-
-function formatDate(d: Date): string {
-  return d.toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
 }
