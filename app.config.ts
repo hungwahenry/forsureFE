@@ -29,6 +29,9 @@ const config: ExpoConfig = {
     supportsTablet: false,
     bundleIdentifier: 'fyi.forsure',
     associatedDomains: ['applinks:forsure.fyi'],
+    infoPlist: {
+      ITSAppUsesNonExemptEncryption: false,
+    },
     splash: {
       image: './assets/images/splash.png',
       resizeMode: 'contain',
