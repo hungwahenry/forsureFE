@@ -28,6 +28,7 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: true,
     bundleIdentifier: 'fyi.forsure',
+    associatedDomains: ['applinks:forsure.fyi'],
     splash: {
       image: './assets/images/splash.png',
       resizeMode: 'contain',
@@ -42,6 +43,14 @@ const config: ExpoConfig = {
   android: {
     package: 'fyi.forsure',
     googleServicesFile: './google-services.json',
+    intentFilters: [
+      {
+        action: 'VIEW',
+        autoVerify: true,
+        data: [{ scheme: 'https', host: 'forsure.fyi' }],
+        category: ['BROWSABLE', 'DEFAULT'],
+      },
+    ],
     adaptiveIcon: {
       foregroundImage: './assets/images/adaptive-icon.png',
       backgroundColor: '#ffffff',
