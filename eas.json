@@ -20,6 +20,8 @@
       "env": {
         "EXPO_PUBLIC_API_URL": "https://api.forsure.fyi",
         "EXPO_PUBLIC_SENTRY_DSN": "https://ebcc6e26634da32308ac60f1cbb5f367@o4511342454308864.ingest.us.sentry.io/4511342456602624",
+        "SENTRY_ORG": "issorite",
+        "SENTRY_PROJECT": "forsure",
         "SENTRY_DISABLE_AUTO_UPLOAD": "true"
       }
     },
@@ -28,6 +30,8 @@
       "env": {
         "EXPO_PUBLIC_API_URL": "https://api.forsure.fyi",
         "EXPO_PUBLIC_SENTRY_DSN": "https://ebcc6e26634da32308ac60f1cbb5f367@o4511342454308864.ingest.us.sentry.io/4511342456602624",
+        "SENTRY_ORG": "issorite",
+        "SENTRY_PROJECT": "forsure",
         "SENTRY_DISABLE_AUTO_UPLOAD": "true"
       }
     }
