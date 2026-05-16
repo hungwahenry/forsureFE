@@ -43,6 +43,10 @@ const CARDS: CollageCard[] = [
   { user: 'kai', emoji: '🎮', activity: 'visit an arcade', place: 'pixel hub', top: '57%', left: '52%', rotate: '-8deg', scale: 0.9 },
 
   { user: 'nina', emoji: '🛶', activity: 'go on a boat ride', place: 'lagos lagoon', top: '80%', left: '20%', rotate: '5deg', scale: 0.93 },
+
+  { user: 'priya', emoji: '🧋', activity: 'get boba', place: 'chatime', top: '78%', left: '-8%', rotate: '-6deg', scale: 0.9 },
+
+  { user: 'omar', emoji: '🏀', activity: 'shoot hoops', place: 'the court', top: '83%', left: '52%', rotate: '7deg', scale: 0.92 },
 ];
 
 function Piece({

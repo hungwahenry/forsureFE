@@ -16,7 +16,7 @@ export default function WelcomeScreen() {
 
         <View className="gap-6 px-6 pb-12">
           <View className="gap-1.5">
-            <Text className="text-foreground text-7xl font-bold tracking-tight">
+            <Text className="text-foreground text-center text-7xl font-bold tracking-tight">
               forsure
             </Text>
             <WelcomeTagline />

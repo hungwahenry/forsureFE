@@ -108,7 +108,7 @@ export function WelcomeTagline() {
 
   return (
     <View>
-      <Text className="text-muted-foreground text-2xl leading-snug">
+      <Text className="text-muted-foreground text-center text-2xl leading-snug">
         find someone to
       </Text>
       <View style={{ height: 38, justifyContent: 'center' }}>
@@ -121,7 +121,7 @@ export function WelcomeTagline() {
             transition={{ type: 'timing', duration: 280 }}
           >
             <Text
-              className="text-foreground text-2xl font-semibold"
+              className="text-foreground text-center text-2xl font-semibold"
               style={{ lineHeight: 32 }}
             >
               {activity.emoji} {activity.label}
