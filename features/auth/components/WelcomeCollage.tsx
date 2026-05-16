@@ -24,29 +24,29 @@ interface CollageCard {
 }
 
 const CARDS: CollageCard[] = [
-  { user: 'maya', emoji: '☕', activity: 'grab coffee', place: 'blue bottle', top: '8%', left: '-9%', rotate: '-7deg', scale: 0.96 },
+  { user: 'henry', emoji: '☕', activity: 'grab coffee', place: 'blue bottle', top: '8%', left: '-9%', rotate: '-7deg', scale: 0.96 },
 
-  { user: 'theo', emoji: '🎾', activity: 'play tennis', place: 'the courts', top: '13%', left: '22%', rotate: '6deg', scale: 0.9 },
+  { user: 'gabriel', emoji: '🎾', activity: 'play tennis', place: 'the courts', top: '13%', left: '22%', rotate: '6deg', scale: 0.9 },
 
   { user: 'leo', emoji: '🌆', activity: 'watch the sunset', place: 'victoria island', top: '7%', left: '52%', rotate: '-5deg', scale: 0.91 },
 
-  { user: 'ana', emoji: '🎬', activity: 'catch a movie', place: 'the rooftop', top: '29%', left: '-7%', rotate: '3deg', scale: 1 },
+  { user: 'adams', emoji: '🎬', activity: 'catch a movie', place: 'the rooftop', top: '29%', left: '-7%', rotate: '3deg', scale: 1 },
 
-  { user: 'jules', emoji: '🥾', activity: 'go for a hike', place: 'eagle trail', top: '34%', left: '24%', rotate: '-6deg', scale: 0.92 },
+  { user: 'ola', emoji: '🥾', activity: 'go for a hike', place: 'eagle trail', top: '34%', left: '24%', rotate: '-6deg', scale: 0.92 },
 
-  { user: 'zara', emoji: '🍣', activity: 'try sushi', place: 'tokyo table', top: '28%', left: '53%', rotate: '7deg', scale: 0.95 },
+  { user: 'king', emoji: '🍣', activity: 'try sushi', place: 'tokyo table', top: '28%', left: '53%', rotate: '7deg', scale: 0.95 },
 
-  { user: 'sam', emoji: '🍜', activity: 'get ramen', place: 'ippudo', top: '58%', left: '-8%', rotate: '8deg', scale: 0.88 },
+  { user: 'chiamaka', emoji: '🍜', activity: 'get ramen', place: 'ippudo', top: '58%', left: '-8%', rotate: '8deg', scale: 0.88 },
 
-  { user: 'noor', emoji: '🎨', activity: 'try pottery', place: 'the studio', top: '63%', left: '23%', rotate: '-4deg', scale: 0.94 },
+  { user: 'james', emoji: '🎨', activity: 'try pottery', place: 'the studio', top: '63%', left: '23%', rotate: '-4deg', scale: 0.94 },
 
-  { user: 'kai', emoji: '🎮', activity: 'visit an arcade', place: 'pixel hub', top: '57%', left: '52%', rotate: '-8deg', scale: 0.9 },
+  { user: 'amina', emoji: '🎮', activity: 'visit an arcade', place: 'pixel hub', top: '57%', left: '52%', rotate: '-8deg', scale: 0.9 },
 
   { user: 'nina', emoji: '🛶', activity: 'go on a boat ride', place: 'lagos lagoon', top: '80%', left: '20%', rotate: '5deg', scale: 0.93 },
 
   { user: 'priya', emoji: '🧋', activity: 'get boba', place: 'chatime', top: '78%', left: '-8%', rotate: '-6deg', scale: 0.9 },
 
-  { user: 'omar', emoji: '🏀', activity: 'shoot hoops', place: 'the court', top: '83%', left: '52%', rotate: '7deg', scale: 0.92 },
+  { user: 'fave', emoji: '🏀', activity: 'shoot hoops', place: 'the court', top: '83%', left: '52%', rotate: '7deg', scale: 0.92 },
 ];
 
 function Piece({

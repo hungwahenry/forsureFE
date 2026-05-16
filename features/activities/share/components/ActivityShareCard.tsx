@@ -1,4 +1,5 @@
 import { Text } from '@/components/ui/text';
+import { Wordmark } from '@/components/ui/wordmark';
 import { ACTIVITY_VERB, GENDER_LABEL } from '@/features/activities/labels';
 import { FONTS } from '@/lib/fonts';
 import {
@@ -142,16 +143,7 @@ function Footer() {
         marginTop: 32,
       }}
     >
-      <Text
-        style={{
-          fontFamily: FONTS.bold,
-          fontSize: 44,
-          lineHeight: 56,
-          color: COLORS.primary,
-        }}
-      >
-        forsure
-      </Text>
+      <Wordmark height={52} />
       <Text
         style={{
           fontFamily: FONTS.regular,

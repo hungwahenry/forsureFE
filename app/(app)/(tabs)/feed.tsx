@@ -1,6 +1,6 @@
 import { Icon } from '@/components/ui/icon';
 import { Screen } from '@/components/ui/screen';
-import { Text } from '@/components/ui/text';
+import { Wordmark } from '@/components/ui/wordmark';
 import { FeedList } from '@/features/feed/components/FeedList';
 import { FeedLocationGate } from '@/features/feed/components/FeedLocationGate';
 import { InboxBell } from '@/features/inbox/components/InboxBell';
@@ -20,7 +20,7 @@ export default function FeedScreen() {
   return (
     <Screen edges={['top']} noKeyboardAvoidance>
       <View className="flex-row items-center justify-between px-6 pb-3 pt-2">
-        <Text className="text-foreground text-3xl font-bold">forsure</Text>
+        <Wordmark height={26} />
         <InboxBell />
       </View>
 
