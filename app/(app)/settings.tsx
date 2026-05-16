@@ -114,7 +114,7 @@ export default function SettingsScreen() {
           <Row
             icon={MessageQuestion}
             label="help & contact"
-            onPress={() => openExternal('https://forsure.fyi/help')}
+            onPress={() => openExternal('https://forsure.fyi/support')}
           />
           <VersionRow onUnlock={() => router.push('/credits' as never)} />
         </Section>
