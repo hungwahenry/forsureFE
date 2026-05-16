@@ -26,7 +26,7 @@ const config: ExpoConfig = {
   },
   assetBundlePatterns: ['**/*'],
   ios: {
-    supportsTablet: true,
+    supportsTablet: false,
     bundleIdentifier: 'fyi.forsure',
     associatedDomains: ['applinks:forsure.fyi'],
     splash: {
